@@ -21,7 +21,7 @@ const Register = () => {
     <div className="min-h-screen bg-linear-to-br from-primary/5 via-background to-secondary/5 flex items-center justify-center p-4">
       <div className="bg-white rounded-3xl shadow-lg w-full max-w-md overflow-hidden">
         {/* Header Banner */}
-        <div className="bg-linear-to-r from-primary to-[oklch(0.55_0.17_262)] p-8 text-white text-center">
+        <div className="bg-linear-to-r from-primary to-sky-400 p-8 text-white text-center">
           <div className="w-16 h-16 bg-white/20 rounded-2xl flex items-center justify-center mx-auto mb-4 text-3xl">
             🚀
           </div>
@@ -61,7 +61,7 @@ const Register = () => {
           {/* Form */}
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-1.5">
-              <Label htmlFor="username" className="text-sm font-semibold">Explorer Name</Label>
+              <Label htmlFor="username" className="text-sm font-semibold">Nama Pengguna</Label>
               <div className="relative">
                 <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                 <Input
@@ -109,7 +109,7 @@ const Register = () => {
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password" className="text-sm font-semibold">Secret Code</Label>
+              <Label htmlFor="password" className="text-sm font-semibold">Password</Label>
               <div className="relative">
                 <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
                 <Input

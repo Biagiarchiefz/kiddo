@@ -1,23 +1,69 @@
+import { useQuery } from '@tanstack/react-query'
+import { supabase } from '@/utils/supabase'
+import { useAuth } from '@/contexts/AuthContext'
+import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
+
 export interface RankEntry {
   rank: number
+  id: string
   name: string
   school: string
   xp: number
+  level: number
   isCurrentUser: boolean
-  avatarBg: string
-  avatarText: string
+  bg: string
+  text: string
 }
 
-const rankings: RankEntry[] = [
-  { rank: 1, name: 'Siti Aminah', school: 'SDN Cendekia Utama', xp: 4300, isCurrentUser: false, avatarBg: 'bg-secondary', avatarText: 'text-white' },
-  { rank: 2, name: 'Budi', school: 'SDN Merdeka 1', xp: 3450, isCurrentUser: false, avatarBg: 'bg-slate-300', avatarText: 'text-slate-700' },
-  { rank: 3, name: 'Arief', school: 'MI Al-Falah', xp: 3100, isCurrentUser: false, avatarBg: 'bg-amber-300', avatarText: 'text-amber-800' },
-  { rank: 4, name: 'Putri Indah', school: 'SDN Pelita Hati 1', xp: 2850, isCurrentUser: false, avatarBg: 'bg-orange-300', avatarText: 'text-orange-800' },
-  { rank: 5, name: 'Kevin Pratama', school: 'Sekolah Cita Buana', xp: 2700, isCurrentUser: false, avatarBg: 'bg-amber-400', avatarText: 'text-amber-900' },
-  { rank: 6, name: 'Dewi Lestari', school: 'SD Tunas Bangsa', xp: 2500, isCurrentUser: false, avatarBg: 'bg-primary', avatarText: 'text-white' },
-  { rank: 42, name: 'You', school: 'SDN Harapan Kita', xp: 1250, isCurrentUser: true, avatarBg: 'bg-primary/20', avatarText: 'text-primary' },
+const avatarPalette = [
+  { bg: 'bg-secondary',   text: 'text-white' },
+  { bg: 'bg-slate-300',   text: 'text-slate-700' },
+  { bg: 'bg-amber-300',   text: 'text-amber-800' },
+  { bg: 'bg-orange-300',  text: 'text-orange-800' },
+  { bg: 'bg-sky-300',     text: 'text-sky-800' },
+  { bg: 'bg-rose-300',    text: 'text-rose-800' },
+  { bg: 'bg-purple-300',  text: 'text-purple-800' },
+  { bg: 'bg-primary',     text: 'text-white' },
 ]
 
+async function fetchLeaderboard() {
+  const { data, error } = await supabase
+    .from('profiles')
+    .select('id, username, school, total_xp, level')
+    .order('total_xp', { ascending: false })
+
+  if (error) throw error
+  return data ?? []
+}
+
 export const useLeaderboard = () => {
-  return { rankings }
+  useBreadcrumb([{ label: 'Papan Peringkat' }])
+  const { user } = useAuth()
+
+  const { data = [], isLoading } = useQuery({
+    queryKey: ['leaderboard'],
+    queryFn: fetchLeaderboard,
+    staleTime: 60_000,
+  })
+
+  const allRankings: RankEntry[] = data.map((p, i) => {
+    const palette = avatarPalette[i % avatarPalette.length]
+    return {
+      rank: i + 1,
+      id: p.id,
+      name: p.username ?? 'Anonim',
+      school: p.school || '—',
+      xp: p.total_xp ?? 0,
+      level: p.level ?? 1,
+      isCurrentUser: p.id === user?.id,
+      ...palette,
+    }
+  })
+
+  const top5 = allRankings.slice(0, 5)
+  const currentUserEntry = allRankings.find(r => r.isCurrentUser)
+  // Only expose currentUserEntry separately when they're outside the top 5
+  const currentUserOutside = currentUserEntry && currentUserEntry.rank > 5 ? currentUserEntry : undefined
+
+  return { rankings: top5, currentUserEntry: currentUserOutside, isLoading }
 }

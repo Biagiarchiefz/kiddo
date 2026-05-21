@@ -9,6 +9,7 @@ export interface Profile {
   avatar_url: string | null
   total_xp: number
   level: number
+  role: 'user' | 'admin'
   created_at: string
   updated_at: string
 }

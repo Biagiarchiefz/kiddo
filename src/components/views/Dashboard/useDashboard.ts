@@ -1,9 +1,8 @@
+import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 
 const useDashboard = () => {
-
-  return {
-
-  }
+  useBreadcrumb([{ label: 'Dashboard' }])
+  return {}
 }
 
 export default useDashboard

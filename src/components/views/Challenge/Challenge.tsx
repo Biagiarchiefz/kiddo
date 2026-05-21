@@ -1,26 +1,172 @@
 import { motion, AnimatePresence } from 'framer-motion'
+import { Link } from 'react-router'
 import AppLayout from '@/components/layouts/AppLayout/AppLayout'
 import { useChallenge } from './useChallenge'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
-import { Lightbulb, ChevronLeft, ChevronRight, Zap } from 'lucide-react'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Lightbulb, ChevronRight, Zap, Trophy, RotateCcw, Home, CheckCircle2, XCircle } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
-const topicColors = ['bg-blue-400', 'bg-rose-400', 'bg-amber-400']
+// ── Topic colors ──────────────────────────────────────────────────────────────
+
+const topicColors = ['bg-blue-400', 'bg-rose-400', 'bg-amber-400', 'bg-emerald-400', 'bg-purple-400']
+
+// ── Loading Skeleton ──────────────────────────────────────────────────────────
+
+const ChallengeSkeleton = () => (
+  <AppLayout>
+    <div className="flex gap-6 items-start">
+      <div className="flex-1 space-y-4">
+        <Skeleton className="h-10 w-64 rounded-xl" />
+        <Skeleton className="h-2 w-full rounded-full" />
+        <Skeleton className="h-52 w-full rounded-2xl" />
+        <Skeleton className="h-10 w-full rounded-xl" />
+      </div>
+      <div className="w-52 shrink-0 space-y-3">
+        <Skeleton className="h-32 w-full rounded-2xl" />
+        <Skeleton className="h-36 w-full rounded-2xl" />
+      </div>
+    </div>
+  </AppLayout>
+)
+
+// ── Result Screen ─────────────────────────────────────────────────────────────
+
+const ChallengeResult = ({
+  correctCount,
+  totalQuestions,
+  totalXpEarned,
+  retry,
+}: {
+  correctCount: number
+  totalQuestions: number
+  totalXpEarned: number
+  retry: () => void
+}) => {
+  const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0
+  const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '😊' : '💪'
+  const headline = pct >= 80 ? 'Luar Biasa!' : pct >= 60 ? 'Bagus!' : 'Terus Semangat!'
+
+  return (
+    <AppLayout>
+      <motion.div
+        initial={{ opacity: 0, y: 24 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ duration: 0.45, ease: 'easeOut' as const }}
+        className="max-w-xl mx-auto space-y-4 py-6"
+      >
+        <Card className="shadow-sm overflow-hidden">
+          <div className="bg-linear-to-r from-blue-500 to-sky-400 p-6 text-center text-white">
+            <div className="text-5xl mb-2 drop-shadow">{emoji}</div>
+            <h2 className="text-2xl font-bold">{headline}</h2>
+            <p className="text-white/75 text-sm mt-1">
+              Kamu menjawab <span className="font-bold text-white">{correctCount}</span> dari{' '}
+              <span className="font-bold text-white">{totalQuestions}</span> soal dengan benar
+            </p>
+          </div>
+
+          <CardContent className="p-5 space-y-4">
+            {/* Score bar */}
+            <div className="space-y-1.5">
+              <div className="flex justify-between text-xs text-muted-foreground">
+                <span>Skor</span>
+                <span className="font-bold text-foreground">{pct}%</span>
+              </div>
+              <div className="h-2 bg-muted rounded-full overflow-hidden">
+                <motion.div
+                  className={cn('h-full rounded-full', pct >= 60 ? 'bg-green-500' : 'bg-amber-400')}
+                  initial={{ width: 0 }}
+                  animate={{ width: `${pct}%` }}
+                  transition={{ duration: 0.7, ease: 'easeOut' as const, delay: 0.2 }}
+                />
+              </div>
+            </div>
+
+            {/* XP earned */}
+            <div className="flex items-center justify-center gap-2 bg-amber-50 border border-amber-100 rounded-xl p-4">
+              <Zap className="w-5 h-5 text-amber-500 fill-amber-400" />
+              <div>
+                <p className="text-xs text-amber-700 font-semibold">XP Tantangan Diperoleh</p>
+                <p className="text-2xl font-black text-amber-600">+{totalXpEarned} XP</p>
+              </div>
+            </div>
+
+            {/* Total badge */}
+            <div className="flex items-center justify-center gap-2 bg-primary/5 border border-primary/10 rounded-xl p-3">
+              <Trophy className="w-4 h-4 text-primary" />
+              <span className="text-sm font-bold text-primary">
+                Tantangan Campuran Selesai!
+              </span>
+            </div>
+
+            {/* Actions */}
+            <div className="flex gap-2.5 pt-1">
+              <Button variant="outline" size="sm" className="flex-1 gap-2 rounded-xl" onClick={retry}>
+                <RotateCcw className="w-3.5 h-3.5" />
+                Ulangi
+              </Button>
+              <Button asChild size="sm" className="flex-1 gap-2 rounded-xl">
+                <Link to="/dashboard">
+                  <Home className="w-3.5 h-3.5" />
+                  Dashboard
+                </Link>
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      </motion.div>
+    </AppLayout>
+  )
+}
+
+// ── Main Component ────────────────────────────────────────────────────────────
 
 const Challenge = () => {
   const {
-    question,
+    currentQuestion,
     currentIndex,
     totalQuestions,
     selectedAnswer,
     showHint,
+    phase,
+    isLoading,
+    isSubmitting,
+    correctCount,
+    totalXpEarned,
     topicBreakdown,
     selectAnswer,
     toggleHint,
-    goNext,
-    goPrev,
+    submitAndNext,
+    retry,
   } = useChallenge()
+
+  if (isLoading) return <ChallengeSkeleton />
+
+  if (phase === 'result') {
+    return (
+      <ChallengeResult
+        correctCount={correctCount}
+        totalQuestions={totalQuestions}
+        totalXpEarned={totalXpEarned}
+        retry={retry}
+      />
+    )
+  }
+
+  if (totalQuestions === 0) {
+    return (
+      <AppLayout>
+        <div className="flex flex-col items-center justify-center py-20 text-center gap-3">
+          <span className="text-5xl">📭</span>
+          <p className="font-bold text-foreground">Belum ada soal tersedia.</p>
+          <Button asChild variant="link" size="sm">
+            <Link to="/dashboard">Kembali ke Dashboard</Link>
+          </Button>
+        </div>
+      </AppLayout>
+    )
+  }
 
   const progress = ((currentIndex + 1) / totalQuestions) * 100
 
@@ -29,115 +175,114 @@ const Challenge = () => {
       <div className="flex gap-6 items-start">
 
         {/* ── Main area ── */}
-        <div className="flex-1 space-y-5">
+        <div className="flex-1 min-w-0 space-y-4">
 
           {/* Header */}
           <motion.div
-            initial={{ opacity: 0, y: 16 }}
+            initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.35, ease: 'easeOut' as const }}
-            className="flex items-start justify-between"
+            transition={{ duration: 0.3, ease: 'easeOut' as const }}
+            className="flex items-center justify-between"
           >
             <div>
               <h2 className="text-xl font-bold text-foreground">Tantangan Campuran</h2>
               <p className="text-sm text-muted-foreground mt-0.5">
-                Uji pengetahuanmu dari semua materi dan dapatkan Extra XP!
+                Uji pengetahuanmu dari semua materi!
               </p>
             </div>
-            <span className="bg-blue-50 border border-blue-100 text-blue-600 text-xs font-bold px-3 py-1.5 rounded-full shrink-0">
-              {question?.category ?? 'Sains'}
+            <span className="text-xs text-muted-foreground font-semibold">
+              Soal {currentIndex + 1} / {totalQuestions}
             </span>
           </motion.div>
 
           {/* Progress bar */}
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            transition={{ delay: 0.1 }}
-            className="space-y-1.5"
-          >
-            <div className="flex justify-between text-xs text-muted-foreground">
-              <span>Challenge {currentIndex + 1} of {totalQuestions}</span>
-              <span className="font-semibold text-primary">{Math.round(progress)}%</span>
-            </div>
-            <div className="h-2 bg-muted rounded-full overflow-hidden">
-              <motion.div
-                className="h-full bg-primary rounded-full"
-                animate={{ width: `${progress}%` }}
-                transition={{ duration: 0.4, ease: 'easeOut' as const }}
-              />
-            </div>
-          </motion.div>
+          <div className="h-1.5 bg-muted rounded-full overflow-hidden">
+            <motion.div
+              className="h-full bg-primary rounded-full"
+              animate={{ width: `${progress}%` }}
+              transition={{ duration: 0.4, ease: 'easeOut' as const }}
+            />
+          </div>
 
-          {/* Question card — slides on change */}
+          {/* Question card */}
           <AnimatePresence mode="wait">
-            {question && (
+            {currentQuestion && (
               <motion.div
                 key={currentIndex}
-                initial={{ opacity: 0, x: 30 }}
+                initial={{ opacity: 0, x: 24 }}
                 animate={{ opacity: 1, x: 0 }}
-                exit={{ opacity: 0, x: -30 }}
+                exit={{ opacity: 0, x: -24 }}
                 transition={{ duration: 0.25, ease: 'easeOut' as const }}
               >
-                <Card className="border border-border shadow-sm">
-                  <CardContent className="p-6 space-y-5">
+                <Card className="shadow-sm">
+                  <CardContent className="p-5 space-y-4">
+                    {/* Category badge */}
+                    <span className="inline-block bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                      {currentQuestion.category}
+                    </span>
+
+                    {/* Question text */}
                     <p className="text-base font-semibold text-foreground leading-relaxed">
-                      {question.question}
+                      {currentQuestion.question}
                     </p>
 
                     {/* Hint toggle */}
-                    <Button
-                      variant={showHint ? 'outline' : 'ghost'}
-                      size="sm"
-                      onClick={toggleHint}
-                      className={cn(
-                        'gap-2 text-xs font-medium h-8',
-                        showHint
-                          ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 hover:text-amber-700'
-                          : 'text-muted-foreground hover:text-foreground'
-                      )}
-                    >
-                      <Lightbulb className={cn('w-3.5 h-3.5', showHint ? 'fill-amber-400 text-amber-400' : '')} />
-                      {showHint ? 'Sembunyikan hint' : 'Klik untuk Balik — Lihat Hint'}
-                    </Button>
-
-                    <AnimatePresence>
-                      {showHint && (
-                        <motion.div
-                          initial={{ opacity: 0, height: 0 }}
-                          animate={{ opacity: 1, height: 'auto' }}
-                          exit={{ opacity: 0, height: 0 }}
-                          transition={{ duration: 0.2 }}
-                          className="overflow-hidden"
+                    {currentQuestion.hint && (
+                      <>
+                        <Button
+                          variant={showHint ? 'outline' : 'ghost'}
+                          size="sm"
+                          onClick={toggleHint}
+                          className={cn(
+                            'gap-2 h-8 text-xs',
+                            showHint
+                              ? 'bg-amber-50 text-amber-700 border-amber-200 hover:bg-amber-100 hover:text-amber-700'
+                              : 'text-muted-foreground hover:text-foreground'
+                          )}
                         >
-                          <div className="bg-amber-50 border border-amber-200 rounded-xl p-4 text-sm text-amber-800 leading-relaxed">
-                            💡 {question.hint}
-                          </div>
-                        </motion.div>
-                      )}
-                    </AnimatePresence>
+                          <Lightbulb className={cn('w-3.5 h-3.5', showHint && 'fill-amber-400 text-amber-400')} />
+                          {showHint ? 'Sembunyikan hint' : 'Lihat Hint'}
+                        </Button>
+
+                        <AnimatePresence>
+                          {showHint && (
+                            <motion.div
+                              initial={{ opacity: 0, height: 0 }}
+                              animate={{ opacity: 1, height: 'auto' }}
+                              exit={{ opacity: 0, height: 0 }}
+                              transition={{ duration: 0.2 }}
+                              className="overflow-hidden"
+                            >
+                              <div className="bg-amber-50 border border-amber-200 rounded-xl p-3.5 text-xs text-amber-800 leading-relaxed">
+                                💡 {currentQuestion.hint}
+                              </div>
+                            </motion.div>
+                          )}
+                        </AnimatePresence>
+                      </>
+                    )}
 
                     {/* Answer options */}
-                    <div className="grid grid-cols-2 gap-3">
-                      {question.options.map(opt => {
-                        const isSelected = selectedAnswer === opt.id
+                    <div className="grid grid-cols-2 gap-2.5">
+                      {currentQuestion.question_options.map(opt => {
+                        const isSelected = selectedAnswer === opt.option_key
                         return (
                           <motion.button
-                            key={opt.id}
+                            key={opt.option_key}
                             whileTap={{ scale: 0.97 }}
-                            onClick={() => selectAnswer(opt.id)}
+                            onClick={() => selectAnswer(opt.option_key)}
                             className={cn(
-                              'flex items-center gap-3 p-4 rounded-xl border-2 text-left text-sm font-medium transition-all duration-200',
+                              'flex items-center gap-3 p-3.5 rounded-xl border-2 text-left text-sm font-medium transition-all duration-150',
                               isSelected
                                 ? 'border-primary bg-primary/5 text-primary shadow-sm'
                                 : 'border-border hover:border-primary/40 hover:bg-muted/30 text-foreground'
                             )}
                           >
                             <span className={cn(
-                              'w-7 h-7 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors',
+                              'w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors',
                               isSelected ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
                             )}>
-                              {opt.id}
+                              {opt.option_key}
                             </span>
                             {opt.text}
                           </motion.button>
@@ -150,62 +295,97 @@ const Challenge = () => {
             )}
           </AnimatePresence>
 
-          {/* Navigation */}
-          <div className="flex gap-3">
-            <Button
-              variant="outline"
-              onClick={goPrev}
-              disabled={currentIndex === 0}
-              className="flex-1 rounded-xl gap-2"
-            >
-              <ChevronLeft className="w-4 h-4" /> Kembali ke Pertanyaan
-            </Button>
-            <Button
-              onClick={goNext}
-              disabled={!selectedAnswer}
-              className="flex-1 rounded-xl gap-2"
-            >
-              Lanjut <ChevronRight className="w-4 h-4" />
-            </Button>
-          </div>
+          {/* Next button */}
+          <Button
+            className="w-full rounded-xl gap-2"
+            onClick={submitAndNext}
+            disabled={!selectedAnswer || isSubmitting}
+          >
+            {isSubmitting
+              ? 'Menyimpan...'
+              : currentIndex === totalQuestions - 1
+              ? 'Selesai'
+              : 'Lanjut'}
+            {!isSubmitting && <ChevronRight className="w-4 h-4" />}
+          </Button>
         </div>
 
-        {/* ── Info Sidebar ── */}
+        {/* ── Sidebar ── */}
         <motion.div
-          initial={{ opacity: 0, x: 20 }}
+          initial={{ opacity: 0, x: 16 }}
           animate={{ opacity: 1, x: 0 }}
-          transition={{ delay: 0.15, duration: 0.4, ease: 'easeOut' as const }}
-          className="w-56 shrink-0 space-y-4"
+          transition={{ delay: 0.15, duration: 0.35, ease: 'easeOut' as const }}
+          className="w-52 shrink-0 space-y-3 sticky top-20"
         >
           {/* XP reward */}
           <Card className="bg-linear-to-br from-amber-50 to-yellow-50 border-amber-100 shadow-sm">
-            <CardContent className="p-5 text-center space-y-2">
-              <p className="text-[11px] text-amber-700 font-bold uppercase tracking-wider">Hadiah XP</p>
-              <div className="flex items-center justify-center gap-1.5">
-                <Zap className="w-5 h-5 text-amber-400 fill-amber-400" />
-                <span className="text-3xl font-black text-amber-600">+250</span>
+            <CardContent className="p-4 text-center space-y-1.5">
+              <p className="text-[10px] text-amber-700 font-bold uppercase tracking-wider">Extra XP</p>
+              <div className="flex items-center justify-center gap-1">
+                <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
+                <span className="text-2xl font-black text-amber-600">
+                  +{currentQuestion?.xp_reward ?? 10}/soal
+                </span>
               </div>
-              <p className="text-xs text-amber-700/70 leading-relaxed">
-                Semakin banyak benar, semakin besar hadiahnya!
+              <p className="text-[10px] text-amber-700/70 leading-relaxed">
+                Jawab benar untuk kumpulkan XP!
               </p>
             </CardContent>
           </Card>
 
-          {/* Topic breakdown */}
+          {/* Progress tracker */}
           <Card className="shadow-sm">
-            <CardContent className="p-5 space-y-3">
-              <h4 className="text-sm font-bold text-foreground">Topik Sesi Ini</h4>
-              {topicBreakdown.map((t, i) => (
-                <div key={t.topic} className="flex items-center gap-2.5">
-                  <div className={cn('w-2 h-2 rounded-full shrink-0', topicColors[i % topicColors.length])} />
-                  <span className="text-sm text-muted-foreground flex-1">{t.topic}</span>
-                  <span className="text-xs font-semibold bg-muted text-foreground px-2 py-0.5 rounded-full">
-                    {t.count} soal
-                  </span>
+            <CardContent className="p-4 space-y-2.5">
+              <p className="text-[10px] font-bold text-foreground uppercase tracking-wide">Progres Soal</p>
+              <div className="grid grid-cols-5 gap-1.5">
+                {Array.from({ length: totalQuestions }).map((_, i) => {
+                  const isDone = i < currentIndex
+                  const isCurrent = i === currentIndex
+                  return (
+                    <div
+                      key={i}
+                      className={cn(
+                        'h-6 w-6 rounded-md flex items-center justify-center text-[10px] font-bold transition-colors',
+                        isDone ? 'bg-green-100 text-green-700' :
+                        isCurrent ? 'bg-primary text-white' :
+                        'bg-muted text-muted-foreground'
+                      )}
+                    >
+                      {isDone ? '✓' : i + 1}
+                    </div>
+                  )
+                })}
+              </div>
+              <div className="flex items-center gap-3 pt-1">
+                <div className="flex items-center gap-1.5 text-xs text-green-700">
+                  <CheckCircle2 className="w-3.5 h-3.5" />
+                  <span className="font-semibold">{currentIndex} selesai</span>
                 </div>
-              ))}
+                <div className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <XCircle className="w-3.5 h-3.5" />
+                  <span>{totalQuestions - currentIndex} tersisa</span>
+                </div>
+              </div>
             </CardContent>
           </Card>
+
+          {/* Topic breakdown */}
+          {topicBreakdown.length > 0 && (
+            <Card className="shadow-sm">
+              <CardContent className="p-4 space-y-2.5">
+                <p className="text-[10px] font-bold text-foreground uppercase tracking-wide">Topik Sesi Ini</p>
+                {topicBreakdown.map((t, i) => (
+                  <div key={t.topic} className="flex items-center gap-2">
+                    <div className={cn('w-2 h-2 rounded-full shrink-0', topicColors[i % topicColors.length])} />
+                    <span className="text-xs text-muted-foreground flex-1 truncate">{t.topic}</span>
+                    <span className="text-[10px] font-semibold bg-muted text-foreground px-1.5 py-0.5 rounded-full">
+                      {t.count}
+                    </span>
+                  </div>
+                ))}
+              </CardContent>
+            </Card>
+          )}
         </motion.div>
 
       </div>

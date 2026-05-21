@@ -1,4 +1,4 @@
-import { ArrowLeft, BookOpen, Star, Check, Lock, RotateCcw, ArrowRight, AlertCircle, Globe } from 'lucide-react'
+import { ArrowLeft, BookOpen, Star, Check, Lock, RotateCcw, ArrowRight, AlertCircle, Sparkles } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion } from 'framer-motion'
 import AppLayout from '@/components/layouts/AppLayout/AppLayout'
@@ -141,15 +141,16 @@ const UnitCard = ({ unit, index }: UnitCardProps) => {
 // ── Connector ─────────────────────────────────────────────────────────────────
 
 const Connector = () => (
-  <div className="flex flex-col items-center py-1 shrink-0">
-    <div className="w-px h-6 bg-border" />
-    <motion.div
-      variants={popIn}
-      className="w-11 h-11 rounded-full bg-secondary shadow-md flex items-center justify-center my-1"
-    >
-      <Globe className="w-5 h-5 text-white" />
+  <div className="flex flex-col items-center shrink-0">
+    <div className="w-0.5 h-8 bg-linear-to-b from-primary/40 to-primary" />
+    <motion.div variants={popIn} className="relative flex items-center justify-center my-1">
+      <div className="absolute w-16 h-16 rounded-full bg-primary/10 animate-pulse" />
+      <div className="absolute w-12 h-12 rounded-full bg-primary/15" />
+      <div className="w-9 h-9 rounded-full bg-linear-to-br from-sky-400 to-primary shadow-lg shadow-primary/30 flex items-center justify-center z-10 relative">
+        <Sparkles className="w-4 h-4 text-white fill-white" />
+      </div>
     </motion.div>
-    <div className="w-px h-6 bg-border" />
+    <div className="w-0.5 h-8 bg-linear-to-b from-primary to-primary/40" />
   </div>
 )
 
@@ -245,8 +246,8 @@ const Materi = () => {
           animate="show"
           className="relative"
         >
-          {/* Central vertical line */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-px bg-border -translate-x-1/2 pointer-events-none" />
+          {/* Central vertical line — gradient */}
+          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-linear-to-b from-transparent via-primary/50 to-transparent -translate-x-1/2 pointer-events-none" />
 
           <div className="space-y-0">
             {units.map((unit, index) => {
@@ -263,17 +264,29 @@ const Materi = () => {
                     {/* Center dot on the line */}
                     <motion.div
                       variants={popIn}
-                      className={`flex items-center justify-center w-7 h-7 rounded-full border-2 mx-auto z-10 relative ${
-                        unit.status === 'completed'
-                          ? 'bg-green-500 border-green-500'
-                          : 'bg-background border-border'
-                      }`}
+                      className="relative flex items-center justify-center mx-auto z-10"
                     >
-                      {unit.status === 'completed' ? (
-                        <Check className="w-3.5 h-3.5 text-white" />
-                      ) : (
-                        <Lock className="w-3 h-3 text-muted-foreground" />
+                      {unit.status === 'completed' && (
+                        <div className="absolute w-12 h-12 rounded-full bg-green-400/20" />
                       )}
+                      {unit.status === 'in_progress' && (
+                        <div className="absolute w-12 h-12 rounded-full bg-primary/20 animate-ping" />
+                      )}
+                      <div className={`w-8 h-8 rounded-full flex items-center justify-center shadow-md relative ${
+                        unit.status === 'completed'
+                          ? 'bg-green-500 shadow-green-200'
+                          : unit.status === 'in_progress'
+                          ? 'bg-primary shadow-primary/30'
+                          : 'bg-background border-2 border-border'
+                      }`}>
+                        {unit.status === 'completed' ? (
+                          <Check className="w-4 h-4 text-white" />
+                        ) : unit.status === 'in_progress' ? (
+                          <ArrowRight className="w-3.5 h-3.5 text-white" />
+                        ) : (
+                          <Lock className="w-3.5 h-3.5 text-muted-foreground" />
+                        )}
+                      </div>
                     </motion.div>
 
                     {/* Right slot */}

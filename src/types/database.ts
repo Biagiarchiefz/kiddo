@@ -1,3 +1,21 @@
+export interface Question {
+  id: number
+  unit_id: number | null
+  category: string
+  question: string
+  hint: string | null
+  correct: string
+  xp_reward: number
+  created_at: string
+}
+
+export interface QuestionOption {
+  id: number
+  question_id: number
+  option_key: string
+  text: string
+}
+
 export interface Module {
   id: number
   title: string

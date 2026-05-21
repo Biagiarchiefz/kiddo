@@ -3,6 +3,7 @@ import { useQuery, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { supabase } from '@/utils/supabase'
 import { useAuth } from '@/contexts/AuthContext'
+import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import type { Module, Unit } from '@/types/database'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
@@ -96,6 +97,13 @@ export const useQuizKilat = () => {
 
   const questions = data?.questions ?? []
   const currentQuestion = questions[currentIndex]
+
+  useBreadcrumb([
+    { label: 'Materi', href: '/dashboard' },
+    { label: data?.module?.title ?? '...', href: `/materi/${moduleId}` },
+    { label: data?.unit?.title ?? '...', href: `/materi/${moduleId}/unit/${unitIdNum}` },
+    { label: 'Kuis Kilat' },
+  ])
 
   const ensureSession = async (): Promise<string> => {
     if (sessionIdRef.current) return sessionIdRef.current

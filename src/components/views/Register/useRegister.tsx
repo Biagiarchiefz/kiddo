@@ -18,8 +18,12 @@ export const useRegister = () => {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.signUp({
-      email: form.email,
+    // Set flag before signUp because Supabase auto-signs-in on success,
+    // which triggers GuestGuard redirect before the lines after signUp run.
+    sessionStorage.setItem('newUser', form.username)
+
+    const { error: signUpError } = await supabase.auth.signUp({
+      email: form.email.trim(),
       password: form.password,
       options: {
         data: {
@@ -29,13 +33,19 @@ export const useRegister = () => {
       },
     })
 
-    if (error) {
-      setError(error.message)
-    } else {
-      navigate('/dashboard')
+    if (signUpError) {
+      sessionStorage.removeItem('newUser')
+      setError(signUpError.message)
+      setLoading(false)
+      return
     }
 
-    setLoading(false)
+    await supabase.auth.signInWithPassword({
+      email: form.email.trim(),
+      password: form.password,
+    })
+
+    navigate('/dashboard')
   }
 
   const handleGoogleLogin = async () => {

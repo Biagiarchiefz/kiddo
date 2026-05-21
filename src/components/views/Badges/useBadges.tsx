@@ -2,16 +2,19 @@ import { useQuery } from '@tanstack/react-query'
 import { supabase } from '@/utils/supabase'
 import { useAuth } from '@/contexts/AuthContext'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
-import type { Module } from '@/types/database'
 
-export interface ModuleWithProgress extends Module {
-  progress: number
-  totalUnits: number
+export interface Badge {
+  id: number
+  title: string
+  description: string
+  emoji: string
+  headerBg: string
+  earned: boolean
   completedUnits: number
-  isNew: boolean
+  totalUnits: number
 }
 
-async function fetchModulesWithProgress(userId: string): Promise<ModuleWithProgress[]> {
+async function fetchBadgeData(userId: string): Promise<Badge[]> {
   const [modulesRes, unitsRes, progressRes] = await Promise.all([
     supabase.from('modules').select('*').eq('is_published', true).order('sort_order'),
     supabase.from('units').select('id, module_id'),
@@ -35,21 +38,33 @@ async function fetchModulesWithProgress(userId: string): Promise<ModuleWithProgr
     const modUnitIds = unitsByModule[mod.id] ?? []
     const completedUnits = modUnitIds.filter(id => completedSet.has(id)).length
     const totalUnits = modUnitIds.length
-    const progress = totalUnits > 0 ? Math.round((completedUnits / totalUnits) * 100) : 0
+    const earned = totalUnits > 0 && completedUnits === totalUnits
 
-    return { ...mod, progress, totalUnits, completedUnits, isNew: completedUnits === 0 }
+    return {
+      id: mod.id,
+      title: mod.title,
+      description: mod.description ?? '',
+      emoji: mod.emoji ?? '📚',
+      headerBg: mod.header_bg ?? 'bg-sky-400',
+      earned,
+      completedUnits,
+      totalUnits,
+    }
   })
 }
 
-export const useDashboard = () => {
+export const useBadges = () => {
+  useBreadcrumb([{ label: 'Lencana' }])
   const { user } = useAuth()
-  useBreadcrumb([{ label: 'Dashboard' }])
 
-  const { data: modules = [], isLoading } = useQuery({
-    queryKey: ['modules', user?.id],
-    queryFn: () => fetchModulesWithProgress(user!.id),
+  const { data: badges = [], isLoading } = useQuery({
+    queryKey: ['badges', user?.id],
+    queryFn: () => fetchBadgeData(user!.id),
     enabled: !!user,
+    staleTime: 60_000,
   })
 
-  return { modules, isLoading }
+  const earnedCount = badges.filter(b => b.earned).length
+
+  return { badges, earnedCount, isLoading }
 }

@@ -35,7 +35,6 @@ interface ResultProps {
   unitCompletionXp: number
   moduleId: number
   unitIdNum: number
-  moduleName: string
   retry: () => void
 }
 
@@ -46,7 +45,6 @@ const QuizResult = ({
   unitCompletionXp,
   moduleId,
   unitIdNum,
-  moduleName,
   retry,
 }: ResultProps) => {
   const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0
@@ -167,7 +165,6 @@ const QuizKilat = () => {
         unitCompletionXp={unitCompletionXp}
         moduleId={moduleId}
         unitIdNum={unitIdNum}
-        moduleName={module.title}
         retry={retry}
       />
     )

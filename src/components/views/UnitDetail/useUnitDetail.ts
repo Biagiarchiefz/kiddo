@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { supabase } from '@/utils/supabase'
 import { useAuth } from '@/contexts/AuthContext'
+import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import type { Module, Unit, UnitContent } from '@/types/database'
 
 async function fetchUnitDetail(moduleId: number, unitId: number, userId: string) {
@@ -42,9 +43,18 @@ export const useUnitDetail = () => {
     enabled: !!user && !isNaN(moduleId) && !isNaN(unitIdNum),
   })
 
+  const module = data?.module ?? null
+  const unit = data?.unit ?? null
+
+  useBreadcrumb([
+    { label: 'Materi', href: '/dashboard' },
+    { label: module?.title ?? '...', href: `/materi/${moduleId}` },
+    { label: unit?.title ?? '...' },
+  ])
+
   return {
-    module: data?.module ?? null,
-    unit: data?.unit ?? null,
+    module,
+    unit,
     content: data?.content ?? null,
     questionCount: data?.questionCount ?? 0,
     progress: data?.progress ?? null,

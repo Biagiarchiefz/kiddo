@@ -2,6 +2,7 @@ import { useQuery } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { supabase } from '@/utils/supabase'
 import { useAuth } from '@/contexts/AuthContext'
+import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import type { Module, Unit } from '@/types/database'
 
 export interface UnitWithProgress extends Unit {
@@ -59,8 +60,14 @@ export const useMateri = () => {
     enabled: !!user && !isNaN(moduleId),
   })
 
+  const module = data?.module ?? null
+  useBreadcrumb([
+    { label: 'Materi', href: '/dashboard' },
+    { label: module?.title ?? '...' },
+  ])
+
   return {
-    module: data?.module ?? null,
+    module,
     units: data?.units ?? [],
     totalXp: data?.totalXp ?? 0,
     isLoading,
