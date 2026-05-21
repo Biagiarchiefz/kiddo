@@ -15,6 +15,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 import { supabase } from '@/utils/supabase'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import Pagination from '@/components/common/Pagination'
@@ -251,6 +252,7 @@ const AdminUsers = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-users'] })
+      toast.success('Akun pengguna berhasil dibuat.')
       setCreateOpen(false)
       setCreateError(null)
     },
@@ -267,8 +269,10 @@ const AdminUsers = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-users'] })
+      toast.success('Data pengguna berhasil diperbarui.')
       setEditTarget(null)
     },
+    onError: () => toast.error('Gagal memperbarui data pengguna.'),
   })
 
   const del = useMutation({
@@ -278,8 +282,10 @@ const AdminUsers = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-users'] })
+      toast.success('Akun pengguna berhasil dihapus.')
       setDeleteTarget(null)
     },
+    onError: () => toast.error('Gagal menghapus akun pengguna.'),
   })
 
   return (

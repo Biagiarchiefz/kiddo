@@ -17,6 +17,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 import { supabase } from '@/utils/supabase'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import type { Unit, Module } from '@/types/database'
@@ -230,7 +231,13 @@ const AdminUnits = () => {
         if (error) throw error
       }
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-units', mid] }); setDialogOpen(false); setEditTarget(null) },
+    onSuccess: (_, { id }) => {
+      qc.invalidateQueries({ queryKey: ['admin-units', mid] })
+      toast.success(id ? 'Unit berhasil diperbarui.' : 'Unit berhasil ditambahkan.')
+      setDialogOpen(false)
+      setEditTarget(null)
+    },
+    onError: () => toast.error('Gagal menyimpan unit.'),
   })
 
   const del = useMutation({
@@ -238,7 +245,12 @@ const AdminUnits = () => {
       const { error } = await supabase.from('units').delete().eq('id', id)
       if (error) throw error
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-units', mid] }); setDeleteTarget(null) },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-units', mid] })
+      toast.success('Unit berhasil dihapus.')
+      setDeleteTarget(null)
+    },
+    onError: () => toast.error('Gagal menghapus unit.'),
   })
 
   const saveContent = useMutation({
@@ -246,7 +258,12 @@ const AdminUnits = () => {
       const { error } = await supabase.from('units').update({ markdown_content: content }).eq('id', id)
       if (error) throw error
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-units', mid] }); setContentTarget(null) },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-units', mid] })
+      toast.success('Konten unit berhasil disimpan.')
+      setContentTarget(null)
+    },
+    onError: () => toast.error('Gagal menyimpan konten unit.'),
   })
 
   return (

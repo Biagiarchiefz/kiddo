@@ -1,7 +1,9 @@
-﻿import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import { Plus, Pencil, Trash2, ChevronRight, BookOpen, LayoutGrid, Search } from 'lucide-react'
+import { Plus, Pencil, Trash2, ChevronRight, BookOpen, LayoutGrid, Search, Upload, X } from 'lucide-react'
+import imageCompression from 'browser-image-compression'
+import { toast } from 'sonner'
 import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -31,28 +33,45 @@ async function fetchModules(): Promise<Module[]> {
   return data ?? []
 }
 
+async function uploadModuleImage(file: File): Promise<string> {
+  const compressed = await imageCompression(file, {
+    maxSizeMB: 1,
+    maxWidthOrHeight: 1080,
+    fileType: 'image/webp',
+    useWebWorker: true,
+  })
+  const ext = 'webp'
+  const path = `modules/${Date.now()}.${ext}`
+  const { error: uploadError } = await supabase.storage
+    .from('module-images')
+    .upload(path, compressed, { contentType: 'image/webp', upsert: false })
+  if (uploadError) throw uploadError
+  const { data } = supabase.storage.from('module-images').getPublicUrl(path)
+  return data.publicUrl
+}
+
 type ModuleForm = {
   title: string
   description: string
-  emoji: string
   level: number
   sort_order: number
   header_bg: string
   progress_color: string
   badge_color: string
   is_published: boolean
+  image_url: string | null
 }
 
 const emptyForm = (): ModuleForm => ({
   title: '',
   description: '',
-  emoji: '📚',
   level: 1,
   sort_order: 0,
   header_bg: 'bg-sky-200',
   progress_color: 'bg-primary',
   badge_color: 'bg-primary text-white',
   is_published: false,
+  image_url: null,
 })
 
 // ── Module Form Dialog ────────────────────────────────────────────────────────
@@ -68,15 +87,48 @@ interface ModuleDialogProps {
 const ModuleDialog = ({ open, onClose, initial, onSave, saving }: ModuleDialogProps) => {
   const [form, setForm] = useState<ModuleForm>(
     initial
-      ? { title: initial.title, description: initial.description, emoji: initial.emoji,
-          level: initial.level, sort_order: initial.sort_order, header_bg: initial.header_bg,
-          progress_color: initial.progress_color, badge_color: initial.badge_color,
-          is_published: initial.is_published }
+      ? {
+          title: initial.title,
+          description: initial.description,
+          level: initial.level,
+          sort_order: initial.sort_order,
+          header_bg: initial.header_bg,
+          progress_color: initial.progress_color,
+          badge_color: initial.badge_color,
+          is_published: initial.is_published,
+          image_url: initial.image_url ?? null,
+        }
       : emptyForm()
   )
+  const [uploading, setUploading] = useState(false)
+  const [preview, setPreview] = useState<string | null>(initial?.image_url ?? null)
+  const fileRef = useRef<HTMLInputElement>(null)
 
-  const set = (k: keyof ModuleForm, v: string | number | boolean) =>
+  const set = (k: keyof ModuleForm, v: string | number | boolean | null) =>
     setForm(prev => ({ ...prev, [k]: v }))
+
+  const handleFile = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+    setUploading(true)
+    try {
+      const url = await uploadModuleImage(file)
+      setPreview(url)
+      set('image_url', url)
+    } catch (err) {
+      console.error('Upload gagal:', err)
+    } finally {
+      setUploading(false)
+      if (fileRef.current) fileRef.current.value = ''
+    }
+  }
+
+  const removeImage = () => {
+    setPreview(null)
+    set('image_url', null)
+  }
+
+  const isBusy = saving || uploading
 
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
@@ -85,16 +137,48 @@ const ModuleDialog = ({ open, onClose, initial, onSave, saving }: ModuleDialogPr
           <DialogTitle>{initial ? 'Edit Modul' : 'Tambah Modul'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-3 py-2">
-          <div className="grid grid-cols-[1fr_80px] gap-3">
-            <div className="space-y-1">
-              <Label htmlFor="title">Judul</Label>
-              <Input id="title" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Judul modul" />
-            </div>
-            <div className="space-y-1">
-              <Label htmlFor="emoji">Emoji</Label>
-              <Input id="emoji" value={form.emoji} onChange={e => set('emoji', e.target.value)} placeholder="📚" className="text-center text-lg" />
-            </div>
+          <div className="space-y-1">
+            <Label htmlFor="title">Judul</Label>
+            <Input id="title" value={form.title} onChange={e => set('title', e.target.value)} placeholder="Judul modul" />
           </div>
+
+          {/* Image upload */}
+          <div className="space-y-1">
+            <Label>Gambar Modul</Label>
+            {preview ? (
+              <div className="relative w-full h-36 rounded-xl overflow-hidden border border-border">
+                <img src={preview} alt="preview" className="w-full h-full object-cover" />
+                <button
+                  type="button"
+                  onClick={removeImage}
+                  className="absolute top-2 right-2 w-6 h-6 rounded-full bg-black/50 flex items-center justify-center text-white hover:bg-black/70 transition-colors"
+                >
+                  <X className="w-3.5 h-3.5" />
+                </button>
+              </div>
+            ) : (
+              <button
+                type="button"
+                onClick={() => fileRef.current?.click()}
+                disabled={uploading}
+                className="w-full h-24 rounded-xl border-2 border-dashed border-border flex flex-col items-center justify-center gap-1.5 text-muted-foreground hover:border-primary hover:text-primary transition-colors disabled:opacity-50"
+              >
+                <Upload className="w-5 h-5" />
+                <span className="text-xs font-medium">
+                  {uploading ? 'Mengupload...' : 'Klik untuk upload gambar'}
+                </span>
+                <span className="text-[10px]">JPG, PNG, WebP — maks. 5MB</span>
+              </button>
+            )}
+            <input
+              ref={fileRef}
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={handleFile}
+            />
+          </div>
+
           <div className="space-y-1">
             <Label htmlFor="desc">Deskripsi</Label>
             <Input id="desc" value={form.description} onChange={e => set('description', e.target.value)} placeholder="Deskripsi singkat modul" />
@@ -121,9 +205,9 @@ const ModuleDialog = ({ open, onClose, initial, onSave, saving }: ModuleDialogPr
           </div>
         </div>
         <DialogFooter>
-          <Button variant="outline" onClick={onClose} disabled={saving}>Batal</Button>
-          <Button onClick={() => onSave(form, initial?.id)} disabled={saving || !form.title}>
-            {saving ? 'Menyimpan...' : 'Simpan'}
+          <Button variant="outline" onClick={onClose} disabled={isBusy}>Batal</Button>
+          <Button onClick={() => onSave(form, initial?.id)} disabled={isBusy || !form.title}>
+            {uploading ? 'Mengupload...' : saving ? 'Menyimpan...' : 'Simpan'}
           </Button>
         </DialogFooter>
       </DialogContent>
@@ -162,19 +246,23 @@ const AdminModules = () => {
 
   const upsert = useMutation({
     mutationFn: async ({ form, id }: { form: ModuleForm; id?: number }) => {
+      const payload = { ...form, emoji: '' }
       if (id) {
-        const { error } = await supabase.from('modules').update(form).eq('id', id)
+        const { error } = await supabase.from('modules').update(payload).eq('id', id)
         if (error) throw error
       } else {
-        const { error } = await supabase.from('modules').insert(form)
+        const { error } = await supabase.from('modules').insert(payload)
         if (error) throw error
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ['admin-modules'] })
+      qc.invalidateQueries({ queryKey: ['admin-sidebar-modules'] })
+      toast.success(id ? 'Modul berhasil diperbarui.' : 'Modul berhasil ditambahkan.')
       setDialogOpen(false)
       setEditTarget(null)
     },
+    onError: () => toast.error('Gagal menyimpan modul.'),
   })
 
   const del = useMutation({
@@ -184,8 +272,10 @@ const AdminModules = () => {
     },
     onSuccess: () => {
       qc.invalidateQueries({ queryKey: ['admin-modules'] })
+      toast.success('Modul berhasil dihapus.')
       setDeleteTarget(null)
     },
+    onError: () => toast.error('Gagal menghapus modul.'),
   })
 
   const openCreate = () => { setEditTarget(null); setDialogOpen(true) }
@@ -225,7 +315,7 @@ const AdminModules = () => {
         <Card className="border border-border overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-3 bg-muted/50 border-b border-border text-xs font-bold text-muted-foreground uppercase tracking-wide">
             <span className="w-8">#</span>
-            <span className="w-10">Emoji</span>
+            <span className="w-14">Gambar</span>
             <span className="flex-1">Judul</span>
             <span className="w-14 text-center">Level</span>
             <span className="w-20 text-center">Status</span>
@@ -236,7 +326,7 @@ const AdminModules = () => {
               ? Array.from({ length: 3 }).map((_, i) => (
                   <div key={i} className="flex items-center gap-3 px-5 py-3.5 border-b border-border last:border-0">
                     <Skeleton className="w-8 h-4" />
-                    <Skeleton className="w-8 h-8 rounded" />
+                    <Skeleton className="w-10 h-10 rounded-lg" />
                     <Skeleton className="flex-1 h-4" />
                     <Skeleton className="w-14 h-6 rounded-full" />
                     <Skeleton className="w-20 h-6 rounded-full" />
@@ -246,7 +336,19 @@ const AdminModules = () => {
               : paginated.map((m, i) => (
                   <div key={m.id} className={`flex items-center gap-3 px-5 py-3.5 ${i < paginated.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/20 transition-colors`}>
                     <span className="w-8 text-sm text-muted-foreground font-mono">{m.sort_order}</span>
-                    <span className="w-10 text-2xl text-center">{m.emoji}</span>
+                    <div className="w-14 shrink-0">
+                      {m.image_url ? (
+                        <img
+                          src={m.image_url}
+                          alt={m.title}
+                          className="w-10 h-10 rounded-lg object-cover border border-border"
+                        />
+                      ) : (
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center text-xl ${m.header_bg}`}>
+                          {m.emoji || '📚'}
+                        </div>
+                      )}
+                    </div>
                     <div className="flex-1 min-w-0">
                       <p className="text-sm font-semibold text-foreground truncate">{m.title}</p>
                       <p className="text-xs text-muted-foreground truncate">{m.description}</p>

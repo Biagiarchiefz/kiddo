@@ -7,6 +7,7 @@ import { TooltipProvider } from '@/components/ui/tooltip'
 import { AuthProvider } from '@/contexts/AuthContext'
 import { BreadcrumbProvider } from '@/contexts/BreadcrumbContext'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
+import { Toaster } from '@/components/ui/sonner'
 
 const queryClient = new QueryClient()
 
@@ -17,6 +18,7 @@ createRoot(document.getElementById('root')!).render(
         <BreadcrumbProvider>
           <TooltipProvider>
             <RouterProvider router={router} />
+            <Toaster position="bottom-right" closeButton />
           </TooltipProvider>
         </BreadcrumbProvider>
       </AuthProvider>

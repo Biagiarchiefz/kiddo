@@ -1,4 +1,5 @@
 import { ArrowLeft, Lightbulb, ChevronRight, Zap, Trophy, RotateCcw, BookOpen, CheckCircle2, XCircle } from 'lucide-react'
+import { Input } from '@/components/ui/input'
 import { Link } from 'react-router'
 import { motion, AnimatePresence } from 'framer-motion'
 import AppLayout from '@/components/layouts/AppLayout/AppLayout'
@@ -337,10 +338,22 @@ const QuizKilat = () => {
                 >
                   <Card className="shadow-sm">
                     <CardContent className="p-5 space-y-4">
-                      {/* Category badge */}
-                      <span className="inline-block bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                        {currentQuestion.category}
-                      </span>
+                      {/* Badges */}
+                      <div className="flex items-center gap-2 flex-wrap">
+                        <span className="inline-block bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
+                          {currentQuestion.category || 'Umum'}
+                        </span>
+                        <span className={cn(
+                          'inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-full border',
+                          currentQuestion.question_type === 'pilihan_ganda' && 'bg-sky-50 border-sky-100 text-sky-600',
+                          currentQuestion.question_type === 'benar_salah' && 'bg-green-50 border-green-100 text-green-600',
+                          currentQuestion.question_type === 'isian_singkat' && 'bg-purple-50 border-purple-100 text-purple-600',
+                        )}>
+                          {currentQuestion.question_type === 'pilihan_ganda' ? '📝 Pilihan Ganda'
+                            : currentQuestion.question_type === 'benar_salah' ? '✓✗ Benar/Salah'
+                            : '✏️ Isian Singkat'}
+                        </span>
+                      </div>
 
                       {/* Question text */}
                       <p className="text-base font-semibold text-foreground leading-relaxed">
@@ -383,33 +396,73 @@ const QuizKilat = () => {
                         </>
                       )}
 
-                      {/* Answer options */}
-                      <div className="grid grid-cols-2 gap-2.5">
-                        {currentQuestion.question_options.map(opt => {
-                          const isSelected = selectedAnswer === opt.option_key
-                          return (
-                            <motion.button
-                              key={opt.option_key}
-                              whileTap={{ scale: 0.97 }}
-                              onClick={() => selectAnswer(opt.option_key)}
-                              className={cn(
-                                'flex items-center gap-3 p-3.5 rounded-xl border-2 text-left text-sm font-medium transition-all duration-150',
-                                isSelected
-                                  ? 'border-primary bg-primary/5 text-primary shadow-sm'
-                                  : 'border-border hover:border-primary/40 hover:bg-muted/30 text-foreground'
-                              )}
-                            >
-                              <span className={cn(
-                                'w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors',
-                                isSelected ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
-                              )}>
-                                {opt.option_key}
-                              </span>
-                              {opt.text}
-                            </motion.button>
-                          )
-                        })}
-                      </div>
+                      {/* Answer options — per question type */}
+                      {currentQuestion.question_type === 'pilihan_ganda' && (
+                        <div className="grid grid-cols-2 gap-2.5">
+                          {currentQuestion.question_options.map(opt => {
+                            const isSelected = selectedAnswer === opt.option_key
+                            return (
+                              <motion.button
+                                key={opt.option_key}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={() => selectAnswer(opt.option_key)}
+                                className={cn(
+                                  'flex items-center gap-3 p-3.5 rounded-xl border-2 text-left text-sm font-medium transition-all duration-150',
+                                  isSelected
+                                    ? 'border-primary bg-primary/5 text-primary shadow-sm'
+                                    : 'border-border hover:border-primary/40 hover:bg-muted/30 text-foreground'
+                                )}
+                              >
+                                <span className={cn(
+                                  'w-6 h-6 rounded-lg flex items-center justify-center font-bold text-xs shrink-0 transition-colors',
+                                  isSelected ? 'bg-primary text-white' : 'bg-muted text-muted-foreground'
+                                )}>
+                                  {opt.option_key}
+                                </span>
+                                {opt.text}
+                              </motion.button>
+                            )
+                          })}
+                        </div>
+                      )}
+
+                      {currentQuestion.question_type === 'benar_salah' && (
+                        <div className="grid grid-cols-2 gap-3">
+                          {[
+                            { key: 'benar', label: 'Benar', icon: '✓', active: 'border-green-500 bg-green-50 text-green-700' },
+                            { key: 'salah', label: 'Salah', icon: '✗', active: 'border-red-400 bg-red-50 text-red-600' },
+                          ].map(opt => {
+                            const isSelected = selectedAnswer === opt.key
+                            return (
+                              <motion.button
+                                key={opt.key}
+                                whileTap={{ scale: 0.97 }}
+                                onClick={() => selectAnswer(opt.key)}
+                                className={cn(
+                                  'flex flex-col items-center justify-center gap-1.5 p-5 rounded-xl border-2 text-sm font-bold transition-all duration-150',
+                                  isSelected ? opt.active : 'border-border hover:border-muted-foreground/40 text-foreground'
+                                )}
+                              >
+                                <span className="text-2xl">{opt.icon}</span>
+                                {opt.label}
+                              </motion.button>
+                            )
+                          })}
+                        </div>
+                      )}
+
+                      {currentQuestion.question_type === 'isian_singkat' && (
+                        <div className="space-y-2">
+                          <p className="text-xs text-muted-foreground">Ketik jawabanmu:</p>
+                          <Input
+                            value={selectedAnswer ?? ''}
+                            onChange={e => selectAnswer(e.target.value)}
+                            placeholder="Tulis jawaban di sini..."
+                            className="h-12 rounded-xl text-base"
+                            onKeyDown={e => e.key === 'Enter' && selectedAnswer && submitAndNext()}
+                          />
+                        </div>
+                      )}
                     </CardContent>
                   </Card>
                 </motion.div>

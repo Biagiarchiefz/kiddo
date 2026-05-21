@@ -15,6 +15,7 @@ import {
   AlertDialog, AlertDialogAction, AlertDialogCancel, AlertDialogContent,
   AlertDialogDescription, AlertDialogFooter, AlertDialogHeader, AlertDialogTitle,
 } from '@/components/ui/alert-dialog'
+import { toast } from 'sonner'
 import { supabase } from '@/utils/supabase'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
 import type { Question, QuestionOption, Unit } from '@/types/database'
@@ -43,9 +44,11 @@ async function fetchQuestions(unitId: number): Promise<QuestionWithOptions[]> {
 
 // ── Question Form ─────────────────────────────────────────────────────────────
 
+type QuestionType = 'pilihan_ganda' | 'benar_salah' | 'isian_singkat'
 type OptionDraft = { key: string; text: string }
 
 type QuestionForm = {
+  question_type: QuestionType
   category: string
   question: string
   hint: string
@@ -54,19 +57,26 @@ type QuestionForm = {
   options: OptionDraft[]
 }
 
+const defaultOptions = (): OptionDraft[] => [
+  { key: 'a', text: '' }, { key: 'b', text: '' },
+  { key: 'c', text: '' }, { key: 'd', text: '' },
+]
+
 const emptyForm = (): QuestionForm => ({
-  category: 'pilihan_ganda',
+  question_type: 'pilihan_ganda',
+  category: '',
   question: '',
   hint: '',
   correct: 'a',
   xp_reward: 10,
-  options: [
-    { key: 'a', text: '' },
-    { key: 'b', text: '' },
-    { key: 'c', text: '' },
-    { key: 'd', text: '' },
-  ],
+  options: defaultOptions(),
 })
+
+const correctDefault: Record<QuestionType, string> = {
+  pilihan_ganda: 'a',
+  benar_salah: 'benar',
+  isian_singkat: '',
+}
 
 interface QuestionDialogProps {
   open: boolean
@@ -76,18 +86,23 @@ interface QuestionDialogProps {
   saving: boolean
 }
 
+const selectClass = 'flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+
 const QuestionDialog = ({ open, onClose, initial, onSave, saving }: QuestionDialogProps) => {
   const [form, setForm] = useState<QuestionForm>(
     initial
       ? {
+          question_type: (initial.question_type as QuestionType) ?? 'pilihan_ganda',
           category: initial.category,
           question: initial.question,
           hint: initial.hint ?? '',
           correct: initial.correct,
           xp_reward: initial.xp_reward,
-          options: initial.question_options.length > 0
-            ? initial.question_options.map(o => ({ key: o.option_key, text: o.text }))
-            : emptyForm().options,
+          options: initial.question_type === 'pilihan_ganda'
+            ? (initial.question_options.length > 0
+                ? initial.question_options.map(o => ({ key: o.option_key, text: o.text }))
+                : defaultOptions())
+            : [],
         }
       : emptyForm()
   )
@@ -98,6 +113,15 @@ const QuestionDialog = ({ open, onClose, initial, onSave, saving }: QuestionDial
   const setOption = (idx: number, text: string) =>
     setForm(prev => ({ ...prev, options: prev.options.map((o, i) => i === idx ? { ...o, text } : o) }))
 
+  const handleTypeChange = (newType: QuestionType) => {
+    setForm(prev => ({
+      ...prev,
+      question_type: newType,
+      correct: correctDefault[newType],
+      options: newType === 'pilihan_ganda' ? defaultOptions() : [],
+    }))
+  }
+
   return (
     <Dialog open={open} onOpenChange={v => !v && onClose()}>
       <DialogContent className="max-w-xl max-h-[90vh] overflow-y-auto">
@@ -105,17 +129,19 @@ const QuestionDialog = ({ open, onClose, initial, onSave, saving }: QuestionDial
           <DialogTitle>{initial ? 'Edit Soal' : 'Tambah Soal'}</DialogTitle>
         </DialogHeader>
         <div className="space-y-4 py-2">
+
+          {/* Row 1: Tipe Soal + XP */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <Label>Kategori</Label>
+              <Label>Tipe Soal</Label>
               <select
-                value={form.category}
-                onChange={e => set('category', e.target.value)}
-                className="flex h-9 w-full rounded-md border border-input bg-transparent px-3 py-1 text-sm shadow-sm transition-colors focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                value={form.question_type}
+                onChange={e => handleTypeChange(e.target.value as QuestionType)}
+                className={selectClass}
               >
                 <option value="pilihan_ganda">Pilihan Ganda</option>
                 <option value="benar_salah">Benar / Salah</option>
-                <option value="isian">Isian Singkat</option>
+                <option value="isian_singkat">Isian Singkat</option>
               </select>
             </div>
             <div className="space-y-1">
@@ -123,43 +149,95 @@ const QuestionDialog = ({ open, onClose, initial, onSave, saving }: QuestionDial
               <Input type="number" min={0} value={form.xp_reward} onChange={e => set('xp_reward', Number(e.target.value))} />
             </div>
           </div>
+
+          {/* Topik */}
+          <div className="space-y-1">
+            <Label>Topik / Kategori</Label>
+            <Input value={form.category} onChange={e => set('category', e.target.value)} placeholder="Contoh: Matematika, Sains, Bahasa..." />
+          </div>
+
+          {/* Pertanyaan */}
           <div className="space-y-1">
             <Label>Pertanyaan</Label>
             <Input value={form.question} onChange={e => set('question', e.target.value)} placeholder="Teks pertanyaan..." />
           </div>
+
+          {/* Hint */}
           <div className="space-y-1">
             <Label>Hint (opsional)</Label>
             <Input value={form.hint} onChange={e => set('hint', e.target.value)} placeholder="Petunjuk untuk siswa..." />
           </div>
 
-          {/* Options */}
-          <div className="space-y-2">
-            <Label>Pilihan Jawaban</Label>
-            {form.options.map((opt, i) => (
-              <div key={opt.key} className="flex items-center gap-2">
-                <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${form.correct === opt.key ? 'bg-green-500 text-white' : 'bg-muted text-muted-foreground'}`}>
-                  {opt.key.toUpperCase()}
-                </span>
-                <Input
-                  value={opt.text}
-                  onChange={e => setOption(i, e.target.value)}
-                  placeholder={`Opsi ${opt.key.toUpperCase()}`}
-                  className="flex-1"
-                />
-                <button
-                  type="button"
-                  onClick={() => set('correct', opt.key)}
-                  className={`text-xs px-2 py-1 rounded-md font-semibold shrink-0 transition-colors ${form.correct === opt.key ? 'bg-green-100 text-green-700' : 'text-muted-foreground hover:bg-muted'}`}
-                >
-                  {form.correct === opt.key ? '✓ Benar' : 'Benar?'}
-                </button>
+          {/* Pilihan Ganda — 4 opsi */}
+          {form.question_type === 'pilihan_ganda' && (
+            <div className="space-y-2">
+              <Label>Pilihan Jawaban</Label>
+              {form.options.map((opt, i) => (
+                <div key={opt.key} className="flex items-center gap-2">
+                  <span className={`w-7 h-7 rounded-lg flex items-center justify-center text-xs font-black shrink-0 ${form.correct === opt.key ? 'bg-green-500 text-white' : 'bg-muted text-muted-foreground'}`}>
+                    {opt.key.toUpperCase()}
+                  </span>
+                  <Input
+                    value={opt.text}
+                    onChange={e => setOption(i, e.target.value)}
+                    placeholder={`Opsi ${opt.key.toUpperCase()}`}
+                    className="flex-1"
+                  />
+                  <button
+                    type="button"
+                    onClick={() => set('correct', opt.key)}
+                    className={`text-xs px-2 py-1 rounded-md font-semibold shrink-0 transition-colors ${form.correct === opt.key ? 'bg-green-100 text-green-700' : 'text-muted-foreground hover:bg-muted'}`}
+                  >
+                    {form.correct === opt.key ? '✓ Benar' : 'Benar?'}
+                  </button>
+                </div>
+              ))}
+            </div>
+          )}
+
+          {/* Benar / Salah */}
+          {form.question_type === 'benar_salah' && (
+            <div className="space-y-2">
+              <Label>Jawaban yang Benar</Label>
+              <div className="grid grid-cols-2 gap-3">
+                {(['benar', 'salah'] as const).map(val => (
+                  <button
+                    key={val}
+                    type="button"
+                    onClick={() => set('correct', val)}
+                    className={`py-3 rounded-xl border-2 text-sm font-bold transition-colors capitalize ${
+                      form.correct === val
+                        ? val === 'benar' ? 'border-green-500 bg-green-50 text-green-700' : 'border-red-400 bg-red-50 text-red-600'
+                        : 'border-border text-muted-foreground hover:border-muted-foreground/50'
+                    }`}
+                  >
+                    {val === 'benar' ? '✓ Benar' : '✗ Salah'}
+                  </button>
+                ))}
               </div>
-            ))}
-          </div>
+            </div>
+          )}
+
+          {/* Isian Singkat */}
+          {form.question_type === 'isian_singkat' && (
+            <div className="space-y-1">
+              <Label>Jawaban yang Benar</Label>
+              <Input
+                value={form.correct}
+                onChange={e => set('correct', e.target.value)}
+                placeholder="Tulis jawaban yang diterima..."
+              />
+              <p className="text-[11px] text-muted-foreground">Jawaban siswa akan dibandingkan tanpa memperhatikan huruf kapital.</p>
+            </div>
+          )}
+
         </div>
         <DialogFooter>
           <Button variant="outline" onClick={onClose} disabled={saving}>Batal</Button>
-          <Button onClick={() => onSave(form, initial?.id)} disabled={saving || !form.question}>
+          <Button
+            onClick={() => onSave(form, initial?.id)}
+            disabled={saving || !form.question || (form.question_type === 'isian_singkat' && !form.correct)}
+          >
             {saving ? 'Menyimpan...' : 'Simpan'}
           </Button>
         </DialogFooter>
@@ -184,7 +262,13 @@ const QuestionRow = ({
         <span className="w-6 text-sm font-mono text-muted-foreground">{idx + 1}</span>
         <div className="flex-1 min-w-0">
           <p className="text-sm font-semibold text-foreground truncate">{q.question}</p>
-          <p className="text-xs text-muted-foreground">{q.category} · Jawaban: <span className="font-bold text-green-600">{q.correct.toUpperCase()}</span></p>
+          <p className="text-xs text-muted-foreground">
+            <span className="font-semibold">{q.question_type === 'pilihan_ganda' ? 'PG' : q.question_type === 'benar_salah' ? 'B/S' : 'Isian'}</span>
+            {q.category ? ` · ${q.category}` : ''} · Jawaban:{' '}
+            <span className="font-bold text-green-600">
+              {q.question_type === 'isian_singkat' ? q.correct : q.correct.toUpperCase()}
+            </span>
+          </p>
         </div>
         <span className="text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full shrink-0">{q.xp_reward} XP</span>
         <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground shrink-0" onClick={() => setExpanded(v => !v)}>
@@ -237,6 +321,7 @@ const AdminQuestions = () => {
       let questionId = id
       const payload = {
         unit_id: uid,
+        question_type: form.question_type,
         category: form.category,
         question: form.question,
         hint: form.hint || null,
@@ -263,11 +348,13 @@ const AdminQuestions = () => {
         if (error) throw error
       }
     },
-    onSuccess: () => {
+    onSuccess: (_, { id }) => {
       qc.invalidateQueries({ queryKey: ['admin-questions', uid] })
+      toast.success(id ? 'Soal berhasil diperbarui.' : 'Soal berhasil ditambahkan.')
       setDialogOpen(false)
       setEditTarget(null)
     },
+    onError: () => toast.error('Gagal menyimpan soal.'),
   })
 
   const del = useMutation({
@@ -276,7 +363,12 @@ const AdminQuestions = () => {
       const { error } = await supabase.from('questions').delete().eq('id', id)
       if (error) throw error
     },
-    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-questions', uid] }); setDeleteTarget(null) },
+    onSuccess: () => {
+      qc.invalidateQueries({ queryKey: ['admin-questions', uid] })
+      toast.success('Soal berhasil dihapus.')
+      setDeleteTarget(null)
+    },
+    onError: () => toast.error('Gagal menghapus soal.'),
   })
 
   return (

@@ -90,10 +90,7 @@ const AdminSidebar = () => {
     <Sidebar collapsible="offcanvas">
 
       <SidebarHeader className="px-4 py-3 gap-3">
-        <Link to="/admin">
-          <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" />
-        </Link>
-
+      
         {profileLoading ? (
           <div className="flex items-center gap-2 mt-1">
             <Skeleton className="w-9 h-9 rounded-full shrink-0 bg-white/20" />

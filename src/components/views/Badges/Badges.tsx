@@ -16,7 +16,7 @@ const fadeUp = {
 }
 
 const BadgeSkeleton = () => (
-  <Card className="overflow-hidden">
+  <Card className="overflow-hidden pt-0">
     <Skeleton className="h-32 w-full rounded-none" />
     <CardContent className="p-4 space-y-2">
       <Skeleton className="h-4 w-3/4 mx-auto" />
@@ -51,7 +51,7 @@ const BadgeCard = ({ badge, index }: { badge: BadgeItem; index: number }) => {
       whileHover={badge.earned ? { y: -4, transition: { type: 'spring' as const, stiffness: 300, damping: 20 } } : {}}
     >
       <Card className={cn(
-        'overflow-hidden transition-all duration-300',
+        'overflow-hidden transition-all duration-300 pt-0',
         badge.earned
           ? 'ring-2 ring-amber-300 shadow-[3px_4px_0px_0px_rgba(245,158,11,0.25)]'
           : 'opacity-60 grayscale'

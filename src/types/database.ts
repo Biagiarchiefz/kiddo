@@ -1,6 +1,9 @@
+export type QuestionType = 'pilihan_ganda' | 'benar_salah' | 'isian_singkat'
+
 export interface Question {
   id: number
   unit_id: number | null
+  question_type: QuestionType
   category: string
   question: string
   hint: string | null
@@ -21,6 +24,7 @@ export interface Module {
   title: string
   description: string
   emoji: string
+  image_url: string | null
   level: number
   header_bg: string
   progress_color: string

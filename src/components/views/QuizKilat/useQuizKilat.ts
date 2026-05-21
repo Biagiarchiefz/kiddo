@@ -18,6 +18,7 @@ export interface QuestionOption {
 export interface QuestionWithOptions {
   id: number
   unit_id: number
+  question_type: 'pilihan_ganda' | 'benar_salah' | 'isian_singkat'
   category: string
   question: string
   hint: string | null
@@ -134,7 +135,10 @@ export const useQuizKilat = () => {
 
     try {
       const sessionId = await ensureSession()
-      const isCorrect = selectedAnswer === currentQuestion.correct
+      const normalize = (s: string) => s.trim().toLowerCase()
+      const isCorrect = currentQuestion.question_type === 'isian_singkat'
+        ? normalize(selectedAnswer) === normalize(currentQuestion.correct)
+        : selectedAnswer === currentQuestion.correct
 
       // Insert attempt — the DB trigger handles XP + progress automatically
       const { error } = await supabase.from('quiz_attempts').insert({
