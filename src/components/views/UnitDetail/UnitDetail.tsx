@@ -56,7 +56,7 @@ const UnitDetailSkeleton = () => (
 // ── Main Component ────────────────────────────────────────────────────────────
 
 const UnitDetail = () => {
-  const { module, unit, content, questionCount, progress, isLoading } = useUnitDetail()
+  const { module, unit, questionCount, progress, isLoading } = useUnitDetail()
 
   if (isLoading) return <UnitDetailSkeleton />
 
