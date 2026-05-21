@@ -30,6 +30,7 @@ async function fetchLeaderboard() {
   const { data, error } = await supabase
     .from('profiles')
     .select('id, username, school, total_xp, level')
+    .eq('role', 'user')
     .order('total_xp', { ascending: false })
 
   if (error) throw error

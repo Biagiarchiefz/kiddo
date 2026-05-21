@@ -1,8 +1,8 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { useParams } from 'react-router'
 import { Plus, Pencil, Trash2, HelpCircle, ChevronDown, ChevronUp } from 'lucide-react'
-import AppLayout from '@/components/layouts/AppLayout/AppLayout'
+import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -272,7 +272,7 @@ const AdminQuestions = () => {
   })
 
   return (
-    <AppLayout>
+    <AdminLayout>
       <div className="space-y-5">
         <div className="flex items-center justify-between">
           <div className="flex items-center gap-3">
@@ -341,7 +341,7 @@ const AdminQuestions = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </AdminLayout>
   )
 }
 

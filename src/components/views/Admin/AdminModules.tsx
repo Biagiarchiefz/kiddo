@@ -1,8 +1,8 @@
-import { useState } from 'react'
+﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { Plus, Pencil, Trash2, ChevronRight, BookOpen, LayoutGrid } from 'lucide-react'
-import AppLayout from '@/components/layouts/AppLayout/AppLayout'
+import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
@@ -178,7 +178,7 @@ const AdminModules = () => {
   const openEdit = (m: Module) => { setEditTarget(m); setDialogOpen(true) }
 
   return (
-    <AppLayout>
+    <AdminLayout>
       <div className="space-y-5">
         {/* Header */}
         <div className="flex items-center justify-between">
@@ -284,7 +284,7 @@ const AdminModules = () => {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </AppLayout>
+    </AdminLayout>
   )
 }
 

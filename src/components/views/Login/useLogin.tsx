@@ -18,7 +18,7 @@ export const useLogin = () => {
     setLoading(true)
     setError(null)
 
-    const { error } = await supabase.auth.signInWithPassword({
+    const { data, error } = await supabase.auth.signInWithPassword({
       email: form.email,
       password: form.password,
     })
@@ -26,7 +26,12 @@ export const useLogin = () => {
     if (error) {
       setError('Email atau password salah. Coba lagi.')
     } else {
-      navigate('/dashboard')
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('role')
+        .eq('id', data.user.id)
+        .single()
+      navigate(profile?.role === 'admin' ? '/admin' : '/dashboard')
     }
 
     setLoading(false)

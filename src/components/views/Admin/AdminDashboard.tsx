@@ -1,7 +1,7 @@
-import { useQuery } from '@tanstack/react-query'
+﻿import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
 import { Users, BookOpen, HelpCircle, LayoutDashboard, ChevronRight } from 'lucide-react'
-import AppLayout from '@/components/layouts/AppLayout/AppLayout'
+import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
@@ -48,7 +48,7 @@ const AdminDashboard = () => {
   })
 
   return (
-    <AppLayout>
+    <AdminLayout>
       <div className="space-y-6">
         {/* Header */}
         <div className="flex items-center gap-3">
@@ -133,7 +133,7 @@ const AdminDashboard = () => {
           ))}
         </div>
       </div>
-    </AppLayout>
+    </AdminLayout>
   )
 }
 

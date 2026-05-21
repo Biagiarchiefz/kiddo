@@ -1,4 +1,4 @@
-import { Rocket, ClipboardList, Medal, Trophy, HelpCircle, LogOut, Lock, ShieldCheck } from 'lucide-react'
+import { Rocket, ClipboardList, Medal, Trophy, HelpCircle, LogOut, Lock } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import { Button } from '@/components/ui/button'
@@ -69,7 +69,6 @@ const AppSidebar = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { profile, isLoading } = useProfile()
-  const isAdmin = profile?.role === 'admin'
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
@@ -141,29 +140,6 @@ const AppSidebar = () => {
           })}
         </SidebarMenu>
       </SidebarContent>
-
-      {/* Admin link — only visible for admins */}
-      {isAdmin && (
-        <>
-          <Divider />
-          <SidebarContent className="px-2 py-2">
-            <SidebarMenu>
-              <SidebarMenuItem>
-                <SidebarMenuButton
-                  asChild
-                  isActive={pathname.startsWith('/admin')}
-                  className="h-10 rounded-lg font-semibold text-amber-700 data-[active=true]:bg-amber-500 data-[active=true]:text-white hover:bg-amber-50 hover:text-amber-800"
-                >
-                  <Link to="/admin">
-                    <ShieldCheck className="w-4 h-4" />
-                    <span>Admin Panel</span>
-                  </Link>
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            </SidebarMenu>
-          </SidebarContent>
-        </>
-      )}
 
       <Divider />
 
