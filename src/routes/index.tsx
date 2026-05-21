@@ -34,14 +34,13 @@ export const router = createBrowserRouter([
   {
     element: <AnimatedOutlet />,
     children: [
-      {
-        path: "/",
-        element: <Home />,
-      },
-      // Auth pages — redirect to /dashboard if already logged in
+      // Public pages — redirect to /dashboard if already logged in
       {
         element: <GuestGuard />,
-        children: [...authRoutes],
+        children: [
+          { path: "/", element: <Home /> },
+          ...authRoutes,
+        ],
       },
       // Protected pages — redirect to / if not authenticated
       {
