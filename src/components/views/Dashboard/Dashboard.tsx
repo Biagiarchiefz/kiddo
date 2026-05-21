@@ -110,7 +110,7 @@ const WelcomeModal = ({
           <div>
             <p className="text-muted-foreground text-sm">Halo,</p>
             <p className="text-2xl font-black text-foreground mt-0.5">
-              {username}! 👋
+              {username}!!
             </p>
             <p className="text-muted-foreground text-xs mt-2 leading-relaxed">
               Petualangan belajarmu dimulai sekarang. Kumpulkan XP, selesaikan
@@ -176,7 +176,7 @@ const Dashboard = () => {
                   Selamat Datang Kembali!
                 </p>
                 <h2 className="text-4xl font-bold text-white leading-snug">
-                  Halo, {profile?.username ?? "Pelajar"}! 👋
+                  Halo, {profile?.username ?? "Pelajar"}!!
                 </h2>
                 <p className="text-white text-xs max-w-xs leading-relaxed">
                   Pilih modul di bawah dan lanjutkan petualangan belajarmu.
@@ -185,7 +185,7 @@ const Dashboard = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="rounded-lg gap-1.5 bg-white text-sky-600 hover:bg-sky-50 border-0 font-bold h-8 text-xs"
+                  className="rounded-lg gap-1.5 bg-white text-sky-600 hover:bg-sky-100 [a]:hover:bg-sky-100 hover:text-sky-700 border-0 font-bold h-8 text-xs"
                 >
                   <Link to="/materi/1">Mulai Belajar</Link>
                 </Button>

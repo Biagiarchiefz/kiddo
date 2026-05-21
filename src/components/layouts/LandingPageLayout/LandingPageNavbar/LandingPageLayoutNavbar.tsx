@@ -1,7 +1,7 @@
 import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
-import kiddoLogo from '@/assets/images/kiddoLogo.webp'
+
 
 const navLinks = [
   { label: 'Beranda', href: '/' },

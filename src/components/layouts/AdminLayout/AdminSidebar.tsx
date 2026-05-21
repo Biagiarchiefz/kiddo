@@ -1,96 +1,126 @@
-import { useState } from 'react'
-import { motion } from 'framer-motion'
-import { useQuery } from '@tanstack/react-query'
+import { useState } from "react";
+import { motion } from "framer-motion";
+import { useQuery } from "@tanstack/react-query";
 import {
-  LayoutDashboard, LayoutGrid, Users, LogOut, ExternalLink,
-  ChevronRight, Layers, HelpCircle, ShieldCheck, BookOpen,
-} from 'lucide-react'
-import { Link, useLocation, useNavigate } from 'react-router'
-import kiddoLogo from '@/assets/images/kiddoLogo.webp'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
-import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
-import { supabase } from '@/utils/supabase'
-import { useProfile } from '@/hooks/useProfile'
+  LayoutDashboard,
+  LayoutGrid,
+  Users,
+  LogOut,
+  ExternalLink,
+  ChevronRight,
+  Layers,
+  HelpCircle,
+  ShieldCheck,
+  BookOpen,
+} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
-  Sidebar, SidebarContent, SidebarFooter, SidebarHeader,
-  SidebarMenu, SidebarMenuButton, SidebarMenuItem,
-  SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
-} from '@/components/ui/sidebar'
+  Collapsible,
+  CollapsibleContent,
+  CollapsibleTrigger,
+} from "@/components/ui/collapsible";
+import { supabase } from "@/utils/supabase";
+import { useProfile } from "@/hooks/useProfile";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
+import {
+  Sidebar,
+  SidebarContent,
+  SidebarFooter,
+  SidebarHeader,
+  SidebarMenu,
+  SidebarMenuButton,
+  SidebarMenuItem,
+  SidebarMenuSub,
+  SidebarMenuSubButton,
+  SidebarMenuSubItem,
+} from "@/components/ui/sidebar";
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
 interface ModuleWithUnits {
-  id: number
-  title: string
-  units: { id: number; title: string; sort_order: number }[]
+  id: number;
+  title: string;
+  units: { id: number; title: string; sort_order: number }[];
 }
 
 async function fetchModulesWithUnits(): Promise<ModuleWithUnits[]> {
   const { data, error } = await supabase
-    .from('modules')
-    .select('id, title, units(id, title, sort_order)')
-    .order('sort_order')
-  if (error) throw error
-  return (data ?? []).map(m => ({
+    .from("modules")
+    .select("id, title, units(id, title, sort_order)")
+    .order("sort_order");
+  if (error) throw error;
+  return (data ?? []).map((m) => ({
     ...m,
     units: [...(m.units ?? [])].sort((a, b) => a.sort_order - b.sort_order),
-  }))
+  }));
 }
 
 // ── Shared active pill (animated with layoutId) ───────────────────────────────
 
-const PILL_ID = 'admin-nav-active'
+const PILL_ID = "admin-nav-active";
 
 const ActivePill = () => (
   <motion.div
     layoutId={PILL_ID}
     className="absolute inset-0 bg-white rounded-lg shadow-sm pointer-events-none"
     initial={false}
-    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+    transition={{ type: "spring", stiffness: 420, damping: 36 }}
   />
-)
+);
 
 // ── Divider ───────────────────────────────────────────────────────────────────
 
-const Divider = () => <div className="shrink-0 h-px bg-sidebar-border" />
+const Divider = () => <div className="shrink-0 h-px bg-sidebar-border" />;
 
 // ── Main ──────────────────────────────────────────────────────────────────────
 
 const AdminSidebar = () => {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const { profile, isLoading: profileLoading } = useProfile()
-  const initial = profile?.username?.charAt(0).toUpperCase() ?? 'A'
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { profile, isLoading: profileLoading } = useProfile();
+  const initial = profile?.username?.charAt(0).toUpperCase() ?? "A";
 
   const { data: modules = [], isLoading } = useQuery({
-    queryKey: ['admin-sidebar-modules'],
+    queryKey: ["admin-sidebar-modules"],
     queryFn: fetchModulesWithUnits,
     staleTime: 60_000,
-  })
+  });
 
-  const [openModules, setOpenModules] = useState<Record<number, boolean>>({})
+  const [openModules, setOpenModules] = useState<Record<number, boolean>>({});
   const toggleModule = (id: number) =>
-    setOpenModules(prev => ({ ...prev, [id]: !prev[id] }))
+    setOpenModules((prev) => ({ ...prev, [id]: !prev[id] }));
+
+  const [logoutOpen, setLogoutOpen] = useState(false);
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    navigate('/')
-  }
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
-  const isModulesSection = pathname.startsWith('/admin/modules') || pathname.startsWith('/admin/units')
+  const isModulesSection =
+    pathname.startsWith("/admin/modules") ||
+    pathname.startsWith("/admin/units");
 
   // Active key for sub-items (used to drive the shared pill)
-  const isDashboard   = pathname === '/admin'
-  const isAllModules  = pathname === '/admin/modules'
-  const isUsers       = pathname.startsWith('/admin/users')
+  const isDashboard = pathname === "/admin";
+  const isAllModules = pathname === "/admin/modules";
+  const isUsers = pathname.startsWith("/admin/users");
 
   return (
     <Sidebar collapsible="offcanvas">
-
       <SidebarHeader className="px-4 py-3 gap-3">
-      
         {profileLoading ? (
           <div className="flex items-center gap-2 mt-1">
             <Skeleton className="w-9 h-9 rounded-full shrink-0 bg-white/20" />
@@ -102,13 +132,13 @@ const AdminSidebar = () => {
         ) : (
           <div className="flex items-center gap-2 mt-1">
             <Avatar className="w-9 h-9 shrink-0">
-              <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
+              <AvatarFallback className="bg-yellow-500 text-slate-900 text-xs font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white leading-none truncate">
-                {profile?.username ?? 'Admin'}
+                {profile?.username ?? "Admin"}
               </p>
               <div className="flex items-center gap-1 mt-1">
                 <ShieldCheck className="w-3 h-3 text-white/60 shrink-0" />
@@ -123,7 +153,6 @@ const AdminSidebar = () => {
 
       <SidebarContent className="px-2 py-3">
         <SidebarMenu className="gap-1">
-
           {/* Dashboard */}
           <SidebarMenuItem className="relative">
             {isDashboard && <ActivePill />}
@@ -142,15 +171,22 @@ const AdminSidebar = () => {
           {/* Modul & Unit — collapsible */}
           <Collapsible
             open={isModulesSection || openModules[-1]}
-            onOpenChange={v => setOpenModules(prev => ({ ...prev, [-1]: v }))}
+            onOpenChange={(v) =>
+              setOpenModules((prev) => ({ ...prev, [-1]: v }))
+            }
           >
             <SidebarMenuItem>
               {/* Wrap only the trigger in relative so the pill doesn't cover expanded content */}
               <div className="relative">
-                {isModulesSection && !isAllModules && !modules.some(m =>
-                  pathname === `/admin/modules/${m.id}/units` ||
-                  m.units.some(u => pathname === `/admin/units/${u.id}/questions`)
-                ) && <ActivePill />}
+                {isModulesSection &&
+                  !isAllModules &&
+                  !modules.some(
+                    (m) =>
+                      pathname === `/admin/modules/${m.id}/units` ||
+                      m.units.some(
+                        (u) => pathname === `/admin/units/${u.id}/questions`,
+                      ),
+                  ) && <ActivePill />}
                 <CollapsibleTrigger asChild>
                   <SidebarMenuButton
                     isActive={isModulesSection}
@@ -158,14 +194,15 @@ const AdminSidebar = () => {
                   >
                     <LayoutGrid className="w-4 h-4" />
                     <span className="flex-1">Modul & Unit</span>
-                    <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isModulesSection || openModules[-1] ? 'rotate-90' : ''}`} />
+                    <ChevronRight
+                      className={`w-3.5 h-3.5 transition-transform duration-200 ${isModulesSection || openModules[-1] ? "rotate-90" : ""}`}
+                    />
                   </SidebarMenuButton>
                 </CollapsibleTrigger>
               </div>
 
               <CollapsibleContent>
                 <SidebarMenuSub className="ml-2 mt-1 gap-0.5">
-
                   {/* Semua Modul */}
                   <SidebarMenuSubItem className="relative">
                     {isAllModules && <ActivePill />}
@@ -188,16 +225,23 @@ const AdminSidebar = () => {
                           <Skeleton className="h-7 w-full rounded-lg my-0.5" />
                         </SidebarMenuSubItem>
                       ))
-                    : modules.map(mod => {
-                        const modOpen = !!openModules[mod.id]
-                          || pathname.startsWith(`/admin/modules/${mod.id}`)
-                          || mod.units.some(u => pathname === `/admin/units/${u.id}/questions`)
-                        const isModActive = pathname === `/admin/modules/${mod.id}/units`
+                    : modules.map((mod) => {
+                        const modOpen =
+                          !!openModules[mod.id] ||
+                          pathname.startsWith(`/admin/modules/${mod.id}`) ||
+                          mod.units.some(
+                            (u) =>
+                              pathname === `/admin/units/${u.id}/questions`,
+                          );
+                        const isModActive =
+                          pathname === `/admin/modules/${mod.id}/units`;
 
                         return (
                           <SidebarMenuSubItem key={mod.id}>
-                            <Collapsible open={modOpen} onOpenChange={() => toggleModule(mod.id)}>
-
+                            <Collapsible
+                              open={modOpen}
+                              onOpenChange={() => toggleModule(mod.id)}
+                            >
                               <div className="relative">
                                 {isModActive && <ActivePill />}
                                 <CollapsibleTrigger asChild>
@@ -206,15 +250,18 @@ const AdminSidebar = () => {
                                     className="relative z-10 rounded-lg h-8 font-medium data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
                                   >
                                     <BookOpen className="w-3.5 h-3.5 shrink-0" />
-                                    <span className="flex-1 truncate">{mod.title}</span>
-                                    <ChevronRight className={`w-3 h-3 shrink-0 transition-transform duration-200 ${modOpen ? 'rotate-90' : ''}`} />
+                                    <span className="flex-1 truncate">
+                                      {mod.title}
+                                    </span>
+                                    <ChevronRight
+                                      className={`w-3 h-3 shrink-0 transition-transform duration-200 ${modOpen ? "rotate-90" : ""}`}
+                                    />
                                   </SidebarMenuSubButton>
                                 </CollapsibleTrigger>
                               </div>
 
                               <CollapsibleContent>
                                 <SidebarMenuSub className="ml-2 mt-1 gap-0.5">
-
                                   <SidebarMenuSubItem className="relative">
                                     {isModActive && <ActivePill />}
                                     <SidebarMenuSubButton
@@ -222,40 +269,48 @@ const AdminSidebar = () => {
                                       isActive={isModActive}
                                       className="relative z-10 rounded-lg h-7 text-[11px] data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
                                     >
-                                      <Link to={`/admin/modules/${mod.id}/units`}>
+                                      <Link
+                                        to={`/admin/modules/${mod.id}/units`}
+                                      >
                                         <Layers className="w-3 h-3" />
                                         Kelola Unit
                                       </Link>
                                     </SidebarMenuSubButton>
                                   </SidebarMenuSubItem>
 
-                                  {mod.units.map(unit => {
-                                    const isUnitActive = pathname === `/admin/units/${unit.id}/questions`
+                                  {mod.units.map((unit) => {
+                                    const isUnitActive =
+                                      pathname ===
+                                      `/admin/units/${unit.id}/questions`;
                                     return (
-                                      <SidebarMenuSubItem key={unit.id} className="relative">
+                                      <SidebarMenuSubItem
+                                        key={unit.id}
+                                        className="relative"
+                                      >
                                         {isUnitActive && <ActivePill />}
                                         <SidebarMenuSubButton
                                           asChild
                                           isActive={isUnitActive}
                                           className="relative z-10 rounded-lg h-7 text-[11px] data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
                                         >
-                                          <Link to={`/admin/units/${unit.id}/questions`}>
+                                          <Link
+                                            to={`/admin/units/${unit.id}/questions`}
+                                          >
                                             <HelpCircle className="w-3 h-3 shrink-0" />
-                                            <span className="truncate">{unit.title}</span>
+                                            <span className="truncate">
+                                              {unit.title}
+                                            </span>
                                           </Link>
                                         </SidebarMenuSubButton>
                                       </SidebarMenuSubItem>
-                                    )
+                                    );
                                   })}
-
                                 </SidebarMenuSub>
                               </CollapsibleContent>
                             </Collapsible>
                           </SidebarMenuSubItem>
-                        )
-                      })
-                  }
-
+                        );
+                      })}
                 </SidebarMenuSub>
               </CollapsibleContent>
             </SidebarMenuItem>
@@ -275,7 +330,6 @@ const AdminSidebar = () => {
               </Link>
             </SidebarMenuButton>
           </SidebarMenuItem>
-
         </SidebarMenu>
       </SidebarContent>
 
@@ -283,7 +337,9 @@ const AdminSidebar = () => {
 
       <SidebarFooter className="gap-2 py-3 px-3">
         <Button
-          asChild variant="outline" size="sm"
+          asChild
+          variant="outline"
+          size="sm"
           className="w-full rounded-lg gap-2 font-semibold bg-white border-sky-200 text-sky-700 hover:bg-sky-50 hover:text-sky-800"
         >
           <Link to="/dashboard">
@@ -293,15 +349,34 @@ const AdminSidebar = () => {
         </Button>
 
         <Button
-          variant="outline" size="sm" onClick={handleLogout}
-          className="w-full rounded-lg gap-2 font-semibold bg-white border-destructive/30 text-destructive hover:bg-red-50 hover:border-destructive/50 hover:text-destructive"
+          variant="outline"
+          size="sm"
+          onClick={() => setLogoutOpen(true)}
+          className="w-full rounded-lg gap-2 font-semibold bg-white border-red-300 text-destructive shadow-none hover:bg-red-50 hover:border-red-400 hover:text-destructive"
         >
           <LogOut className="w-4 h-4" />
           Keluar
         </Button>
       </SidebarFooter>
-    </Sidebar>
-  )
-}
 
-export default AdminSidebar
+      <AlertDialog open={logoutOpen} onOpenChange={setLogoutOpen}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>Keluar dari Admin?</AlertDialogTitle>
+            <AlertDialogDescription>
+              Anda akan keluar dari sesi admin. Pastikan semua perubahan sudah tersimpan.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>Batal</AlertDialogCancel>
+            <AlertDialogAction variant="destructive" onClick={handleLogout}>
+              Keluar
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </Sidebar>
+  );
+};
+
+export default AdminSidebar;

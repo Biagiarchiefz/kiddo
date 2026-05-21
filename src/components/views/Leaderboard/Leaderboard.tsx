@@ -333,7 +333,7 @@ const Leaderboard = () => {
         {/* ── Rankings list ── */}
         <Card className="flex-1 overflow-hidden shadow-md border border-border/70 bg-card/90 py-0 gap-0">
           {/* Table header */}
-          <div className="grid grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 bg-yellow-500 border-b border-border/70 text-[11px] font-bold text-slate-900 uppercase tracking-wider">
+          <div className="grid grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border/70 text-[11px] font-bold text-slate-900 uppercase tracking-wider">
             <span className="text-center">No</span>
             <span>Pelajar</span>
             <span className="text-center">Level</span>

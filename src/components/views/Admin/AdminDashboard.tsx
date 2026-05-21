@@ -113,7 +113,7 @@ const AdminDashboard = () => {
                   Panel Admin
                 </p>
                 <h2 className="text-4xl font-bold text-white leading-snug">
-                  Halo, {profile?.username ?? "Admin"}! 👋
+                  Halo, {profile?.username ?? "Admin"}!!
                 </h2>
                 <p className="text-white/80 text-xs max-w-xs leading-relaxed">
                   Kelola konten, soal, dan pengguna platform Kiddo dari sini.
@@ -121,7 +121,7 @@ const AdminDashboard = () => {
                 <Button
                   asChild
                   size="sm"
-                  className="rounded-lg gap-1.5 bg-white text-amber-600 hover:bg-amber-50 border-0 font-bold h-8 text-xs"
+                  className="rounded-lg gap-1.5 bg-white text-amber-600 hover:bg-amber-100 [a]:hover:bg-amber-100 hover:text-amber-700 border-0 font-bold h-8 text-xs"
                 >
                   <Link to="/admin/modules">
                     Kelola Modul <ChevronRight className="w-3.5 h-3.5" />

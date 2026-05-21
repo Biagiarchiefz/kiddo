@@ -1,10 +1,17 @@
-import { motion } from 'framer-motion'
-import { Rocket, ClipboardList, Medal, Trophy, LogOut, ShieldCheck, Zap } from 'lucide-react'
-import { Link, useLocation, useNavigate } from 'react-router'
-import kiddoLogo from '@/assets/images/kiddoLogo.webp'
-import { Button } from '@/components/ui/button'
-import { Skeleton } from '@/components/ui/skeleton'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import { motion } from "framer-motion";
+import {
+  Rocket,
+  ClipboardList,
+  Medal,
+  Trophy,
+  LogOut,
+  ShieldCheck,
+  Zap,
+} from "lucide-react";
+import { Link, useLocation, useNavigate } from "react-router";
+import { Button } from "@/components/ui/button";
+import { Skeleton } from "@/components/ui/skeleton";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -15,9 +22,9 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
   AlertDialogTrigger,
-} from '@/components/ui/alert-dialog'
-import { supabase } from '@/utils/supabase'
-import { useProfile } from '@/hooks/useProfile'
+} from "@/components/ui/alert-dialog";
+import { supabase } from "@/utils/supabase";
+import { useProfile } from "@/hooks/useProfile";
 import {
   Sidebar,
   SidebarContent,
@@ -26,72 +33,69 @@ import {
   SidebarMenu,
   SidebarMenuButton,
   SidebarMenuItem,
-} from '@/components/ui/sidebar'
-import type { ReactNode } from 'react'
+} from "@/components/ui/sidebar";
+import type { ReactNode } from "react";
 
 interface NavItem {
-  label: string
-  icon: ReactNode
-  href: string
-  match: (pathname: string) => boolean
+  label: string;
+  icon: ReactNode;
+  href: string;
+  match: (pathname: string) => boolean;
 }
 
 const navItems: NavItem[] = [
   {
-    label: 'Modul',
+    label: "Modul",
     icon: <Rocket className="w-4 h-4" />,
-    href: '/dashboard',
-    match: p => p === '/dashboard' || p.startsWith('/materi'),
+    href: "/dashboard",
+    match: (p) => p === "/dashboard" || p.startsWith("/materi"),
   },
   {
-    label: 'Tantangan',
+    label: "Tantangan",
     icon: <ClipboardList className="w-4 h-4" />,
-    href: '/challenges',
-    match: p => p.startsWith('/challenges'),
+    href: "/challenges",
+    match: (p) => p.startsWith("/challenges"),
   },
   {
-    label: 'Lencana',
+    label: "Lencana",
     icon: <Medal className="w-4 h-4" />,
-    href: '/badges',
-    match: p => p.startsWith('/badges'),
+    href: "/badges",
+    match: (p) => p.startsWith("/badges"),
   },
   {
-    label: 'Peringkat',
+    label: "Peringkat",
     icon: <Trophy className="w-4 h-4" />,
-    href: '/leaderboard',
-    match: p => p.startsWith('/leaderboard'),
+    href: "/leaderboard",
+    match: (p) => p.startsWith("/leaderboard"),
   },
-]
+];
 
-const PILL_ID = 'app-nav-active'
+const PILL_ID = "app-nav-active";
 
 const ActivePill = () => (
   <motion.div
     layoutId={PILL_ID}
     className="absolute inset-0 bg-white rounded-lg shadow-sm pointer-events-none"
     initial={false}
-    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+    transition={{ type: "spring", stiffness: 420, damping: 36 }}
   />
-)
+);
 
-const Divider = () => (
-  <div className="shrink-0 h-px bg-sidebar-border mx-0" />
-)
+const Divider = () => <div className="shrink-0 h-px bg-sidebar-border mx-0" />;
 
 const AppSidebar = () => {
-  const { pathname } = useLocation()
-  const navigate = useNavigate()
-  const { profile, isLoading } = useProfile()
-  const initial = profile?.username?.charAt(0).toUpperCase() ?? '?'
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
+  const { profile, isLoading } = useProfile();
+  const initial = profile?.username?.charAt(0).toUpperCase() ?? "?";
 
   const handleLogout = async () => {
-    await supabase.auth.signOut()
-    navigate('/')
-  }
+    await supabase.auth.signOut();
+    navigate("/");
+  };
 
   return (
     <Sidebar collapsible="offcanvas">
-
       <SidebarHeader className="px-4 py-3 gap-3">
         {/* <Link to="/dashboard">
           <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" />
@@ -112,18 +116,18 @@ const AppSidebar = () => {
               {profile?.avatar_url && (
                 <AvatarImage src={profile.avatar_url} alt={profile.username} />
               )}
-              <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
+              <AvatarFallback className="bg-yellow-500 text-slate-900 text-xs font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
               <p className="text-sm font-semibold text-white leading-none truncate">
-                {profile?.username ?? 'Explorer'}
+                {profile?.username ?? "Explorer"}
               </p>
               <div className="flex items-center gap-1 mt-1">
                 <Zap className="w-3 h-3 text-yellow-300 fill-yellow-300 shrink-0" />
                 <span className="text-xs font-bold text-yellow-300">
-                  {(profile?.total_xp ?? 0).toLocaleString('id-ID')} XP
+                  {(profile?.total_xp ?? 0).toLocaleString("id-ID")} XP
                 </span>
               </div>
             </div>
@@ -136,8 +140,8 @@ const AppSidebar = () => {
       {/* Nav Items */}
       <SidebarContent className="px-2 py-3">
         <SidebarMenu className="gap-1.5">
-          {navItems.map(item => {
-            const active = item.match(pathname)
+          {navItems.map((item) => {
+            const active = item.match(pathname);
             return (
               <SidebarMenuItem key={item.href} className="relative">
                 {active && <ActivePill />}
@@ -152,7 +156,7 @@ const AppSidebar = () => {
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
-            )
+            );
           })}
         </SidebarMenu>
       </SidebarContent>
@@ -161,7 +165,7 @@ const AppSidebar = () => {
 
       {/* Footer */}
       <SidebarFooter className="gap-2 py-3 px-3">
-        {profile?.role === 'admin' && (
+        {profile?.role === "admin" && (
           <Button
             asChild
             variant="outline"
@@ -181,7 +185,7 @@ const AppSidebar = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full rounded-lg gap-2 font-semibold bg-white border-destructive/30 text-destructive hover:bg-red-50 hover:border-destructive/50 hover:text-destructive"
+                className="w-full rounded-lg gap-2 font-semibold bg-white border-red-300 text-destructive shadow-none hover:bg-red-50 hover:border-red-400 hover:text-destructive"
               >
                 <LogOut className="w-4 h-4" />
                 Keluar
@@ -191,14 +195,15 @@ const AppSidebar = () => {
               <AlertDialogHeader>
                 <AlertDialogTitle>Yakin mau keluar?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  Kamu akan keluar dari akun Kiddo. Progress belajarmu tetap tersimpan.
+                  Kamu akan keluar dari akun Kiddo. Progress belajarmu tetap
+                  tersimpan.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
                 <AlertDialogCancel>Batal</AlertDialogCancel>
                 <AlertDialogAction
                   onClick={handleLogout}
-                  className="bg-destructive text-white hover:bg-destructive/90"
+                  variant="destructive"
                 >
                   Keluar
                 </AlertDialogAction>
@@ -208,7 +213,7 @@ const AppSidebar = () => {
         </div>
       </SidebarFooter>
     </Sidebar>
-  )
-}
+  );
+};
 
-export default AppSidebar
+export default AppSidebar;

@@ -12,7 +12,6 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useLogin } from "./useLogin";
-import kiddoLogo from "@/assets/images/kiddoLogo.webp";
 import heroSection from "@/assets/images/heroSection.webp";
 
 const GoogleIcon = () => (
