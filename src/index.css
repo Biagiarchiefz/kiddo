@@ -1,15 +1,29 @@
 @import "tailwindcss";
 @import "tw-animate-css";
 @import "shadcn/tailwind.css";
+@plugin "@tailwindcss/typography";
 
 @custom-variant dark (&:is(.dark *));
+
+@keyframes collapsible-down {
+  from { height: 0; opacity: 0; }
+  to   { height: var(--radix-collapsible-content-height); opacity: 1; }
+}
+
+@keyframes collapsible-up {
+  from { height: var(--radix-collapsible-content-height); opacity: 1; }
+  to   { height: 0; opacity: 0; }
+}
 
 @theme {
   /* Mendaftarkan Balsamiq untuk judul (heading) */
   --font-balsamiq: "Balsamiq Sans", cursive;
-  
+
   /* Mendaftarkan Nunito untuk teks utama (body) */
   --font-nunito: "Nunito", sans-serif;
+
+  --animate-collapsible-down: collapsible-down 0.2s ease-out;
+  --animate-collapsible-up:   collapsible-up   0.2s ease-out;
 }
 
 @theme inline {
@@ -81,14 +95,14 @@
     --chart-4: oklch(0.73 0.16 78);
     --chart-5: oklch(0.50 0.22 27);
     --radius: 0.5rem;
-    --sidebar: oklch(0.978 0.01 211);
-    --sidebar-foreground: oklch(0.138 0.007 264);
-    --sidebar-primary: oklch(0.62 0.19 211);
+    --sidebar: oklch(0.685 0.169 237);
+    --sidebar-foreground: oklch(1 0 0);
+    --sidebar-primary: oklch(0.72 0.20 142);
     --sidebar-primary-foreground: oklch(1 0 0);
-    --sidebar-accent: oklch(0.62 0.19 211);
+    --sidebar-accent: oklch(1 0 0 / 24%);
     --sidebar-accent-foreground: oklch(1 0 0);
-    --sidebar-border: oklch(0.80 0.10 211);
-    --sidebar-ring: oklch(0.62 0.19 211);
+    --sidebar-border: oklch(1 0 0 / 18%);
+    --sidebar-ring: oklch(0.72 0.20 142);
 }
 
 .dark {
@@ -115,14 +129,14 @@
     --chart-3: oklch(0.78 0.24 130);
     --chart-4: oklch(0.73 0.16 78);
     --chart-5: oklch(0.65 0.22 27);
-    --sidebar: oklch(0.19 0.02 211);
-    --sidebar-foreground: oklch(0.985 0 0);
-    --sidebar-primary: oklch(0.72 0.19 211);
-    --sidebar-primary-foreground: oklch(0.14 0.04 211);
-    --sidebar-accent: oklch(0.72 0.19 211);
+    --sidebar: oklch(0.32 0.18 278);
+    --sidebar-foreground: oklch(1 0 0);
+    --sidebar-primary: oklch(0.72 0.20 142);
+    --sidebar-primary-foreground: oklch(1 0 0);
+    --sidebar-accent: oklch(1 0 0 / 12%);
     --sidebar-accent-foreground: oklch(1 0 0);
-    --sidebar-border: oklch(0.35 0.08 211);
-    --sidebar-ring: oklch(0.72 0.19 211);
+    --sidebar-border: oklch(1 0 0 / 12%);
+    --sidebar-ring: oklch(0.72 0.20 142);
 }
 
 @layer base {

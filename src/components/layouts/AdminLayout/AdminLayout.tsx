@@ -1,7 +1,6 @@
 import type { ReactNode } from 'react'
 import { Link } from 'react-router'
-import { SidebarProvider, SidebarInset, SidebarTrigger } from '@/components/ui/sidebar'
-import { Separator } from '@/components/ui/separator'
+import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import {
   Breadcrumb, BreadcrumbItem, BreadcrumbLink, BreadcrumbList,
   BreadcrumbPage, BreadcrumbSeparator,
@@ -53,20 +52,10 @@ const AdminBreadcrumb = () => {
 }
 
 const AdminLayout = ({ children }: { children: ReactNode }) => (
-  <SidebarProvider>
+  <SidebarProvider className="bg-sidebar h-svh overflow-hidden">
     <AdminSidebar />
-    <SidebarInset>
-      {/* Navbar */}
-      <header className="bg-sidebar border-b border-border/60 shadow-sm sticky top-0 z-50 flex items-center gap-2 px-4 py-2.5">
-        <SidebarTrigger className="-ml-1" />
-        <Separator orientation="vertical" className="h-4 mx-1" />
-        <div className="flex items-center gap-1.5 text-xs font-semibold text-amber-600">
-          <ShieldCheck className="w-3.5 h-3.5" />
-          Mode Admin
-        </div>
-      </header>
-
-      <main className="p-6 w-full">
+    <SidebarInset className="rounded-l-[30px] overflow-hidden">
+      <main className="h-full overflow-y-auto p-6 w-full">
         <AdminBreadcrumb />
         {children}
       </main>

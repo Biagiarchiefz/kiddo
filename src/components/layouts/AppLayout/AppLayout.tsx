@@ -2,7 +2,6 @@ import type { ReactNode } from 'react'
 import { Link } from 'react-router'
 import { SidebarProvider, SidebarInset } from '@/components/ui/sidebar'
 import AppSidebar from './AppSidebar/AppSidebar'
-import AppNavbar from './AppNavbar/AppNavbar'
 import { useBreadcrumbItems } from '@/contexts/BreadcrumbContext'
 import {
   Breadcrumb,
@@ -66,11 +65,10 @@ const PageBreadcrumb = () => {
 
 const AppLayout = ({ children }: Props) => {
   return (
-    <SidebarProvider>
+    <SidebarProvider className="bg-sidebar h-svh overflow-hidden">
       <AppSidebar />
-      <SidebarInset>
-        <AppNavbar />
-        <main className="p-6 w-full">
+      <SidebarInset className="rounded-l-[30px] overflow-hidden">
+        <main className="h-full overflow-y-auto p-6 w-full">
           <PageBreadcrumb />
           {children}
         </main>

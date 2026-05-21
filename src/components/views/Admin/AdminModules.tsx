@@ -1,13 +1,14 @@
-﻿import { useState } from 'react'
+﻿import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import { Plus, Pencil, Trash2, ChevronRight, BookOpen, LayoutGrid } from 'lucide-react'
+import { Plus, Pencil, Trash2, ChevronRight, BookOpen, LayoutGrid, Search } from 'lucide-react'
 import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
+import Pagination from '@/components/common/Pagination'
 import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogFooter,
 } from '@/components/ui/dialog'
@@ -145,6 +146,19 @@ const AdminModules = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Module | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Module | null>(null)
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const PER_PAGE = 10
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase()
+    return q
+      ? modules.filter(m => m.title.toLowerCase().includes(q) || m.description.toLowerCase().includes(q))
+      : modules
+  }, [modules, search])
+
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+  const handleSearch = (v: string) => { setSearch(v); setPage(1) }
 
   const upsert = useMutation({
     mutationFn: async ({ form, id }: { form: ModuleForm; id?: number }) => {
@@ -181,17 +195,28 @@ const AdminModules = () => {
     <AdminLayout>
       <div className="space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center">
-              <LayoutGrid className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">Modul</h1>
-              <p className="text-xs text-muted-foreground">{modules.length} modul terdaftar</p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-sky-500 flex items-center justify-center">
+            <LayoutGrid className="w-5 h-5 text-white" />
           </div>
-          <Button onClick={openCreate} className="gap-2 rounded-lg">
+          <div>
+            <h1 className="text-lg font-bold text-foreground">Modul</h1>
+            <p className="text-xs text-muted-foreground">{modules.length} modul terdaftar</p>
+          </div>
+        </div>
+
+        {/* Search + Add */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Cari modul..."
+              value={search}
+              onChange={e => handleSearch(e.target.value)}
+              className="pl-9 h-9 w-64 rounded-lg"
+            />
+          </div>
+          <Button onClick={openCreate} className="gap-2 rounded-lg shrink-0">
             <Plus className="w-4 h-4" /> Tambah Modul
           </Button>
         </div>
@@ -218,8 +243,8 @@ const AdminModules = () => {
                     <Skeleton className="w-28 h-8 rounded-lg" />
                   </div>
                 ))
-              : modules.map((m, i) => (
-                  <div key={m.id} className={`flex items-center gap-3 px-5 py-3.5 ${i < modules.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/20 transition-colors`}>
+              : paginated.map((m, i) => (
+                  <div key={m.id} className={`flex items-center gap-3 px-5 py-3.5 ${i < paginated.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/20 transition-colors`}>
                     <span className="w-8 text-sm text-muted-foreground font-mono">{m.sort_order}</span>
                     <span className="w-10 text-2xl text-center">{m.emoji}</span>
                     <div className="flex-1 min-w-0">
@@ -251,6 +276,8 @@ const AdminModules = () => {
             }
           </CardContent>
         </Card>
+
+        <Pagination page={page} total={filtered.length} perPage={PER_PAGE} onChange={setPage} />
       </div>
 
       {/* Create / Edit dialog */}

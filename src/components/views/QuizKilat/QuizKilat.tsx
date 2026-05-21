@@ -8,6 +8,102 @@ import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
 import { useQuizKilat } from './useQuizKilat'
 
+// ── Level-up modal ────────────────────────────────────────────────────────────
+
+interface LevelUpModalProps {
+  oldLevel: number
+  newLevel: number
+  badgeName: string
+  badgeEmoji: string
+  onClose: () => void
+}
+
+const LevelUpModal = ({ oldLevel, newLevel, badgeName, badgeEmoji, onClose }: LevelUpModalProps) => (
+  <AnimatePresence>
+    <motion.div
+      className="fixed inset-0 z-50 flex items-center justify-center p-4"
+      initial={{ opacity: 0 }}
+      animate={{ opacity: 1 }}
+      exit={{ opacity: 0 }}
+    >
+      <motion.div
+        className="absolute inset-0 bg-black/50 backdrop-blur-sm"
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        onClick={onClose}
+      />
+
+      <motion.div
+        className="relative bg-white rounded-3xl shadow-2xl w-full max-w-sm overflow-hidden"
+        initial={{ opacity: 0, scale: 0.8, y: 24 }}
+        animate={{ opacity: 1, scale: 1, y: 0, transition: { type: 'spring', stiffness: 260, damping: 20 } }}
+        exit={{ opacity: 0, scale: 0.9, y: 12 }}
+      >
+        {/* Header */}
+        <div className="bg-linear-to-r from-amber-500 to-yellow-400 px-6 pt-8 pb-10 text-center relative overflow-hidden">
+          <div className="absolute -top-4 -left-4 w-24 h-24 bg-white/10 rounded-full pointer-events-none" />
+          <div className="absolute -bottom-6 -right-6 w-28 h-28 bg-white/10 rounded-full pointer-events-none" />
+
+          <motion.div
+            initial={{ scale: 0, rotate: -20 }}
+            animate={{ scale: 1, rotate: 0, transition: { type: 'spring', stiffness: 280, damping: 14, delay: 0.15 } }}
+            className="text-6xl mb-3 select-none"
+          >
+            🎊
+          </motion.div>
+          <h2 className="text-xl font-black text-white">Naik Level!</h2>
+          <p className="text-white/80 text-sm mt-1">Kamu semakin hebat!</p>
+        </div>
+
+        {/* Body */}
+        <div className="-mt-5 bg-white rounded-t-3xl px-6 pt-6 pb-7 text-center space-y-5 relative z-10">
+          {/* Level progression */}
+          <div className="flex items-center justify-center gap-4">
+            <div className="flex flex-col items-center">
+              <div className="w-14 h-14 rounded-2xl bg-muted flex items-center justify-center">
+                <span className="text-2xl font-black text-muted-foreground">{oldLevel}</span>
+              </div>
+              <p className="text-[10px] text-muted-foreground mt-1 font-semibold">SEBELUM</p>
+            </div>
+
+            <motion.div
+              initial={{ scale: 0 }}
+              animate={{ scale: 1, transition: { delay: 0.3, type: 'spring', stiffness: 300 } }}
+              className="text-2xl"
+            >
+              →
+            </motion.div>
+
+            <div className="flex flex-col items-center">
+              <motion.div
+                initial={{ scale: 0 }}
+                animate={{ scale: 1, transition: { delay: 0.4, type: 'spring', stiffness: 300, damping: 15 } }}
+                className="w-14 h-14 rounded-2xl bg-amber-400 flex items-center justify-center shadow-md shadow-amber-200"
+              >
+                <span className="text-2xl font-black text-white">{newLevel}</span>
+              </motion.div>
+              <p className="text-[10px] text-amber-600 mt-1 font-bold">SEKARANG</p>
+            </div>
+          </div>
+
+          {/* Badge earned */}
+          <div className="bg-amber-50 border border-amber-100 rounded-2xl p-4 space-y-1">
+            <p className="text-[10px] text-amber-700 font-bold uppercase tracking-wide">Lencana Baru Didapat!</p>
+            <div className="flex items-center justify-center gap-2 mt-1">
+              <span className="text-3xl">{badgeEmoji}</span>
+              <span className="font-black text-foreground text-base">{badgeName}</span>
+            </div>
+          </div>
+
+          <Button onClick={onClose} className="w-full rounded-xl h-11 text-sm font-bold bg-amber-500 hover:bg-amber-600 border-0">
+            Sip, Lanjutkan! 🚀
+          </Button>
+        </div>
+      </motion.div>
+    </motion.div>
+  </AnimatePresence>
+)
+
 // ── Loading skeleton ──────────────────────────────────────────────────────────
 
 const QuizSkeleton = () => (
@@ -35,6 +131,8 @@ interface ResultProps {
   unitCompletionXp: number
   moduleId: number
   unitIdNum: number
+  levelUpInfo: { oldLevel: number; newLevel: number; badgeName: string; badgeEmoji: string } | null
+  clearLevelUp: () => void
   retry: () => void
 }
 
@@ -45,6 +143,8 @@ const QuizResult = ({
   unitCompletionXp,
   moduleId,
   unitIdNum,
+  levelUpInfo,
+  clearLevelUp,
   retry,
 }: ResultProps) => {
   const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0
@@ -54,6 +154,15 @@ const QuizResult = ({
 
   return (
     <AppLayout>
+      {levelUpInfo && (
+        <LevelUpModal
+          oldLevel={levelUpInfo.oldLevel}
+          newLevel={levelUpInfo.newLevel}
+          badgeName={levelUpInfo.badgeName}
+          badgeEmoji={levelUpInfo.badgeEmoji}
+          onClose={clearLevelUp}
+        />
+      )}
       <motion.div
         initial={{ opacity: 0, y: 24 }}
         animate={{ opacity: 1, y: 0 }}
@@ -137,6 +246,7 @@ const QuizKilat = () => {
     module, unit, currentQuestion, currentIndex, totalQuestions,
     selectedAnswer, showHint, phase, isLoading, isSubmitting,
     correctCount, totalXpEarned, unitCompletionXp, moduleId, unitIdNum,
+    levelUpInfo, clearLevelUp,
     selectAnswer, toggleHint, submitAndNext, retry,
   } = useQuizKilat()
 
@@ -165,6 +275,8 @@ const QuizKilat = () => {
         unitCompletionXp={unitCompletionXp}
         moduleId={moduleId}
         unitIdNum={unitIdNum}
+        levelUpInfo={levelUpInfo}
+        clearLevelUp={clearLevelUp}
         retry={retry}
       />
     )

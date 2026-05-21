@@ -172,7 +172,7 @@ const Leaderboard = () => {
         </p>
       </motion.div>
 
-      <div className="flex gap-6 items-start">
+      <div className="flex gap-6 items-end">
 
         {/* ── Podium ── */}
         <motion.div

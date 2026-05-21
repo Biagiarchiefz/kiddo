@@ -1,129 +1,293 @@
-import { LayoutDashboard, LayoutGrid, Users, LogOut, ExternalLink, ShieldCheck } from 'lucide-react'
+import { useState } from 'react'
+import { motion } from 'framer-motion'
+import { useQuery } from '@tanstack/react-query'
+import {
+  LayoutDashboard, LayoutGrid, Users, LogOut, ExternalLink,
+  ChevronRight, Layers, HelpCircle, ShieldCheck, BookOpen,
+} from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import kiddoLogo from '@/assets/images/kiddoLogo.webp'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
+import { Avatar, AvatarFallback } from '@/components/ui/avatar'
+import { Collapsible, CollapsibleContent, CollapsibleTrigger } from '@/components/ui/collapsible'
 import { supabase } from '@/utils/supabase'
 import { useProfile } from '@/hooks/useProfile'
 import {
-  Sidebar,
-  SidebarContent,
-  SidebarFooter,
-  SidebarHeader,
-  SidebarMenu,
-  SidebarMenuButton,
-  SidebarMenuItem,
+  Sidebar, SidebarContent, SidebarFooter, SidebarHeader,
+  SidebarMenu, SidebarMenuButton, SidebarMenuItem,
+  SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
 } from '@/components/ui/sidebar'
-import type { ReactNode } from 'react'
 
-interface NavItem {
-  label: string
-  icon: ReactNode
-  href: string
-  match: (p: string) => boolean
+// ── Types ─────────────────────────────────────────────────────────────────────
+
+interface ModuleWithUnits {
+  id: number
+  title: string
+  units: { id: number; title: string; sort_order: number }[]
 }
 
-const navItems: NavItem[] = [
-  {
-    label: 'Dashboard Admin',
-    icon: <LayoutDashboard className="w-4 h-4" />,
-    href: '/admin',
-    match: p => p === '/admin',
-  },
-  {
-    label: 'Modul & Unit',
-    icon: <LayoutGrid className="w-4 h-4" />,
-    href: '/admin/modules',
-    match: p => p.startsWith('/admin/modules') || p.startsWith('/admin/units'),
-  },
-  {
-    label: 'Pengguna',
-    icon: <Users className="w-4 h-4" />,
-    href: '/admin/users',
-    match: p => p.startsWith('/admin/users'),
-  },
-]
+async function fetchModulesWithUnits(): Promise<ModuleWithUnits[]> {
+  const { data, error } = await supabase
+    .from('modules')
+    .select('id, title, units(id, title, sort_order)')
+    .order('sort_order')
+  if (error) throw error
+  return (data ?? []).map(m => ({
+    ...m,
+    units: [...(m.units ?? [])].sort((a, b) => a.sort_order - b.sort_order),
+  }))
+}
 
-const Divider = () => <div className="shrink-0 h-px bg-sidebar-border mx-0" />
+// ── Shared active pill (animated with layoutId) ───────────────────────────────
+
+const PILL_ID = 'admin-nav-active'
+
+const ActivePill = () => (
+  <motion.div
+    layoutId={PILL_ID}
+    className="absolute inset-0 bg-white rounded-lg shadow-sm pointer-events-none"
+    initial={false}
+    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+  />
+)
+
+// ── Divider ───────────────────────────────────────────────────────────────────
+
+const Divider = () => <div className="shrink-0 h-px bg-sidebar-border" />
+
+// ── Main ──────────────────────────────────────────────────────────────────────
 
 const AdminSidebar = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
-  const { profile, isLoading } = useProfile()
+  const { profile, isLoading: profileLoading } = useProfile()
+  const initial = profile?.username?.charAt(0).toUpperCase() ?? 'A'
+
+  const { data: modules = [], isLoading } = useQuery({
+    queryKey: ['admin-sidebar-modules'],
+    queryFn: fetchModulesWithUnits,
+    staleTime: 60_000,
+  })
+
+  const [openModules, setOpenModules] = useState<Record<number, boolean>>({})
+  const toggleModule = (id: number) =>
+    setOpenModules(prev => ({ ...prev, [id]: !prev[id] }))
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     navigate('/')
   }
 
-  const initial = profile?.username?.charAt(0).toUpperCase() ?? 'A'
+  const isModulesSection = pathname.startsWith('/admin/modules') || pathname.startsWith('/admin/units')
+
+  // Active key for sub-items (used to drive the shared pill)
+  const isDashboard   = pathname === '/admin'
+  const isAllModules  = pathname === '/admin/modules'
+  const isUsers       = pathname.startsWith('/admin/users')
 
   return (
     <Sidebar collapsible="offcanvas">
 
-      {/* Header — amber gradient to differentiate from user sidebar */}
-      <SidebarHeader className="items-center gap-2.5 p-0">
-        <div className="w-full bg-linear-to-b from-amber-500 to-amber-400 px-4 pt-5 pb-4 flex flex-col items-center gap-2.5">
-          {isLoading ? (
-            <>
-              <Skeleton className="w-12 h-12 rounded-full bg-white/30" />
-              <div className="space-y-1.5 flex flex-col items-center">
-                <Skeleton className="h-3 w-24 bg-white/30" />
-                <Skeleton className="h-2.5 w-16 bg-white/20" />
+      <SidebarHeader className="px-4 py-3 gap-3">
+        <Link to="/admin">
+          <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" />
+        </Link>
+
+        {profileLoading ? (
+          <div className="flex items-center gap-2 mt-1">
+            <Skeleton className="w-9 h-9 rounded-full shrink-0 bg-white/20" />
+            <div className="flex flex-col gap-1.5 flex-1">
+              <Skeleton className="h-2.5 w-24 bg-white/20" />
+              <Skeleton className="h-2 w-16 bg-white/20" />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mt-1">
+            <Avatar className="w-9 h-9 shrink-0">
+              <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
+                {initial}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white leading-none truncate">
+                {profile?.username ?? 'Admin'}
+              </p>
+              <div className="flex items-center gap-1 mt-1">
+                <ShieldCheck className="w-3 h-3 text-white/60 shrink-0" />
+                <span className="text-xs text-white/60">Administrator</span>
               </div>
-            </>
-          ) : (
-            <>
-              <div className="flex items-center gap-2">
-                <ShieldCheck className="w-4 h-4 text-white/80" />
-                <span className="text-xs font-bold text-white/80 uppercase tracking-wider">Admin Panel</span>
-              </div>
-              <Avatar className="w-12 h-12 ring-2 ring-white/60 shadow-md">
-                <AvatarFallback className="bg-white/20 text-white text-lg font-bold">
-                  {initial}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-center">
-                <p className="font-bold text-sm text-white">{profile?.username ?? 'Admin'}</p>
-                <p className="text-xs text-white/70 mt-0.5">{profile?.school || 'Administrator'}</p>
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </SidebarHeader>
 
       <Divider />
 
-      {/* Nav */}
       <SidebarContent className="px-2 py-3">
-        <SidebarMenu className="gap-1.5">
-          {navItems.map(item => (
-            <SidebarMenuItem key={item.href}>
-              <SidebarMenuButton
-                asChild
-                isActive={item.match(pathname)}
-                className="h-10 rounded-lg font-semibold"
-              >
-                <Link to={item.href}>
-                  {item.icon}
-                  <span>{item.label}</span>
-                </Link>
-              </SidebarMenuButton>
+        <SidebarMenu className="gap-1">
+
+          {/* Dashboard */}
+          <SidebarMenuItem className="relative">
+            {isDashboard && <ActivePill />}
+            <SidebarMenuButton
+              asChild
+              isActive={isDashboard}
+              className="relative z-10 h-10 rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+            >
+              <Link to="/admin">
+                <LayoutDashboard className="w-4 h-4" />
+                Dashboard Admin
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
+          {/* Modul & Unit — collapsible */}
+          <Collapsible
+            open={isModulesSection || openModules[-1]}
+            onOpenChange={v => setOpenModules(prev => ({ ...prev, [-1]: v }))}
+          >
+            <SidebarMenuItem>
+              {/* Wrap only the trigger in relative so the pill doesn't cover expanded content */}
+              <div className="relative">
+                {isModulesSection && !isAllModules && !modules.some(m =>
+                  pathname === `/admin/modules/${m.id}/units` ||
+                  m.units.some(u => pathname === `/admin/units/${u.id}/questions`)
+                ) && <ActivePill />}
+                <CollapsibleTrigger asChild>
+                  <SidebarMenuButton
+                    isActive={isModulesSection}
+                    className="relative z-10 h-10 rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                  >
+                    <LayoutGrid className="w-4 h-4" />
+                    <span className="flex-1">Modul & Unit</span>
+                    <ChevronRight className={`w-3.5 h-3.5 transition-transform duration-200 ${isModulesSection || openModules[-1] ? 'rotate-90' : ''}`} />
+                  </SidebarMenuButton>
+                </CollapsibleTrigger>
+              </div>
+
+              <CollapsibleContent>
+                <SidebarMenuSub className="ml-2 mt-1 gap-0.5">
+
+                  {/* Semua Modul */}
+                  <SidebarMenuSubItem className="relative">
+                    {isAllModules && <ActivePill />}
+                    <SidebarMenuSubButton
+                      asChild
+                      isActive={isAllModules}
+                      className="relative z-10 rounded-lg font-semibold text-xs h-8 data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                    >
+                      <Link to="/admin/modules">
+                        <LayoutGrid className="w-3.5 h-3.5" />
+                        Semua Modul
+                      </Link>
+                    </SidebarMenuSubButton>
+                  </SidebarMenuSubItem>
+
+                  {/* Per-module */}
+                  {isLoading
+                    ? Array.from({ length: 2 }).map((_, i) => (
+                        <SidebarMenuSubItem key={i}>
+                          <Skeleton className="h-7 w-full rounded-lg my-0.5" />
+                        </SidebarMenuSubItem>
+                      ))
+                    : modules.map(mod => {
+                        const modOpen = !!openModules[mod.id]
+                          || pathname.startsWith(`/admin/modules/${mod.id}`)
+                          || mod.units.some(u => pathname === `/admin/units/${u.id}/questions`)
+                        const isModActive = pathname === `/admin/modules/${mod.id}/units`
+
+                        return (
+                          <SidebarMenuSubItem key={mod.id}>
+                            <Collapsible open={modOpen} onOpenChange={() => toggleModule(mod.id)}>
+
+                              <div className="relative">
+                                {isModActive && <ActivePill />}
+                                <CollapsibleTrigger asChild>
+                                  <SidebarMenuSubButton
+                                    isActive={isModActive}
+                                    className="relative z-10 rounded-lg h-8 font-medium data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                                  >
+                                    <BookOpen className="w-3.5 h-3.5 shrink-0" />
+                                    <span className="flex-1 truncate">{mod.title}</span>
+                                    <ChevronRight className={`w-3 h-3 shrink-0 transition-transform duration-200 ${modOpen ? 'rotate-90' : ''}`} />
+                                  </SidebarMenuSubButton>
+                                </CollapsibleTrigger>
+                              </div>
+
+                              <CollapsibleContent>
+                                <SidebarMenuSub className="ml-2 mt-1 gap-0.5">
+
+                                  <SidebarMenuSubItem className="relative">
+                                    {isModActive && <ActivePill />}
+                                    <SidebarMenuSubButton
+                                      asChild
+                                      isActive={isModActive}
+                                      className="relative z-10 rounded-lg h-7 text-[11px] data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                                    >
+                                      <Link to={`/admin/modules/${mod.id}/units`}>
+                                        <Layers className="w-3 h-3" />
+                                        Kelola Unit
+                                      </Link>
+                                    </SidebarMenuSubButton>
+                                  </SidebarMenuSubItem>
+
+                                  {mod.units.map(unit => {
+                                    const isUnitActive = pathname === `/admin/units/${unit.id}/questions`
+                                    return (
+                                      <SidebarMenuSubItem key={unit.id} className="relative">
+                                        {isUnitActive && <ActivePill />}
+                                        <SidebarMenuSubButton
+                                          asChild
+                                          isActive={isUnitActive}
+                                          className="relative z-10 rounded-lg h-7 text-[11px] data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                                        >
+                                          <Link to={`/admin/units/${unit.id}/questions`}>
+                                            <HelpCircle className="w-3 h-3 shrink-0" />
+                                            <span className="truncate">{unit.title}</span>
+                                          </Link>
+                                        </SidebarMenuSubButton>
+                                      </SidebarMenuSubItem>
+                                    )
+                                  })}
+
+                                </SidebarMenuSub>
+                              </CollapsibleContent>
+                            </Collapsible>
+                          </SidebarMenuSubItem>
+                        )
+                      })
+                  }
+
+                </SidebarMenuSub>
+              </CollapsibleContent>
             </SidebarMenuItem>
-          ))}
+          </Collapsible>
+
+          {/* Pengguna */}
+          <SidebarMenuItem className="relative">
+            {isUsers && <ActivePill />}
+            <SidebarMenuButton
+              asChild
+              isActive={isUsers}
+              className="relative z-10 h-10 rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+            >
+              <Link to="/admin/users">
+                <Users className="w-4 h-4" />
+                Pengguna
+              </Link>
+            </SidebarMenuButton>
+          </SidebarMenuItem>
+
         </SidebarMenu>
       </SidebarContent>
 
       <Divider />
 
-      {/* Footer */}
       <SidebarFooter className="gap-2 py-3 px-3">
-        {/* View as user button */}
         <Button
-          asChild
-          variant="outline"
-          size="sm"
-          className="w-full rounded-lg gap-2 font-semibold border-sky-200 text-sky-700 hover:bg-sky-50 hover:text-sky-800"
+          asChild variant="outline" size="sm"
+          className="w-full rounded-lg gap-2 font-semibold bg-white border-sky-200 text-sky-700 hover:bg-sky-50 hover:text-sky-800"
         >
           <Link to="/dashboard">
             <ExternalLink className="w-4 h-4" />
@@ -132,12 +296,10 @@ const AdminSidebar = () => {
         </Button>
 
         <Button
-          variant="ghost"
-          size="sm"
-          onClick={handleLogout}
-          className="w-full justify-start gap-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive font-normal h-9 px-3"
+          variant="outline" size="sm" onClick={handleLogout}
+          className="w-full rounded-lg gap-2 font-semibold bg-white border-destructive/30 text-destructive hover:bg-red-50 hover:border-destructive/50 hover:text-destructive"
         >
-          <LogOut className="w-4 h-4 shrink-0" />
+          <LogOut className="w-4 h-4" />
           Keluar
         </Button>
       </SidebarFooter>

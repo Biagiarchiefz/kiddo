@@ -38,6 +38,7 @@ export interface Unit {
   sort_order: number
   xp_reward: number
   unlock_required_correct: number
+  markdown_content: string
   created_at: string
 }
 

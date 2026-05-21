@@ -84,6 +84,12 @@ export const useQuizKilat = () => {
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [totalXpEarned, setTotalXpEarned] = useState(0)
   const [unitCompletionXp, setUnitCompletionXp] = useState(0)
+  const [levelUpInfo, setLevelUpInfo] = useState<{
+    oldLevel: number
+    newLevel: number
+    badgeName: string
+    badgeEmoji: string
+  } | null>(null)
 
   const moduleId = Number(id)
   const unitIdNum = Number(unitId)
@@ -166,6 +172,17 @@ export const useQuizKilat = () => {
           setUnitCompletionXp(bonusXp)
         }
 
+        // Check if user leveled up
+        const { data: lvlResult } = await supabase.rpc('check_and_level_up')
+        if (lvlResult?.leveled_up) {
+          setLevelUpInfo({
+            oldLevel: lvlResult.old_level,
+            newLevel: lvlResult.new_level,
+            badgeName: lvlResult.badge_name,
+            badgeEmoji: lvlResult.badge_emoji,
+          })
+        }
+
         // Refresh profile XP, module & unit caches
         queryClient.invalidateQueries({ queryKey: ['profile', user?.id] })
         queryClient.invalidateQueries({ queryKey: ['module', moduleId, user?.id] })
@@ -195,6 +212,7 @@ export const useQuizKilat = () => {
     setPhase('quiz')
     setTotalXpEarned(0)
     setUnitCompletionXp(0)
+    setLevelUpInfo(null)
     queryClient.invalidateQueries({ queryKey: ['quiz-kilat', moduleId, unitIdNum, user?.id] })
   }
 
@@ -216,6 +234,8 @@ export const useQuizKilat = () => {
     answers,
     moduleId,
     unitIdNum,
+    levelUpInfo,
+    clearLevelUp: () => setLevelUpInfo(null),
     selectAnswer: (opt: string) => setSelectedAnswer(opt),
     toggleHint: () => setShowHint(p => !p),
     submitAndNext,

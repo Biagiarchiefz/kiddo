@@ -1,6 +1,6 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
-import { Users, Plus, Pencil, Trash2, ShieldCheck, User } from 'lucide-react'
+import { Users, Plus, Pencil, Trash2, ShieldCheck, User, Search } from 'lucide-react'
 import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/alert-dialog'
 import { supabase } from '@/utils/supabase'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
+import Pagination from '@/components/common/Pagination'
 
 // ── Types ─────────────────────────────────────────────────────────────────────
 
@@ -219,6 +220,23 @@ const AdminUsers = () => {
   const [createError, setCreateError] = useState<string | null>(null)
   const [editTarget, setEditTarget] = useState<UserRow | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<UserRow | null>(null)
+  const [search, setSearch] = useState('')
+  const [page, setPage] = useState(1)
+  const PER_PAGE = 10
+
+  const filtered = useMemo(() => {
+    const q = search.toLowerCase()
+    return q
+      ? users.filter(u =>
+          u.username.toLowerCase().includes(q) ||
+          u.email.toLowerCase().includes(q) ||
+          (u.school ?? '').toLowerCase().includes(q)
+        )
+      : users
+  }, [users, search])
+
+  const paginated = filtered.slice((page - 1) * PER_PAGE, page * PER_PAGE)
+  const handleSearch = (v: string) => { setSearch(v); setPage(1) }
 
   const create = useMutation({
     mutationFn: async (form: CreateForm) => {
@@ -268,17 +286,28 @@ const AdminUsers = () => {
     <AdminLayout>
       <div className="space-y-5">
         {/* Header */}
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
-              <Users className="w-5 h-5 text-white" />
-            </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">Pengguna</h1>
-              <p className="text-xs text-muted-foreground">{users.length} akun terdaftar</p>
-            </div>
+        <div className="flex items-center gap-3">
+          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center">
+            <Users className="w-5 h-5 text-white" />
           </div>
-          <Button onClick={() => { setCreateError(null); setCreateOpen(true) }} className="gap-2 rounded-lg">
+          <div>
+            <h1 className="text-lg font-bold text-foreground">Pengguna</h1>
+            <p className="text-xs text-muted-foreground">{users.length} akun terdaftar</p>
+          </div>
+        </div>
+
+        {/* Search + Add */}
+        <div className="flex items-center justify-between gap-3">
+          <div className="relative">
+            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
+            <Input
+              placeholder="Cari pengguna..."
+              value={search}
+              onChange={e => handleSearch(e.target.value)}
+              className="pl-9 h-9 w-64 rounded-lg"
+            />
+          </div>
+          <Button onClick={() => { setCreateError(null); setCreateOpen(true) }} className="gap-2 rounded-lg shrink-0">
             <Plus className="w-4 h-4" /> Tambah Pengguna
           </Button>
         </div>
@@ -286,7 +315,7 @@ const AdminUsers = () => {
         {/* Table */}
         <Card className="border border-border overflow-hidden">
           <div className="flex items-center gap-3 px-5 py-3 bg-muted/50 border-b border-border text-xs font-bold text-muted-foreground uppercase tracking-wide">
-            <span className="w-8" />
+            <span className="w-8">#</span>
             <span className="flex-1">Pengguna</span>
             <span className="w-28">Email</span>
             <span className="w-16 text-center">XP</span>
@@ -305,11 +334,15 @@ const AdminUsers = () => {
                     <Skeleton className="w-20 h-7 rounded-lg" />
                   </div>
                 ))
-              : users.map((u, i) => (
+              : paginated.map((u, i) => (
                   <div
                     key={u.id}
-                    className={`flex items-center gap-3 px-5 py-3 ${i < users.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/20 transition-colors`}
+                    className={`flex items-center gap-3 px-5 py-3 ${i < paginated.length - 1 ? 'border-b border-border' : ''} hover:bg-muted/20 transition-colors`}
                   >
+                    {/* No */}
+                    <span className="w-8 text-sm text-muted-foreground font-mono shrink-0">
+                      {(page - 1) * PER_PAGE + i + 1}
+                    </span>
                     {/* Avatar */}
                     <Avatar className="w-8 h-8 shrink-0">
                       <AvatarFallback className={`text-xs font-bold ${u.role === 'admin' ? 'bg-amber-100 text-amber-700' : 'bg-sky-100 text-sky-700'}`}>
@@ -365,6 +398,8 @@ const AdminUsers = () => {
             }
           </CardContent>
         </Card>
+
+        <Pagination page={page} total={filtered.length} perPage={PER_PAGE} onChange={setPage} />
       </div>
 
       {/* Create dialog */}

@@ -8,7 +8,7 @@ import { Card, CardContent } from '@/components/ui/card'
 import { Badge } from '@/components/ui/badge'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
-import { ChevronRight, Zap, Star, BookCheck, Swords, ShieldCheck } from 'lucide-react'
+import { ChevronRight, Zap, Star, BookCheck, Swords } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
 const ModuleCardSkeleton = () => (
@@ -123,21 +123,6 @@ const Dashboard = () => {
     <AppLayout>
       {newUserName && <WelcomeModal username={newUserName} onClose={() => setNewUserName(null)} />}
       <div className="space-y-5">
-
-        {/* Admin viewing user dashboard — back button */}
-        {profile?.role === 'admin' && (
-          <div className="flex items-center justify-between bg-amber-50 border border-amber-200 rounded-xl px-4 py-2.5">
-            <div className="flex items-center gap-2 text-amber-700">
-              <ShieldCheck className="w-4 h-4 shrink-0" />
-              <span className="text-xs font-semibold">Kamu sedang melihat tampilan pengguna</span>
-            </div>
-            <Button asChild size="sm" variant="outline" className="h-7 text-xs rounded-lg border-amber-300 text-amber-700 hover:bg-amber-100 gap-1.5">
-              <Link to="/admin">
-                Kembali ke Admin
-              </Link>
-            </Button>
-          </div>
-        )}
 
         {/* Hero Banner */}
         <motion.div custom={0} variants={fadeUp} initial="hidden" animate="show">

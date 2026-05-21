@@ -1,7 +1,9 @@
 ﻿import { useState } from 'react'
 import { useQuery, useMutation, useQueryClient } from '@tanstack/react-query'
 import { Link, useParams } from 'react-router'
-import { Plus, Pencil, Trash2, ChevronRight, Layers } from 'lucide-react'
+import { Plus, Pencil, Trash2, ChevronRight, Layers, FileText } from 'lucide-react'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
@@ -52,6 +54,89 @@ const emptyUnitForm = (): UnitForm => ({
   xp_reward: 50,
   unlock_required_correct: 0,
 })
+
+// ── Content Editor Dialog ─────────────────────────────────────────────────────
+
+interface ContentEditorProps {
+  open: boolean
+  onClose: () => void
+  unit: Unit | null
+  onSave: (id: number, content: string) => void
+  saving: boolean
+}
+
+const ContentEditorDialog = ({ open, onClose, unit, onSave, saving }: ContentEditorProps) => {
+  const [text, setText] = useState(unit?.markdown_content ?? '')
+  const [tab, setTab] = useState<'edit' | 'preview'>('edit')
+
+  return (
+    <Dialog open={open} onOpenChange={v => !v && onClose()}>
+      <DialogContent className="max-w-5xl h-[85vh] flex flex-col">
+        <DialogHeader className="shrink-0">
+          <DialogTitle className="flex items-center gap-2">
+            <FileText className="w-4 h-4" />
+            Konten — {unit?.title}
+          </DialogTitle>
+        </DialogHeader>
+
+        {/* Tab switcher */}
+        <div className="shrink-0 flex gap-1 bg-muted rounded-lg p-1 w-fit">
+          <button
+            onClick={() => setTab('edit')}
+            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${tab === 'edit' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Edit
+          </button>
+          <button
+            onClick={() => setTab('preview')}
+            className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors ${tab === 'preview' ? 'bg-background shadow-sm text-foreground' : 'text-muted-foreground hover:text-foreground'}`}
+          >
+            Preview
+          </button>
+        </div>
+
+        {/* Editor / Preview */}
+        <div className="flex-1 overflow-hidden min-h-0">
+          {tab === 'edit' ? (
+            <textarea
+              value={text}
+              onChange={e => setText(e.target.value)}
+              placeholder={`# Judul Konten\n\nTulis konten bacaan di sini...\n\n## Sub Judul\n\nParagraf isi materi.`}
+              className="w-full h-full resize-none rounded-lg border border-border bg-muted/30 p-4 text-sm font-mono leading-relaxed focus:outline-none focus:ring-2 focus:ring-primary/30"
+            />
+          ) : (
+            <div className="h-full overflow-y-auto rounded-lg border border-border bg-background p-5">
+              {text.trim() ? (
+                <div className="prose prose-sm max-w-none
+                  prose-headings:font-bold prose-headings:text-foreground
+                  prose-h1:text-xl prose-h2:text-lg prose-h3:text-base
+                  prose-p:text-muted-foreground prose-p:leading-relaxed
+                  prose-strong:text-foreground prose-strong:font-semibold
+                  prose-code:bg-muted prose-code:px-1 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono
+                  prose-pre:bg-muted prose-pre:rounded-lg
+                  prose-ul:text-muted-foreground prose-ol:text-muted-foreground
+                  prose-blockquote:border-primary/40 prose-blockquote:text-muted-foreground
+                  prose-hr:border-border">
+                  <ReactMarkdown remarkPlugins={[remarkGfm]}>{text}</ReactMarkdown>
+                </div>
+              ) : (
+                <p className="text-xs text-muted-foreground italic">Belum ada konten untuk ditampilkan.</p>
+              )}
+            </div>
+          )}
+        </div>
+
+        <DialogFooter className="shrink-0">
+          <p className="text-xs text-muted-foreground mr-auto">Gunakan # untuk H1, ## untuk H2, **tebal**, *miring*, dll.</p>
+          <Button variant="outline" onClick={onClose} disabled={saving}>Batal</Button>
+          <Button onClick={() => unit && onSave(unit.id, text)} disabled={saving}>
+            {saving ? 'Menyimpan...' : 'Simpan Konten'}
+          </Button>
+        </DialogFooter>
+      </DialogContent>
+    </Dialog>
+  )
+}
 
 // ── Unit Form Dialog ──────────────────────────────────────────────────────────
 
@@ -133,6 +218,7 @@ const AdminUnits = () => {
   const [dialogOpen, setDialogOpen] = useState(false)
   const [editTarget, setEditTarget] = useState<Unit | null>(null)
   const [deleteTarget, setDeleteTarget] = useState<Unit | null>(null)
+  const [contentTarget, setContentTarget] = useState<Unit | null>(null)
 
   const upsert = useMutation({
     mutationFn: async ({ form, id }: { form: UnitForm; id?: number }) => {
@@ -153,6 +239,14 @@ const AdminUnits = () => {
       if (error) throw error
     },
     onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-units', mid] }); setDeleteTarget(null) },
+  })
+
+  const saveContent = useMutation({
+    mutationFn: async ({ id, content }: { id: number; content: string }) => {
+      const { error } = await supabase.from('units').update({ markdown_content: content }).eq('id', id)
+      if (error) throw error
+    },
+    onSuccess: () => { qc.invalidateQueries({ queryKey: ['admin-units', mid] }); setContentTarget(null) },
   })
 
   return (
@@ -179,7 +273,7 @@ const AdminUnits = () => {
             <span className="flex-1">Judul</span>
             <span className="w-16 text-center">XP</span>
             <span className="w-20 text-center">Min Benar</span>
-            <span className="w-28 text-center">Aksi</span>
+            <span className="w-36 text-center">Aksi</span>
           </div>
           <CardContent className="p-0">
             {isLoading
@@ -198,11 +292,14 @@ const AdminUnits = () => {
                     </div>
                     <span className="w-16 text-center text-xs font-bold text-amber-700 bg-amber-50 px-2 py-0.5 rounded-full">{u.xp_reward} XP</span>
                     <span className="w-20 text-center text-xs text-muted-foreground">{u.unlock_required_correct} soal</span>
-                    <div className="w-28 flex items-center justify-center gap-1">
+                    <div className="w-36 flex items-center justify-center gap-1">
                       <Button asChild variant="ghost" size="sm" className="h-7 px-2 text-xs gap-1 text-sky-600 hover:text-sky-700 hover:bg-sky-50">
                         <Link to={`/admin/units/${u.id}/questions`}>
                           Soal <ChevronRight className="w-3 h-3" />
                         </Link>
+                      </Button>
+                      <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-purple-500 hover:text-purple-700 hover:bg-purple-50" title="Edit Konten" onClick={() => setContentTarget(u)}>
+                        <FileText className="w-3.5 h-3.5" />
                       </Button>
                       <Button variant="ghost" size="sm" className="h-7 w-7 p-0 text-muted-foreground hover:text-foreground" onClick={() => { setEditTarget(u); setDialogOpen(true) }}>
                         <Pencil className="w-3.5 h-3.5" />
@@ -225,6 +322,16 @@ const AdminUnits = () => {
           initial={editTarget}
           onSave={(form, id) => upsert.mutate({ form, id })}
           saving={upsert.isPending}
+        />
+      )}
+
+      {contentTarget && (
+        <ContentEditorDialog
+          open={!!contentTarget}
+          onClose={() => setContentTarget(null)}
+          unit={contentTarget}
+          onSave={(id, content) => saveContent.mutate({ id, content })}
+          saving={saveContent.isPending}
         />
       )}
 

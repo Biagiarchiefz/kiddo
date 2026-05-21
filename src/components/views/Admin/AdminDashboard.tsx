@@ -1,12 +1,14 @@
-﻿import { useQuery } from '@tanstack/react-query'
+import { motion } from 'framer-motion'
+import { useQuery } from '@tanstack/react-query'
 import { Link } from 'react-router'
-import { Users, BookOpen, HelpCircle, LayoutDashboard, ChevronRight } from 'lucide-react'
+import { Users, BookOpen, HelpCircle, ChevronRight } from 'lucide-react'
 import AdminLayout from '@/components/layouts/AdminLayout/AdminLayout'
 import { Card, CardContent } from '@/components/ui/card'
 import { Button } from '@/components/ui/button'
 import { Skeleton } from '@/components/ui/skeleton'
 import { supabase } from '@/utils/supabase'
 import { useBreadcrumb } from '@/contexts/BreadcrumbContext'
+import { useProfile } from '@/hooks/useProfile'
 
 async function fetchStats() {
   const [users, modules, questions] = await Promise.all([
@@ -21,25 +23,54 @@ async function fetchStats() {
   }
 }
 
-const adminSections = [
+const quickNav = [
   {
     label: 'Kelola Modul',
-    description: 'Tambah, edit, hapus, dan publish modul belajar.',
+    description: 'Tambah, edit, hapus, dan atur urutan modul belajar.',
     href: '/admin/modules',
-    icon: <BookOpen className="w-5 h-5 text-sky-600" />,
+    emoji: '📚',
     bg: 'bg-sky-50',
   },
   {
     label: 'Kelola Soal',
-    description: 'Buka halaman modul, lalu masuk ke unit untuk mengelola soal.',
+    description: 'Masuk ke unit dalam modul untuk mengelola soal kuis.',
     href: '/admin/modules',
-    icon: <HelpCircle className="w-5 h-5 text-amber-600" />,
+    emoji: '❓',
     bg: 'bg-amber-50',
+  },
+  {
+    label: 'Kelola Pengguna',
+    description: 'Lihat dan kelola data pengguna yang terdaftar di Kiddo.',
+    href: '/admin/users',
+    emoji: '👥',
+    bg: 'bg-purple-50',
   },
 ]
 
+const fadeUp = {
+  hidden: { opacity: 0, y: 20 },
+  show: (i: number) => ({
+    opacity: 1,
+    y: 0,
+    transition: { delay: i * 0.08, duration: 0.4, ease: 'easeOut' as const },
+  }),
+}
+
+const StatSkeleton = () => (
+  <Card className="border border-border">
+    <CardContent className="p-4 flex items-center gap-3">
+      <Skeleton className="w-10 h-10 rounded-lg" />
+      <div className="space-y-1.5">
+        <Skeleton className="h-3 w-16" />
+        <Skeleton className="h-5 w-12" />
+      </div>
+    </CardContent>
+  </Card>
+)
+
 const AdminDashboard = () => {
   useBreadcrumb([{ label: 'Admin' }])
+  const { profile } = useProfile()
 
   const { data: stats, isLoading } = useQuery({
     queryKey: ['admin-stats'],
@@ -49,29 +80,54 @@ const AdminDashboard = () => {
 
   return (
     <AdminLayout>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center gap-3">
-          <div className="w-10 h-10 rounded-xl bg-primary flex items-center justify-center shrink-0">
-            <LayoutDashboard className="w-5 h-5 text-white" />
-          </div>
-          <div>
-            <h1 className="text-xl font-bold text-foreground">Admin Panel</h1>
-            <p className="text-xs text-muted-foreground">Kelola konten dan pengguna Kiddo</p>
-          </div>
-        </div>
+      <div className="space-y-5">
 
-        {/* Stats */}
-        <div className="grid grid-cols-3 gap-3">
+        {/* Hero Banner */}
+        <motion.div custom={0} variants={fadeUp} initial="hidden" animate="show">
+          <Card className="bg-linear-to-r from-amber-500 to-amber-400 border-0">
+            <CardContent className="p-5 flex items-center justify-between gap-4 relative">
+              <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
+              <div className="absolute bottom-0 right-28 w-20 h-20 bg-white/10 rounded-full pointer-events-none" />
+
+              <div className="space-y-2 flex-1 relative z-10">
+                <p className="text-amber-100 text-[10px] font-bold uppercase tracking-widest">
+                  Panel Admin
+                </p>
+                <h2 className="text-xl font-bold text-white leading-snug">
+                  Halo, {profile?.username ?? 'Admin'}! 👋
+                </h2>
+                <p className="text-amber-100/80 text-xs max-w-xs leading-relaxed">
+                  Kelola konten, soal, dan pengguna platform Kiddo dari sini.
+                </p>
+                <Button
+                  asChild
+                  size="sm"
+                  className="rounded-lg gap-1.5 bg-white text-amber-600 hover:bg-amber-50 border-0 font-bold h-8 text-xs"
+                >
+                  <Link to="/admin/modules">
+                    Kelola Modul <ChevronRight className="w-3.5 h-3.5" />
+                  </Link>
+                </Button>
+              </div>
+
+              <div className="hidden md:block select-none text-7xl shrink-0 drop-shadow-lg relative z-10">
+                🛡️
+              </div>
+            </CardContent>
+          </Card>
+        </motion.div>
+
+        {/* Stats row */}
+        <motion.div
+          custom={1} variants={fadeUp} initial="hidden" animate="show"
+          className="grid grid-cols-3 gap-3"
+        >
           {isLoading ? (
-            Array.from({ length: 3 }).map((_, i) => (
-              <Card key={i} className="border border-border">
-                <CardContent className="p-4 flex items-center gap-3">
-                  <Skeleton className="w-10 h-10 rounded-lg" />
-                  <div className="space-y-1.5"><Skeleton className="h-3 w-16" /><Skeleton className="h-5 w-10" /></div>
-                </CardContent>
-              </Card>
-            ))
+            <>
+              <StatSkeleton />
+              <StatSkeleton />
+              <StatSkeleton />
+            </>
           ) : (
             <>
               <Card className="border border-border">
@@ -85,6 +141,7 @@ const AdminDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
+
               <Card className="border border-border">
                 <CardContent className="p-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-green-100 flex items-center justify-center shrink-0">
@@ -96,6 +153,7 @@ const AdminDashboard = () => {
                   </div>
                 </CardContent>
               </Card>
+
               <Card className="border border-border">
                 <CardContent className="p-4 flex items-center gap-3">
                   <div className="w-10 h-10 rounded-lg bg-amber-100 flex items-center justify-center shrink-0">
@@ -109,29 +167,42 @@ const AdminDashboard = () => {
               </Card>
             </>
           )}
-        </div>
+        </motion.div>
 
-        {/* Quick nav */}
-        <div className="grid grid-cols-2 gap-3">
-          {adminSections.map(s => (
-            <Card key={s.href + s.label} className="border border-border">
-              <CardContent className="p-5 flex items-start justify-between gap-4">
-                <div className="flex items-start gap-3">
-                  <div className={`w-10 h-10 rounded-lg flex items-center justify-center shrink-0 ${s.bg}`}>
-                    {s.icon}
+        {/* Section header */}
+        <motion.div
+          custom={2} variants={fadeUp} initial="hidden" animate="show"
+          className="flex items-center justify-between"
+        >
+          <h3 className="text-sm font-bold text-foreground">Akses Cepat</h3>
+        </motion.div>
+
+        {/* Quick nav cards */}
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+          {quickNav.map((s, i) => (
+            <motion.div
+              key={s.label}
+              custom={i + 3}
+              variants={fadeUp}
+              initial="hidden"
+              animate="show"
+              whileHover={{ y: -4, transition: { type: 'spring' as const, stiffness: 300, damping: 20 } }}
+            >
+              <Link to={s.href} className="block h-full">
+                <Card className="border border-border h-full">
+                  <div className={`h-24 flex items-center justify-center text-4xl ${s.bg}`}>
+                    {s.emoji}
                   </div>
-                  <div>
+                  <CardContent className="p-3.5 space-y-1.5">
                     <p className="font-bold text-sm text-foreground">{s.label}</p>
-                    <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{s.description}</p>
-                  </div>
-                </div>
-                <Button asChild size="sm" variant="outline" className="shrink-0 rounded-lg h-8 gap-1 text-xs">
-                  <Link to={s.href}>Buka <ChevronRight className="w-3 h-3" /></Link>
-                </Button>
-              </CardContent>
-            </Card>
+                    <p className="text-xs text-muted-foreground leading-relaxed">{s.description}</p>
+                  </CardContent>
+                </Card>
+              </Link>
+            </motion.div>
           ))}
         </div>
+
       </div>
     </AdminLayout>
   )

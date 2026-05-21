@@ -1,12 +1,13 @@
-import { ArrowLeft, BookOpen, CheckCircle2, Circle, Zap, ClipboardList } from 'lucide-react'
+import { ArrowLeft, BookOpen, Zap, ClipboardList } from 'lucide-react'
 import { Link } from 'react-router'
 import { motion } from 'framer-motion'
+import ReactMarkdown from 'react-markdown'
+import remarkGfm from 'remark-gfm'
 import AppLayout from '@/components/layouts/AppLayout/AppLayout'
 import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { useUnitDetail } from './useUnitDetail'
-import type { SectionBlock } from '@/types/database'
 
 // ── Animation variants ────────────────────────────────────────────────────────
 
@@ -19,51 +20,17 @@ const stagger = {
   show: { transition: { staggerChildren: 0.08, delayChildren: 0.1 } },
 }
 
-// ── Content Blocks ────────────────────────────────────────────────────────────
+// ── Heading parser ────────────────────────────────────────────────────────────
 
-const ParagraphBlock = ({ title, body }: { title: string; body: string }) => (
-  <motion.div variants={fadeUp} className="space-y-1.5">
-    <h2 className="text-sm font-bold text-foreground">{title}</h2>
-    <p className="text-sm text-muted-foreground leading-relaxed">{body}</p>
-  </motion.div>
-)
-
-const InfoBoxesBlock = ({
-  boxes,
-}: {
-  boxes: Array<{ title: string; icon: string; body: string }>
-}) => (
-  <motion.div variants={fadeUp} className="grid grid-cols-2 gap-2.5">
-    {boxes.map((box, i) => (
-      <div
-        key={i}
-        className={`rounded-xl p-3 space-y-1.5 ${
-          i % 2 === 0
-            ? 'bg-amber-50 border border-amber-100'
-            : 'bg-blue-50 border border-blue-100'
-        }`}
-      >
-        <div className="flex items-center gap-1.5">
-          <span className="text-base leading-none">{box.icon}</span>
-          <p
-            className={`text-[10px] font-bold uppercase tracking-wide leading-none ${
-              i % 2 === 0 ? 'text-amber-700' : 'text-blue-700'
-            }`}
-          >
-            {box.title}
-          </p>
-        </div>
-        <p
-          className={`text-xs leading-relaxed ${
-            i % 2 === 0 ? 'text-amber-800/80' : 'text-blue-800/80'
-          }`}
-        >
-          {box.body}
-        </p>
-      </div>
-    ))}
-  </motion.div>
-)
+function parseHeadings(md: string) {
+  return md
+    .split('\n')
+    .filter(l => /^#{1,3} /.test(l))
+    .map(l => ({
+      level: (l.match(/^#+/)?.[0].length ?? 1),
+      text: l.replace(/^#+\s*/, ''),
+    }))
+}
 
 // ── Loading Skeleton ──────────────────────────────────────────────────────────
 
@@ -110,9 +77,8 @@ const UnitDetail = () => {
   const correctAnswers = progress?.correct_answers ?? 0
   const readProgress = questionCount > 0 ? Math.round((correctAnswers / questionCount) * 100) : 0
 
-  const paragraphTitles = (content?.sections ?? [])
-    .filter((s): s is Extract<SectionBlock, { type: 'paragraph' }> => s.type === 'paragraph')
-    .map(s => s.title)
+  const markdownContent = unit.markdown_content ?? ''
+  const headings = parseHeadings(markdownContent)
 
   return (
     <AppLayout>
@@ -178,29 +144,25 @@ const UnitDetail = () => {
             animate="show"
           >
             <Card className="shadow-sm">
-              <CardContent className="p-5 space-y-5">
-                {/* Intro */}
-                {content?.intro && (
-                  <motion.div
-                    variants={fadeUp}
-                    className="flex items-start gap-2.5 bg-primary/5 border border-primary/10 rounded-xl p-3.5"
-                  >
-                    <BookOpen className="w-4 h-4 text-primary shrink-0 mt-0.5" />
-                    <p className="text-xs text-foreground/80 leading-relaxed">{content.intro}</p>
+              <CardContent className="p-5">
+                {markdownContent.trim() ? (
+                  <motion.div variants={fadeUp} className="
+                    prose prose-sm max-w-none
+                    prose-headings:font-bold prose-headings:text-foreground prose-headings:mt-5 prose-headings:mb-2 prose-headings:first:mt-0
+                    prose-h1:text-xl prose-h2:text-base prose-h3:text-sm
+                    prose-p:text-muted-foreground prose-p:leading-relaxed prose-p:my-2
+                    prose-strong:text-foreground prose-strong:font-semibold
+                    prose-em:text-muted-foreground
+                    prose-code:bg-muted prose-code:px-1.5 prose-code:py-0.5 prose-code:rounded prose-code:text-xs prose-code:font-mono prose-code:text-foreground
+                    prose-pre:bg-muted prose-pre:rounded-xl prose-pre:p-4
+                    prose-ul:text-muted-foreground prose-ul:my-2 prose-li:my-0.5
+                    prose-ol:text-muted-foreground prose-ol:my-2
+                    prose-blockquote:border-l-primary/40 prose-blockquote:text-muted-foreground prose-blockquote:bg-muted/30 prose-blockquote:rounded-r-lg prose-blockquote:py-1
+                    prose-hr:border-border prose-hr:my-4
+                    prose-table:text-sm prose-th:text-foreground prose-td:text-muted-foreground
+                  ">
+                    <ReactMarkdown remarkPlugins={[remarkGfm]}>{markdownContent}</ReactMarkdown>
                   </motion.div>
-                )}
-
-                {/* Sections */}
-                {content?.sections && content.sections.length > 0 ? (
-                  content.sections.map((section, i) => {
-                    if (section.type === 'paragraph') {
-                      return <ParagraphBlock key={i} title={section.title} body={section.body} />
-                    }
-                    if (section.type === 'info_boxes') {
-                      return <InfoBoxesBlock key={i} boxes={section.boxes} />
-                    }
-                    return null
-                  })
                 ) : (
                   <div className="text-center py-10 text-muted-foreground">
                     <BookOpen className="w-8 h-8 mx-auto mb-2 opacity-30" />
@@ -219,26 +181,16 @@ const UnitDetail = () => {
             className="w-56 shrink-0 space-y-3 sticky top-20"
           >
             {/* Daftar Isi */}
-            {paragraphTitles.length > 0 && (
+            {headings.length > 0 && (
               <Card className="shadow-sm">
                 <CardContent className="p-4 space-y-2.5">
                   <h4 className="text-xs font-bold text-foreground uppercase tracking-wide">Daftar Isi</h4>
                   <div className="space-y-1.5">
-                    {paragraphTitles.map((title, i) => (
-                      <div key={i} className="flex items-start gap-2">
-                        {i === 0 ? (
-                          <CheckCircle2 className="w-3.5 h-3.5 text-green-500 shrink-0 mt-0.5" />
-                        ) : (
-                          <Circle className="w-3.5 h-3.5 text-muted-foreground/30 shrink-0 mt-0.5" />
-                        )}
-                        <span
-                          className={`text-xs leading-snug ${
-                            i === 0
-                              ? 'text-foreground font-medium'
-                              : 'text-muted-foreground'
-                          }`}
-                        >
-                          {title}
+                    {headings.map((h, i) => (
+                      <div key={i} className="flex items-start gap-2" style={{ paddingLeft: `${(h.level - 1) * 10}px` }}>
+                        <span className="w-1 h-1 rounded-full bg-muted-foreground/40 shrink-0 mt-1.5" />
+                        <span className={`text-xs leading-snug ${h.level === 1 ? 'text-foreground font-semibold' : 'text-muted-foreground'}`}>
+                          {h.text}
                         </span>
                       </div>
                     ))}

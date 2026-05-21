@@ -1,6 +1,7 @@
 import { Link, useLocation } from 'react-router'
 import { Button } from '@/components/ui/button'
 import { Menu } from 'lucide-react'
+import kiddoLogo from '@/assets/images/kiddoLogo.webp'
 
 const navLinks = [
   { label: 'Beranda', href: '/' },
@@ -16,12 +17,9 @@ const LandingPageLayoutNavbar = () => {
     <nav className="bg-white border-b border-sky-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
         {/* Logo */}
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-8 h-8 rounded-xl flex items-center justify-center text-white font-black text-sm"
-            style={{ background: 'linear-gradient(135deg, #38BDF8, #0284C7)' }}>
-            K
-          </div>
-          <span className="font-bold text-xl text-sky-600">Kiddo</span>
+        <Link to="/">
+          {/* <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" /> */}
+          <h1 className='text-4xl font-bold text-sky-500'>kiddo</h1>
         </Link>
 
         {/* Nav Links */}

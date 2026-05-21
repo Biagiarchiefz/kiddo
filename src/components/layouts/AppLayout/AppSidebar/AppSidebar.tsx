@@ -1,7 +1,10 @@
-import { Rocket, ClipboardList, Medal, Trophy, HelpCircle, LogOut, Lock } from 'lucide-react'
+import { motion } from 'framer-motion'
+import { Rocket, ClipboardList, Medal, Trophy, LogOut, ShieldCheck, Zap } from 'lucide-react'
 import { Link, useLocation, useNavigate } from 'react-router'
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
+import kiddoLogo from '@/assets/images/kiddoLogo.webp'
 import { Button } from '@/components/ui/button'
+import { Skeleton } from '@/components/ui/skeleton'
+import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar'
 import {
   AlertDialog,
   AlertDialogAction,
@@ -13,7 +16,6 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from '@/components/ui/alert-dialog'
-import { Skeleton } from '@/components/ui/skeleton'
 import { supabase } from '@/utils/supabase'
 import { useProfile } from '@/hooks/useProfile'
 import {
@@ -61,6 +63,17 @@ const navItems: NavItem[] = [
   },
 ]
 
+const PILL_ID = 'app-nav-active'
+
+const ActivePill = () => (
+  <motion.div
+    layoutId={PILL_ID}
+    className="absolute inset-0 bg-white rounded-lg shadow-sm pointer-events-none"
+    initial={false}
+    transition={{ type: 'spring', stiffness: 420, damping: 36 }}
+  />
+)
+
 const Divider = () => (
   <div className="shrink-0 h-px bg-sidebar-border mx-0" />
 )
@@ -69,51 +82,53 @@ const AppSidebar = () => {
   const { pathname } = useLocation()
   const navigate = useNavigate()
   const { profile, isLoading } = useProfile()
+  const initial = profile?.username?.charAt(0).toUpperCase() ?? '?'
 
   const handleLogout = async () => {
     await supabase.auth.signOut()
     navigate('/')
   }
 
-  const initial = profile?.username?.charAt(0).toUpperCase() ?? '?'
-
   return (
     <Sidebar collapsible="offcanvas">
 
-      {/* Profile header with sky blue gradient accent */}
-      <SidebarHeader className="items-center gap-2.5 p-0">
-        <div className="w-full bg-linear-to-b from-sky-500 to-sky-400 px-4 pt-6 pb-5 flex flex-col items-center gap-2.5">
-          {isLoading ? (
-            <>
-              <Skeleton className="w-14 h-14 rounded-full bg-white/30" />
-              <div className="space-y-1.5 flex flex-col items-center">
-                <Skeleton className="h-3 w-24 bg-white/30" />
-                <Skeleton className="h-2.5 w-16 bg-white/20" />
+      <SidebarHeader className="px-4 py-3 gap-3">
+        {/* <Link to="/dashboard">
+          <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" />
+        </Link> */}
+
+        {/* User info + XP */}
+        {isLoading ? (
+          <div className="flex items-center gap-2 mt-1">
+            <Skeleton className="w-9 h-9 rounded-full shrink-0 bg-white/20" />
+            <div className="flex flex-col gap-1.5 flex-1">
+              <Skeleton className="h-2.5 w-24 bg-white/20" />
+              <Skeleton className="h-2 w-16 bg-white/20" />
+            </div>
+          </div>
+        ) : (
+          <div className="flex items-center gap-2 mt-1">
+            <Avatar className="w-9 h-9 shrink-0">
+              {profile?.avatar_url && (
+                <AvatarImage src={profile.avatar_url} alt={profile.username} />
+              )}
+              <AvatarFallback className="bg-white/20 text-white text-xs font-bold">
+                {initial}
+              </AvatarFallback>
+            </Avatar>
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-semibold text-white leading-none truncate">
+                {profile?.username ?? 'Explorer'}
+              </p>
+              <div className="flex items-center gap-1 mt-1">
+                <Zap className="w-3 h-3 text-yellow-300 fill-yellow-300 shrink-0" />
+                <span className="text-xs font-bold text-yellow-300">
+                  {(profile?.total_xp ?? 0).toLocaleString('id-ID')} XP
+                </span>
               </div>
-            </>
-          ) : (
-            <>
-              <Avatar className="w-14 h-14 ring-2 ring-white/60 shadow-md">
-                {profile?.avatar_url && (
-                  <AvatarImage src={profile.avatar_url} alt={profile.username} />
-                )}
-                <AvatarFallback className="bg-white/20 text-white text-xl font-bold">
-                  {initial}
-                </AvatarFallback>
-              </Avatar>
-              <div className="text-center">
-                <p className="font-bold text-sm text-white">
-                  {profile?.username ?? 'Explorer'}
-                </p>
-                <p className="text-xs text-white/70 mt-0.5">
-                  {profile?.school
-                    ? profile.school
-                    : `Level ${profile?.level ?? 1} Adventurer`}
-                </p>
-              </div>
-            </>
-          )}
-        </div>
+            </div>
+          </div>
+        )}
       </SidebarHeader>
 
       <Divider />
@@ -124,11 +139,12 @@ const AppSidebar = () => {
           {navItems.map(item => {
             const active = item.match(pathname)
             return (
-              <SidebarMenuItem key={item.href}>
+              <SidebarMenuItem key={item.href} className="relative">
+                {active && <ActivePill />}
                 <SidebarMenuButton
                   asChild
                   isActive={active}
-                  className="h-10 rounded-lg font-semibold"
+                  className="relative z-10 h-10 rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
                 >
                   <Link to={item.href}>
                     {item.icon}
@@ -145,28 +161,29 @@ const AppSidebar = () => {
 
       {/* Footer */}
       <SidebarFooter className="gap-2 py-3 px-3">
-        <Button className="w-full rounded-lg gap-2 font-semibold" size="default">
-          <Lock className="w-4 h-4" />
-          Buka Semua
-        </Button>
-
-        <div className="flex flex-col gap-0.5">
+        {profile?.role === 'admin' && (
           <Button
-            variant="ghost"
+            asChild
+            variant="outline"
             size="sm"
-            className="w-full justify-start gap-2.5 text-sidebar-foreground/60 hover:bg-black/5 hover:text-sidebar-foreground font-normal h-9 px-3"
+            className="w-full rounded-lg gap-2 font-semibold bg-white border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
           >
-            <HelpCircle className="w-4 h-4 shrink-0" />
-            Bantuan
+            <Link to="/admin">
+              <ShieldCheck className="w-4 h-4" />
+              Kembali ke Admin
+            </Link>
           </Button>
+        )}
+
+        <div className="flex flex-col gap-1.5">
           <AlertDialog>
             <AlertDialogTrigger asChild>
               <Button
-                variant="ghost"
+                variant="outline"
                 size="sm"
-                className="w-full justify-start gap-2.5 text-destructive hover:bg-destructive/10 hover:text-destructive font-normal h-9 px-3"
+                className="w-full rounded-lg gap-2 font-semibold bg-white border-destructive/30 text-destructive hover:bg-red-50 hover:border-destructive/50 hover:text-destructive"
               >
-                <LogOut className="w-4 h-4 shrink-0" />
+                <LogOut className="w-4 h-4" />
                 Keluar
               </Button>
             </AlertDialogTrigger>
