@@ -84,7 +84,7 @@ const UnitDetail = () => {
     <AppLayout>
       <div className="space-y-4">
 
-        {/* ── Header Banner ── */}
+
         <motion.div
           initial={{ opacity: 0, y: 14 }}
           animate={{ opacity: 1, y: 0 }}
