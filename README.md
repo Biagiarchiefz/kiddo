@@ -6,7 +6,7 @@
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat&logo=tailwindcss)
 ![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat&logo=supabase)
 
-**Kiddo** adalah platform belajar interaktif yang dirancang khusus untuk anak usia **7–12 tahun**. Anak-anak dapat menjelajahi modul materi, mengerjakan kuis singkat, mengumpulkan XP & lencana, dan bersaing di papan peringkat — semuanya dalam antarmuka yang menyenangkan dan sesuai Kurikulum Merdeka.
+**Kiddo** adalah platform belajar interaktif yang dirancang khusus untuk anak usia **7–12 tahun**. Anak-anak dapat menjelajahi modul materi, mengerjakan kuis singkat, mengumpulkan XP & lencana, dan bersaing di papan peringkat — semuanya dalam antarmuka yang menyenangkan.
 
 ---
 
@@ -15,7 +15,7 @@
 | Fitur | Deskripsi |
 |---|---|
 | **Materi Interaktif** | Modul belajar terstruktur per unit dengan konten teks & gambar |
-| **Kuis Kilat** | Kuis pilihan ganda setelah setiap unit untuk mengumpulkan XP |
+| **Kuis Kilat** | Kuis pilihan ganda, benar/salah, isi jawaban, setelah setiap unit untuk mengumpulkan XP |
 | **Sistem XP & Level** | Poin pengalaman bertambah setiap menyelesaikan kuis |
 | **Papan Peringkat** | Ranking pengguna berdasarkan total XP |
 | **Lencana (Badges)** | Pencapaian khusus yang dapat dikumpulkan |
@@ -194,18 +194,6 @@ npm run build     # Type-check + build produksi
 npm run lint      # Jalankan ESLint
 npm run preview   # Preview build produksi
 ```
-
----
-
-## Standar Upload Gambar
-
-Semua gambar dikompresi di sisi klien sebelum diunggah ke Supabase Storage:
-- Format dikonversi ke **WebP**
-- Resolusi maksimal **1080px**
-- Library: `browser-image-compression`
-- Database hanya menyimpan **URL publik**, bukan binary/base64
-
----
 
 ## Lisensi
 
