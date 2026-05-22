@@ -1,73 +1,212 @@
-# React + TypeScript + Vite
+# Kiddo — Platform Belajar Interaktif untuk Anak Indonesia
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+![React](https://img.shields.io/badge/React-19-61DAFB?style=flat&logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?style=flat&logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-8-646CFF?style=flat&logo=vite)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind_CSS-v4-38BDF8?style=flat&logo=tailwindcss)
+![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?style=flat&logo=supabase)
 
-Currently, two official plugins are available:
+**Kiddo** adalah platform belajar interaktif yang dirancang khusus untuk anak usia **7–12 tahun**. Anak-anak dapat menjelajahi modul materi, mengerjakan kuis singkat, mengumpulkan XP & lencana, dan bersaing di papan peringkat — semuanya dalam antarmuka yang menyenangkan dan sesuai Kurikulum Merdeka.
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+---
 
-## React Compiler
+## Fitur Utama
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+| Fitur | Deskripsi |
+|---|---|
+| **Materi Interaktif** | Modul belajar terstruktur per unit dengan konten teks & gambar |
+| **Kuis Kilat** | Kuis pilihan ganda setelah setiap unit untuk mengumpulkan XP |
+| **Sistem XP & Level** | Poin pengalaman bertambah setiap menyelesaikan kuis |
+| **Papan Peringkat** | Ranking pengguna berdasarkan total XP |
+| **Lencana (Badges)** | Pencapaian khusus yang dapat dikumpulkan |
+| **Tantangan (Challenges)** | Soal-soal tantangan lintas modul |
+| **Admin Panel** | Kelola modul, unit, soal, dan pengguna |
 
-## Expanding the ESLint configuration
+---
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## Demo Akun
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+> Akun berikut tersedia untuk keperluan penilaian / demo.
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+### Admin
+| Field | Value |
+|---|---|
+| Email | `admin@gmail.com` |
+| Password | `123456` |
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+Setelah login sebagai admin, akses panel admin di: `/admin`
+
+### User Biasa
+| Field | Value |
+|---|---|
+| Email | `asep@gmail.com` |
+| Password | `123456` |
+
+---
+
+## Tech Stack
+
+- **Frontend:** React 19, TypeScript, Vite 8
+- **Styling:** Tailwind CSS v4, shadcn/ui, Framer Motion
+- **State Management:** Zustand, TanStack Query v5
+- **Routing:** React Router v7
+- **Backend & Auth:** Supabase (PostgreSQL, Auth, Storage)
+- **UI Components:** Radix UI primitives via shadcn, Lucide React icons
+
+---
+
+## Struktur Proyek
+
+```
+kiddo/
+├── public/
+├── src/
+│   ├── assets/
+│   │   └── images/          # Aset gambar (WebP)
+│   ├── components/
+│   │   ├── common/          # Komponen shared lintas fitur
+│   │   │   ├── AuthGuard.tsx      # Guard: redirect ke / jika belum login
+│   │   │   ├── AdminGuard.tsx     # Guard: redirect ke /dashboard jika bukan admin
+│   │   │   ├── GuestGuard.tsx     # Guard: redirect ke /dashboard jika sudah login
+│   │   │   ├── Pagination.tsx
+│   │   │   └── SearchInput.tsx
+│   │   ├── layouts/
+│   │   │   ├── LandingPageLayout/ # Layout publik (Navbar + Footer)
+│   │   │   ├── AppLayout/         # Layout app siswa (Sidebar + Navbar)
+│   │   │   └── AdminLayout/       # Layout panel admin
+│   │   ├── ui/              # Komponen shadcn/ui (jangan diedit manual)
+│   │   └── views/           # Komponen halaman per route
+│   │       ├── Home/              # Landing page
+│   │       ├── Login/
+│   │       ├── Register/
+│   │       ├── Dashboard/
+│   │       ├── Materi/            # Daftar unit dalam satu modul
+│   │       ├── UnitDetail/        # Konten unit belajar
+│   │       ├── QuizKilat/         # Kuis setelah unit
+│   │       ├── Challenge/
+│   │       ├── Leaderboard/
+│   │       ├── Badges/
+│   │       └── Admin/             # Halaman-halaman admin
+│   ├── contexts/
+│   │   ├── AuthContext.tsx        # Context autentikasi global
+│   │   └── BreadcrumbContext.tsx
+│   ├── features/            # Route definitions per fitur
+│   │   ├── auth/
+│   │   ├── dashboard/
+│   │   ├── materi/
+│   │   ├── challenges/
+│   │   ├── leaderboard/
+│   │   ├── badges/
+│   │   └── admin/
+│   ├── hooks/               # Utility hooks shared (useDebounce, use-mobile)
+│   ├── lib/
+│   │   └── utils.ts         # Helper cn() untuk merge Tailwind classes
+│   ├── routes/
+│   │   └── index.tsx        # Router utama (createBrowserRouter)
+│   ├── types/
+│   │   └── database.ts      # TypeScript types hasil generate Supabase
+│   ├── utils/
+│   │   └── supabase.ts      # Supabase client instance
+│   ├── index.css            # Tailwind v4 + CSS variables (design tokens)
+│   └── main.tsx             # Entry point
+├── .env.example
+├── package.json
+├── tsconfig.app.json
+└── vite.config.ts
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+### Pola Arsitektur
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+- **Route guards:** Tiga jenis guard melindungi halaman sesuai status autentikasi dan role.
+- **View hooks:** Setiap halaman memiliki custom hook co-located (misal `useLogin.tsx`) yang mengelola semua state & data — komponen view hanya bertugas merender.
+- **Features folder:** Setiap fitur mendefinisikan route-nya sendiri di `<feature>.routes.tsx` dan di-spread ke router utama di `src/routes/index.tsx`.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+---
+
+## Alur Navigasi
+
 ```
+/                          → Landing page (publik)
+/login                     → Halaman login
+/daftar                    → Halaman registrasi
+
+/dashboard                 → Dashboard siswa (perlu login)
+/materi/:id                → Daftar unit dalam satu modul
+/materi/:id/unit/:uid      → Konten unit belajar
+/materi/:id/unit/:uid/kuis → Kuis kilat
+/challenges                → Tantangan
+/leaderboard               → Papan peringkat
+/badges                    → Koleksi lencana
+
+/admin                     → Dashboard admin (perlu role admin)
+/admin/modules             → Kelola modul
+/admin/modules/:id/units   → Kelola unit per modul
+/admin/units/:id/questions → Kelola soal per unit
+/admin/users               → Kelola pengguna
+```
+
+---
+
+## Menjalankan Secara Lokal
+
+### Prasyarat
+
+- Node.js 18+
+- npm
+- Akun [Supabase](https://supabase.com)
+
+### Langkah Instalasi
+
+```bash
+# 1. Clone repo
+git clone https://github.com/<username>/kiddo.git
+cd kiddo
+
+# 2. Install dependencies
+npm install
+
+# 3. Salin file environment
+cp .env.example .env
+```
+
+### Konfigurasi Environment
+
+Isi file `.env` dengan kredensial Supabase project Anda:
+
+```env
+VITE_SUPABASE_URL=https://<project-id>.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=<your-anon-key>
+```
+
+### Jalankan Dev Server
+
+```bash
+npm run dev
+```
+
+Aplikasi berjalan di `http://localhost:5173`.
+
+### Perintah Tersedia
+
+```bash
+npm run dev       # Dev server dengan Vite HMR
+npm run build     # Type-check + build produksi
+npm run lint      # Jalankan ESLint
+npm run preview   # Preview build produksi
+```
+
+---
+
+## Standar Upload Gambar
+
+Semua gambar dikompresi di sisi klien sebelum diunggah ke Supabase Storage:
+- Format dikonversi ke **WebP**
+- Resolusi maksimal **1080px**
+- Library: `browser-image-compression`
+- Database hanya menyimpan **URL publik**, bukan binary/base64
+
+---
+
+## Lisensi
+
+Proyek ini dibuat untuk keperluan pembelajaran dan kompetisi.
