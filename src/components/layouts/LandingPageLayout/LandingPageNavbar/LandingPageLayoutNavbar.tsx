@@ -13,6 +13,18 @@ const navLinks = [
 const LandingPageLayoutNavbar = () => {
   const location = useLocation()
 
+  const handleNavClick = (e: React.MouseEvent<HTMLAnchorElement>, href: string) => {
+    if (location.pathname !== '/') return
+    const hash = href.split('#')[1]
+    if (hash) {
+      e.preventDefault()
+      document.getElementById(hash)?.scrollIntoView({ behavior: 'smooth' })
+    } else {
+      e.preventDefault()
+      window.scrollTo({ top: 0, behavior: 'smooth' })
+    }
+  }
+
   return (
     <nav className="bg-white border-b border-sky-100 sticky top-0 z-50 shadow-sm">
       <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
@@ -32,6 +44,7 @@ const LandingPageLayoutNavbar = () => {
               <Link
                 key={link.href}
                 to={link.href}
+                onClick={(e) => handleNavClick(e, link.href)}
                 className={`text-sm font-medium transition-colors pb-0.5 ${
                   isActive
                     ? 'text-sky-600 font-semibold border-b-2 border-sky-500'

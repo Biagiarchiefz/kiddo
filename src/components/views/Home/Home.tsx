@@ -1,4 +1,5 @@
-import { Link } from "react-router";
+import { useEffect } from "react";
+import { Link, useLocation } from "react-router";
 import { motion } from "framer-motion";
 import LandingPageLayout from "@/components/layouts/LandingPageLayout/LandingPageLayout";
 import { Button } from "@/components/ui/button";
@@ -141,6 +142,17 @@ const testimonials = [
 // ── Main Component ────────────────────────────────────────────────────────────
 
 const Home = () => {
+  const location = useLocation()
+
+  useEffect(() => {
+    const hash = location.hash.slice(1)
+    if (!hash) return
+    const el = document.getElementById(hash)
+    if (el) {
+      setTimeout(() => el.scrollIntoView({ behavior: 'smooth' }), 100)
+    }
+  }, [location.hash])
+
   return (
     <LandingPageLayout>
       {/* ══════════════ 1. HERO ══════════════ */}
