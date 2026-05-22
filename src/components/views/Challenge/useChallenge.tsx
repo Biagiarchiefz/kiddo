@@ -184,6 +184,8 @@ export const useChallenge = () => {
     correctCount: answers.filter(a => a.isCorrect).length,
     totalXpEarned,
     topicBreakdown,
+    questions,
+    answers,
     selectAnswer: (opt: string) => setSelectedAnswer(opt),
     toggleHint: () => setShowHint(p => !p),
     submitAndNext,

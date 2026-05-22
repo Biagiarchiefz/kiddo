@@ -7,7 +7,7 @@ import { Button } from '@/components/ui/button'
 import { Card, CardContent } from '@/components/ui/card'
 import { Skeleton } from '@/components/ui/skeleton'
 import { cn } from '@/lib/utils'
-import { useQuizKilat } from './useQuizKilat'
+import { useQuizKilat, type QuestionWithOptions } from './useQuizKilat'
 
 // ── Level-up modal ────────────────────────────────────────────────────────────
 
@@ -112,12 +112,12 @@ const QuizSkeleton = () => (
     <div className="space-y-4">
       <Skeleton className="h-10 w-64 rounded-xl" />
       <Skeleton className="h-2 w-full rounded-full" />
-      <div className="flex gap-5 items-start">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
         <div className="flex-1 space-y-3">
           <Skeleton className="h-52 w-full rounded-2xl" />
           <Skeleton className="h-10 w-full rounded-xl" />
         </div>
-        <Skeleton className="w-52 h-48 rounded-2xl shrink-0" />
+        <Skeleton className="hidden lg:block lg:w-52 h-48 rounded-2xl lg:shrink-0" />
       </div>
     </div>
   </AppLayout>
@@ -135,6 +135,8 @@ interface ResultProps {
   levelUpInfo: { oldLevel: number; newLevel: number; badgeName: string; badgeEmoji: string } | null
   clearLevelUp: () => void
   retry: () => void
+  questions: QuestionWithOptions[]
+  answers: Array<{ questionId: number; selectedOption: string; isCorrect: boolean }>
 }
 
 const QuizResult = ({
@@ -147,6 +149,8 @@ const QuizResult = ({
   levelUpInfo,
   clearLevelUp,
   retry,
+  questions,
+  answers,
 }: ResultProps) => {
   const pct = totalQuestions > 0 ? Math.round((correctCount / totalQuestions) * 100) : 0
   const emoji = pct >= 80 ? '🎉' : pct >= 60 ? '😊' : '💪'
@@ -235,6 +239,109 @@ const QuizResult = ({
             </div>
           </CardContent>
         </Card>
+
+        {/* ── Answer Review ── */}
+        <Card className="shadow-sm">
+          <CardContent className="p-5 space-y-3">
+            <p className="text-sm font-bold text-foreground">Pembahasan Jawaban</p>
+            <div className="space-y-2.5">
+              {questions.map((q, idx) => {
+                const record = answers.find(a => a.questionId === q.id)
+                if (!record) return null
+                const { isCorrect, selectedOption } = record
+                return (
+                  <div
+                    key={q.id}
+                    className={cn(
+                      'rounded-xl border p-3.5 space-y-2.5',
+                      isCorrect ? 'border-green-100 bg-green-50/60' : 'border-red-100 bg-red-50/60',
+                    )}
+                  >
+                    <div className="flex items-start gap-2">
+                      {isCorrect
+                        ? <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                        : <XCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                      }
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-muted-foreground font-semibold mb-0.5">Soal {idx + 1}</p>
+                        <p className="text-sm font-medium text-foreground leading-relaxed">{q.question}</p>
+                      </div>
+                    </div>
+
+                    {q.question_type === 'pilihan_ganda' && (
+                      <div className="ml-6 space-y-1.5">
+                        {q.question_options
+                          .filter(opt => opt.option_key === q.correct || opt.option_key === selectedOption)
+                          .map(opt => {
+                            const isCorrectOpt = opt.option_key === q.correct
+                            return (
+                              <div
+                                key={opt.option_key}
+                                className={cn(
+                                  'flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs',
+                                  isCorrectOpt ? 'bg-green-100 text-green-800' : 'bg-red-100 text-red-700',
+                                )}
+                              >
+                                <span className={cn(
+                                  'w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-black shrink-0',
+                                  isCorrectOpt ? 'bg-green-500 text-white' : 'bg-red-400 text-white',
+                                )}>
+                                  {opt.option_key}
+                                </span>
+                                <span className="flex-1">{opt.text}</span>
+                                <span className={cn(
+                                  'shrink-0 text-[10px] font-bold',
+                                  isCorrectOpt ? 'text-green-700' : 'text-red-500',
+                                )}>
+                                  {isCorrectOpt ? '✓ Benar' : '✗ Kamu'}
+                                </span>
+                              </div>
+                            )
+                          })}
+                      </div>
+                    )}
+
+                    {q.question_type === 'benar_salah' && (
+                      <div className="ml-6 flex flex-wrap gap-4 text-xs">
+                        <span className="text-muted-foreground">
+                          Jawabanmu:{' '}
+                          <span className={cn('font-bold', isCorrect ? 'text-green-700' : 'text-red-600')}>
+                            {selectedOption === 'benar' ? 'Benar' : 'Salah'}
+                          </span>
+                        </span>
+                        {!isCorrect && (
+                          <span className="text-muted-foreground">
+                            Jawaban benar:{' '}
+                            <span className="font-bold text-green-700">
+                              {q.correct === 'benar' ? 'Benar' : 'Salah'}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {q.question_type === 'isian_singkat' && (
+                      <div className="ml-6 flex flex-wrap gap-4 text-xs">
+                        <span className="text-muted-foreground">
+                          Jawabanmu:{' '}
+                          <span className={cn('font-bold', isCorrect ? 'text-green-700' : 'text-red-600')}>
+                            {selectedOption}
+                          </span>
+                        </span>
+                        {!isCorrect && (
+                          <span className="text-muted-foreground">
+                            Jawaban benar:{' '}
+                            <span className="font-bold text-green-700">{q.correct}</span>
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                )
+              })}
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
     </AppLayout>
   )
@@ -244,10 +351,10 @@ const QuizResult = ({
 
 const QuizKilat = () => {
   const {
-    module, unit, currentQuestion, currentIndex, totalQuestions,
+    module, unit, questions, currentQuestion, currentIndex, totalQuestions,
     selectedAnswer, showHint, phase, isLoading, isSubmitting,
     correctCount, totalXpEarned, unitCompletionXp, moduleId, unitIdNum,
-    levelUpInfo, clearLevelUp,
+    levelUpInfo, clearLevelUp, answers,
     selectAnswer, toggleHint, submitAndNext, retry,
   } = useQuizKilat()
 
@@ -279,6 +386,8 @@ const QuizKilat = () => {
         levelUpInfo={levelUpInfo}
         clearLevelUp={clearLevelUp}
         retry={retry}
+        questions={questions}
+        answers={answers}
       />
     )
   }
@@ -323,7 +432,7 @@ const QuizKilat = () => {
         </div>
 
         {/* ── Two-column layout ── */}
-        <div className="flex gap-5 items-start">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
 
           {/* ── Question area ── */}
           <div className="flex-1 min-w-0 space-y-3">
@@ -485,7 +594,7 @@ const QuizKilat = () => {
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.15, duration: 0.35, ease: 'easeOut' as const }}
-            className="w-52 shrink-0 space-y-3 sticky top-20"
+            className="w-full lg:w-52 lg:shrink-0 space-y-3 lg:sticky lg:top-20"
           >
             {/* XP reward */}
             <Card className="bg-linear-to-br from-amber-50 to-yellow-50 border-amber-100 shadow-sm">

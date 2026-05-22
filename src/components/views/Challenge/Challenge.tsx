@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Link } from "react-router";
 import AppLayout from "@/components/layouts/AppLayout/AppLayout";
-import { useChallenge } from "./useChallenge";
+import { useChallenge, type ChallengeQuestion } from "./useChallenge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -58,11 +58,15 @@ const ChallengeResult = ({
   correctCount,
   totalQuestions,
   totalXpEarned,
+  questions,
+  answers,
   retry,
 }: {
   correctCount: number;
   totalQuestions: number;
   totalXpEarned: number;
+  questions: ChallengeQuestion[];
+  answers: Array<{ questionId: number; selectedOption: string; isCorrect: boolean }>;
   retry: () => void;
 }) => {
   const pct =
@@ -78,6 +82,7 @@ const ChallengeResult = ({
         transition={{ duration: 0.45, ease: "easeOut" as const }}
         className="max-w-xl mx-auto space-y-4 py-6"
       >
+        {/* ── Score card ── */}
         <Card className="shadow-sm overflow-hidden pt-0">
           <div className="bg-linear-to-r from-blue-500 to-sky-400 p-6 text-center text-white">
             <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15">
@@ -157,6 +162,142 @@ const ChallengeResult = ({
             </div>
           </CardContent>
         </Card>
+
+        {/* ── Answer Review ── */}
+        <Card className="shadow-sm">
+          <CardContent className="p-5 space-y-3">
+            <p className="text-sm font-bold text-foreground">Pembahasan Jawaban</p>
+            <div className="space-y-2.5">
+              {questions.map((q, idx) => {
+                const record = answers.find((a) => a.questionId === q.id);
+                if (!record) return null;
+                const { isCorrect, selectedOption } = record;
+                return (
+                  <div
+                    key={q.id}
+                    className={cn(
+                      "rounded-xl border p-3.5 space-y-2.5",
+                      isCorrect
+                        ? "border-green-100 bg-green-50/60"
+                        : "border-red-100 bg-red-50/60",
+                    )}
+                  >
+                    <div className="flex items-start gap-2">
+                      {isCorrect ? (
+                        <CheckCircle2 className="w-4 h-4 text-green-500 shrink-0 mt-0.5" />
+                      ) : (
+                        <XCircle className="w-4 h-4 text-red-400 shrink-0 mt-0.5" />
+                      )}
+                      <div className="flex-1 min-w-0">
+                        <p className="text-[10px] text-muted-foreground font-semibold mb-0.5">
+                          Soal {idx + 1}
+                        </p>
+                        <p className="text-sm font-medium text-foreground leading-relaxed">
+                          {q.question}
+                        </p>
+                      </div>
+                    </div>
+
+                    {q.question_type === "pilihan_ganda" && (
+                      <div className="ml-6 space-y-1.5">
+                        {q.question_options
+                          .filter(
+                            (opt) =>
+                              opt.option_key === q.correct ||
+                              opt.option_key === selectedOption,
+                          )
+                          .map((opt) => {
+                            const isCorrectOpt = opt.option_key === q.correct;
+                            return (
+                              <div
+                                key={opt.option_key}
+                                className={cn(
+                                  "flex items-center gap-2 px-2.5 py-1.5 rounded-lg text-xs",
+                                  isCorrectOpt
+                                    ? "bg-green-100 text-green-800"
+                                    : "bg-red-100 text-red-700",
+                                )}
+                              >
+                                <span
+                                  className={cn(
+                                    "w-5 h-5 rounded-md flex items-center justify-center text-[9px] font-black shrink-0",
+                                    isCorrectOpt
+                                      ? "bg-green-500 text-white"
+                                      : "bg-red-400 text-white",
+                                  )}
+                                >
+                                  {opt.option_key}
+                                </span>
+                                <span className="flex-1">{opt.text}</span>
+                                <span
+                                  className={cn(
+                                    "shrink-0 text-[10px] font-bold",
+                                    isCorrectOpt
+                                      ? "text-green-700"
+                                      : "text-red-500",
+                                  )}
+                                >
+                                  {isCorrectOpt ? "✓ Benar" : "✗ Kamu"}
+                                </span>
+                              </div>
+                            );
+                          })}
+                      </div>
+                    )}
+
+                    {q.question_type === "benar_salah" && (
+                      <div className="ml-6 flex flex-wrap gap-4 text-xs">
+                        <span className="text-muted-foreground">
+                          Jawabanmu:{" "}
+                          <span
+                            className={cn(
+                              "font-bold",
+                              isCorrect ? "text-green-700" : "text-red-600",
+                            )}
+                          >
+                            {selectedOption === "benar" ? "Benar" : "Salah"}
+                          </span>
+                        </span>
+                        {!isCorrect && (
+                          <span className="text-muted-foreground">
+                            Jawaban benar:{" "}
+                            <span className="font-bold text-green-700">
+                              {q.correct === "benar" ? "Benar" : "Salah"}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    )}
+
+                    {q.question_type === "isian_singkat" && (
+                      <div className="ml-6 flex flex-wrap gap-4 text-xs">
+                        <span className="text-muted-foreground">
+                          Jawabanmu:{" "}
+                          <span
+                            className={cn(
+                              "font-bold",
+                              isCorrect ? "text-green-700" : "text-red-600",
+                            )}
+                          >
+                            {selectedOption}
+                          </span>
+                        </span>
+                        {!isCorrect && (
+                          <span className="text-muted-foreground">
+                            Jawaban benar:{" "}
+                            <span className="font-bold text-green-700">
+                              {q.correct}
+                            </span>
+                          </span>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          </CardContent>
+        </Card>
       </motion.div>
     </AppLayout>
   );
@@ -177,6 +318,8 @@ const Challenge = () => {
     correctCount,
     totalXpEarned,
     topicBreakdown,
+    questions,
+    answers,
     selectAnswer,
     toggleHint,
     submitAndNext,
@@ -210,6 +353,8 @@ const Challenge = () => {
         correctCount={correctCount}
         totalQuestions={totalQuestions}
         totalXpEarned={totalXpEarned}
+        questions={questions}
+        answers={answers}
         retry={handleRetry}
       />
     );
