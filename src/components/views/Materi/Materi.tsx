@@ -246,18 +246,18 @@ const Materi = () => {
           animate="show"
           className="relative"
         >
-          {/* Central vertical line — gradient */}
-          <div className="absolute left-1/2 top-0 bottom-0 w-0.5 bg-linear-to-b from-transparent via-primary/50 to-transparent -translate-x-1/2 pointer-events-none" />
+          {/* Central vertical line — left on mobile, centered on desktop */}
+          <div className="absolute left-4 top-0 bottom-0 w-0.5 bg-linear-to-b from-transparent via-primary/50 to-transparent pointer-events-none md:left-1/2 md:-translate-x-1/2" />
 
           <div className="space-y-0">
             {units.map((unit, index) => {
               const isLeft = index % 2 === 0
               return (
                 <div key={unit.id}>
-                  {/* Unit row — card on alternating side */}
-                  <div className="grid grid-cols-[1fr_56px_1fr] items-center gap-0">
-                    {/* Left slot */}
-                    <div className="pr-4">
+                  {/* Unit row — single column on mobile, alternating on desktop */}
+                  <div className="grid grid-cols-[32px_1fr] items-start gap-0 md:grid-cols-[1fr_56px_1fr] md:items-center">
+                    {/* Left slot — desktop only */}
+                    <div className="hidden md:block pr-4">
                       {isLeft && <UnitCard unit={unit} index={index} />}
                     </div>
 
@@ -289,14 +289,26 @@ const Materi = () => {
                       </div>
                     </motion.div>
 
-                    {/* Right slot */}
-                    <div className="pl-4">
-                      {!isLeft && <UnitCard unit={unit} index={index} />}
+                    {/* Right slot — all cards on mobile, right-side only on desktop */}
+                    <div className="pl-3 pb-4 md:pl-4 md:pb-0">
+                      <div className="md:hidden">
+                        <UnitCard unit={unit} index={index} />
+                      </div>
+                      {!isLeft && (
+                        <div className="hidden md:block">
+                          <UnitCard unit={unit} index={index} />
+                        </div>
+                      )}
                     </div>
                   </div>
 
-                  {/* Connector between units */}
-                  {index < units.length - 1 && <Connector />}
+                  {/* Connector between units — simple line on mobile, sparkle on desktop */}
+                  {index < units.length - 1 && (
+                    <>
+                      <div className="md:hidden w-0.5 h-6 bg-primary/30 ml-4" />
+                      <div className="hidden md:block"><Connector /></div>
+                    </>
+                  )}
                 </div>
               )
             })}

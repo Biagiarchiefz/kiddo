@@ -171,7 +171,7 @@ const QuizResult = ({
         className="max-w-xl mx-auto space-y-4 py-6"
       >
         {/* Score card */}
-        <Card className="shadow-sm overflow-hidden">
+        <Card className="shadow-sm overflow-hidden pt-0">
           <div className="bg-linear-to-r from-blue-500 to-sky-400 p-6 text-center text-white">
             <div className="text-5xl mb-2 drop-shadow">{emoji}</div>
             <h2 className="text-2xl font-bold">{headline}</h2>
@@ -199,7 +199,7 @@ const QuizResult = ({
             </div>
 
             {/* XP breakdown */}
-            <div className="grid grid-cols-2 gap-3">
+            <div className={cn("grid gap-3", unitCompletionXp > 0 ? "grid-cols-2" : "grid-cols-1")}>
               <div className="bg-amber-50 border border-amber-100 rounded-xl p-3.5 text-center">
                 <Zap className="w-5 h-5 text-amber-500 fill-amber-400 mx-auto mb-1" />
                 <p className="text-xs text-amber-700 font-semibold mb-0.5">XP Kuis</p>

@@ -385,14 +385,14 @@ const AdminModules = () => {
         </div>
 
         {/* Search + Add */}
-        <div className="flex items-center justify-between gap-3">
-          <div className="relative">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="relative flex-1 min-w-0 sm:flex-none">
             <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground" />
             <Input
               placeholder="Cari modul..."
               value={search}
               onChange={(e) => handleSearch(e.target.value)}
-              className="pl-9 h-9 w-64 rounded-lg"
+              className="pl-9 h-9 w-full sm:w-64 rounded-lg"
             />
           </div>
           <Button onClick={openCreate} className="gap-2 rounded-lg shrink-0">
@@ -401,7 +401,8 @@ const AdminModules = () => {
         </div>
 
         {/* Table */}
-        <Card className="border border-border overflow-hidden py-0 gap-0">
+        <div className="overflow-x-auto rounded-xl">
+        <Card className="border border-border overflow-hidden py-0 gap-0 min-w-[540px]">
           <div className="flex items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border text-xs font-bold text-slate-900 uppercase tracking-wide">
             <span className="w-8">No</span>
             <span className="w-14">Gambar</span>
@@ -497,6 +498,7 @@ const AdminModules = () => {
                 ))}
           </CardContent>
         </Card>
+        </div>
 
         <Pagination
           page={page}

@@ -175,7 +175,7 @@ const Dashboard = () => {
                 <p className="text-sky-100 text-[15px] font-bold uppercase tracking-widest ">
                   Selamat Datang Kembali!
                 </p>
-                <h2 className="text-4xl font-bold text-white leading-snug">
+                <h2 className="text-2xl sm:text-4xl font-bold text-white leading-snug">
                   Halo, {profile?.username ?? "Pelajar"}!!
                 </h2>
                 <p className="text-white text-xs max-w-xs leading-relaxed">
@@ -210,7 +210,7 @@ const Dashboard = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-3 gap-3"
+          className="grid grid-cols-3 gap-2 sm:gap-3"
         >
           {profileLoading ? (
             <>
@@ -221,72 +221,72 @@ const Dashboard = () => {
           ) : (
             <>
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                      <Zap className="w-4.5 h-4.5 text-amber-500 fill-amber-400" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                      <Zap className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-amber-500 fill-amber-400" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
                         Total XP
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {(profile?.total_xp ?? 0).toLocaleString()}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Modul aktif {totalModules}
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
                     XP
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
-                      <Star className="w-4.5 h-4.5 text-sky-500 fill-sky-400" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
+                      <Star className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-sky-500 fill-sky-400" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
                         Level
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {profile?.level ?? 1}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Rata-rata progres {averageProgress}%
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
                     LV
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
-                      <BookCheck className="w-4.5 h-4.5 text-green-600" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                      <BookCheck className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-green-600" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
-                        Modul Selesai
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                        Selesai
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {completedModules}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Dari {totalModules} modul
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                     {completionRate}%
                   </div>
                 </CardContent>
@@ -422,7 +422,7 @@ const Dashboard = () => {
           animate="show"
         >
           <Card className="border border-sky-100 bg-linear-to-r from-sky-50 to-white">
-            <CardContent className="p-5 flex items-center justify-between gap-4">
+            <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-sky-500 flex items-center justify-center shrink-0">
                   <Swords className="w-6 h-6 text-white" />
@@ -439,7 +439,7 @@ const Dashboard = () => {
               <Button
                 asChild
                 size="sm"
-                className="rounded-lg gap-1.5 bg-sky-500 hover:bg-sky-600 text-white font-semibold shrink-0"
+                className="rounded-lg gap-1.5 bg-sky-500 hover:bg-sky-600 text-white font-semibold shrink-0 self-start sm:self-auto"
               >
                 <Link to="/challenges">
                   Mulai <ChevronRight className="w-3.5 h-3.5" />

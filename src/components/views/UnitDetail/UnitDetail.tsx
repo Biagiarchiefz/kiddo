@@ -38,13 +38,13 @@ const UnitDetailSkeleton = () => (
   <AppLayout>
     <div className="space-y-4">
       <Skeleton className="h-28 w-full rounded-2xl" />
-      <div className="flex gap-5 items-start">
+      <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
         <div className="flex-1 space-y-3">
           {Array.from({ length: 4 }).map((_, i) => (
             <Skeleton key={i} className="h-20 w-full rounded-xl" />
           ))}
         </div>
-        <div className="w-56 shrink-0 space-y-3">
+        <div className="hidden lg:block lg:w-56 lg:shrink-0 space-y-3">
           <Skeleton className="h-40 w-full rounded-xl" />
           <Skeleton className="h-36 w-full rounded-xl" />
         </div>
@@ -134,7 +134,7 @@ const UnitDetail = () => {
         </motion.div>
 
         {/* ── Two-column body ── */}
-        <div className="flex gap-5 items-start">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
 
           {/* ── Article Content ── */}
           <motion.div
@@ -178,7 +178,7 @@ const UnitDetail = () => {
             initial={{ opacity: 0, x: 16 }}
             animate={{ opacity: 1, x: 0 }}
             transition={{ delay: 0.18, duration: 0.35, ease: 'easeOut' as const }}
-            className="w-56 shrink-0 space-y-3 sticky top-20"
+            className="w-full lg:w-56 lg:shrink-0 space-y-3 lg:sticky lg:top-20"
           >
             {/* Daftar Isi */}
             {headings.length > 0 && (

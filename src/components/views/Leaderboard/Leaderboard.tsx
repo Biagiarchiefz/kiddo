@@ -50,7 +50,7 @@ const RankRow = ({ entry, idx, showBorder }: RankRowProps) => (
     initial="hidden"
     animate="show"
     className={cn(
-      "grid grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 transition-colors",
+      "grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 transition-colors",
       showBorder ? "border-b border-border/70" : "",
       entry.isCurrentUser
         ? "bg-primary/8 border-l-[3px] border-l-primary"
@@ -109,7 +109,7 @@ const RankRow = ({ entry, idx, showBorder }: RankRowProps) => (
       </div>
     </div>
 
-    <span className="justify-self-center text-xs font-bold text-foreground bg-muted/70 px-2.5 py-0.5 rounded-full">
+    <span className="hidden sm:block justify-self-center text-xs font-bold text-foreground bg-muted/70 px-2.5 py-0.5 rounded-full">
       Lv.{entry.level}
     </span>
 
@@ -139,8 +139,8 @@ const LeaderboardSkeleton = () => (
       <Skeleton className="h-9 w-48 mx-auto rounded-xl" />
       <Skeleton className="h-4 w-72 mx-auto rounded" />
     </div>
-    <div className="flex gap-6 items-end">
-      <div className="w-72 shrink-0 flex items-end justify-center gap-3 pb-1">
+    <div className="flex flex-col gap-6 lg:flex-row lg:items-end">
+      <div className="w-full lg:w-72 lg:shrink-0 flex items-end justify-center gap-3 pb-1">
         {[2, 1, 3].map((i) => (
           <div key={i} className="flex flex-col items-center gap-2">
             <Skeleton className="w-14 h-14 rounded-full" />
@@ -211,7 +211,7 @@ const Leaderboard = () => {
         variants={fadeUp}
         initial="hidden"
         animate="show"
-        className="text-center mb-8"
+        className="text-center mb-4 sm:mb-8"
       >
         <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
           Leaderboard
@@ -225,14 +225,14 @@ const Leaderboard = () => {
         </p>
       </motion.div>
 
-      <div className="flex gap-6 items-end">
+      <div className="flex flex-col gap-6 lg:flex-row lg:items-end">
         {/* ── Podium ── */}
         <motion.div
           custom={1}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="w-72 shrink-0"
+          className="w-full lg:w-72 lg:shrink-0"
         >
           {/* Podium avatars */}
           <div className="flex items-end justify-center gap-3 pb-1">
@@ -333,10 +333,10 @@ const Leaderboard = () => {
         {/* ── Rankings list ── */}
         <Card className="flex-1 overflow-hidden shadow-md border border-border/70 bg-card/90 py-0 gap-0">
           {/* Table header */}
-          <div className="grid grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border/70 text-[11px] font-bold text-slate-900 uppercase tracking-wider">
+          <div className="grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border/70 text-[11px] font-bold text-slate-900 uppercase tracking-wider">
             <span className="text-center">No</span>
             <span>Pelajar</span>
-            <span className="text-center">Level</span>
+            <span className="hidden sm:block text-center">Level</span>
             <span className="text-right">XP</span>
           </div>
 

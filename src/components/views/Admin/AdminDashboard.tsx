@@ -112,7 +112,7 @@ const AdminDashboard = () => {
                 <p className="text-amber-100 text-[10px] font-bold uppercase tracking-widest">
                   Panel Admin
                 </p>
-                <h2 className="text-4xl font-bold text-white leading-snug">
+                <h2 className="text-2xl sm:text-4xl font-bold text-white leading-snug">
                   Halo, {profile?.username ?? "Admin"}!!
                 </h2>
                 <p className="text-white/80 text-xs max-w-xs leading-relaxed">
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-3 gap-3"
+          className="grid grid-cols-3 gap-2 sm:gap-3"
         >
           {profileLoading || statsLoading ? (
             <>
@@ -160,72 +160,72 @@ const AdminDashboard = () => {
           ) : (
             <>
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
-                      <Users className="w-4 h-4 text-sky-600" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
+                      <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-600" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
                         Pengguna
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {stats?.users}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Terdaftar
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
                     USR
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
-                      <BookOpen className="w-4 h-4 text-green-600" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                      <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
                         Modul
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {stats?.modules}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Tersedia
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                     MOD
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-3.5 flex items-start justify-between gap-3">
-                  <div className="flex items-start gap-3">
-                    <div className="w-9 h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                      <HelpCircle className="w-4 h-4 text-amber-600" />
+                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                  <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                      <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
                     </div>
-                    <div className="space-y-0.5">
-                      <p className="text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                    <div className="space-y-0.5 text-center sm:text-left">
+                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
                         Soal
                       </p>
-                      <p className="text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
                         {stats?.questions}
                       </p>
-                      <p className="text-[10px] text-muted-foreground">
+                      <p className="text-[10px] text-muted-foreground hidden sm:block">
                         Total bank soal
                       </p>
                     </div>
                   </div>
-                  <div className="text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
                     SOL
                   </div>
                 </CardContent>
@@ -297,7 +297,7 @@ const AdminDashboard = () => {
           animate="show"
         >
           <Card className="border border-amber-100 bg-linear-to-r from-amber-50 to-white">
-            <CardContent className="p-5 flex items-center justify-between gap-4">
+            <CardContent className="p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3">
               <div className="flex items-center gap-4">
                 <div className="w-12 h-12 rounded-xl bg-amber-500 flex items-center justify-center shrink-0">
                   <ShieldCheck className="w-6 h-6 text-white" />
@@ -314,7 +314,7 @@ const AdminDashboard = () => {
               <Button
                 asChild
                 size="sm"
-                className="rounded-lg gap-1.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold shrink-0"
+                className="rounded-lg gap-1.5 bg-amber-500 hover:bg-amber-600 text-white font-semibold shrink-0 self-start sm:self-auto"
               >
                 <Link to="/admin/modules">
                   <LayoutGrid className="w-3.5 h-3.5" />

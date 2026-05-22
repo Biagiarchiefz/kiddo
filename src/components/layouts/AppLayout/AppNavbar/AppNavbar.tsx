@@ -20,9 +20,9 @@ const AppNavbar = () => {
         {isLoading ? (
           <Skeleton className="h-7 w-24 rounded-full" />
         ) : (
-          <div className="flex items-center gap-1 bg-secondary/15 border border-secondary/30 px-2.5 py-1 rounded-full">
-            <Zap className="w-3.5 h-3.5 text-secondary fill-secondary" />
-            <span className="text-xs font-bold text-secondary">
+          <div className="flex items-center gap-1 bg-yellow-400/20 border border-yellow-400/50 px-2.5 py-1 rounded-full">
+            <Zap className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
+            <span className="text-xs font-bold text-yellow-400">
               {(profile?.total_xp ?? 0).toLocaleString('id-ID')} XP
             </span>
           </div>

@@ -37,14 +37,14 @@ const topicColors = [
 
 const ChallengeSkeleton = () => (
   <AppLayout>
-    <div className="flex gap-6 items-start">
+    <div className="flex flex-col gap-4 lg:flex-row lg:items-start">
       <div className="flex-1 space-y-4">
         <Skeleton className="h-10 w-64 rounded-xl" />
         <Skeleton className="h-2 w-full rounded-full" />
         <Skeleton className="h-52 w-full rounded-2xl" />
         <Skeleton className="h-10 w-full rounded-xl" />
       </div>
-      <div className="w-52 shrink-0 space-y-3">
+      <div className="hidden lg:block lg:w-52 lg:shrink-0 space-y-3">
         <Skeleton className="h-32 w-full rounded-2xl" />
         <Skeleton className="h-36 w-full rounded-2xl" />
       </div>
@@ -78,7 +78,7 @@ const ChallengeResult = ({
         transition={{ duration: 0.45, ease: "easeOut" as const }}
         className="max-w-xl mx-auto space-y-4 py-6"
       >
-        <Card className="shadow-sm overflow-hidden">
+        <Card className="shadow-sm overflow-hidden pt-0">
           <div className="bg-linear-to-r from-blue-500 to-sky-400 p-6 text-center text-white">
             <div className="mx-auto mb-2 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/15">
               <Sparkles className="h-8 w-8 text-white" />
@@ -295,7 +295,7 @@ const Challenge = () => {
         <div className="pointer-events-none absolute -top-10 -right-10 h-40 w-40 rounded-full bg-amber-200/40 blur-3xl" />
         <div className="pointer-events-none absolute -bottom-12 -left-12 h-44 w-44 rounded-full bg-sky-200/50 blur-3xl" />
 
-        <div className="flex gap-6 items-start relative">
+        <div className="flex flex-col gap-4 lg:flex-row lg:items-start relative">
           {/* ── Main area ── */}
           <div className="flex-1 min-w-0 space-y-4">
             {/* Header */}
@@ -516,7 +516,7 @@ const Challenge = () => {
               duration: 0.35,
               ease: "easeOut" as const,
             }}
-            className="w-52 shrink-0 space-y-3 sticky top-20"
+            className="w-full lg:w-52 lg:shrink-0 space-y-3 lg:sticky lg:top-20"
           >
             <Card className="bg-linear-to-br from-sky-50 to-white border-sky-100 shadow-sm">
               <CardContent className="p-4 space-y-2">

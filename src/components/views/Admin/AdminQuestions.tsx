@@ -522,13 +522,13 @@ const AdminQuestions = () => {
   return (
     <AdminLayout>
       <div className="space-y-5">
-        <div className="flex items-center justify-between">
-          <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center">
+        <div className="flex flex-wrap items-center justify-between gap-3">
+          <div className="flex items-center gap-3 flex-1 min-w-0">
+            <div className="w-10 h-10 rounded-xl bg-amber-500 flex items-center justify-center shrink-0">
               <HelpCircle className="w-5 h-5 text-white" />
             </div>
-            <div>
-              <h1 className="text-lg font-bold text-foreground">
+            <div className="min-w-0">
+              <h1 className="text-lg font-bold text-foreground truncate">
                 Soal — {unit?.title}
               </h1>
               <p className="text-xs text-muted-foreground">
@@ -541,13 +541,14 @@ const AdminQuestions = () => {
               setEditTarget(null);
               setDialogOpen(true);
             }}
-            className="gap-2 rounded-lg"
+            className="gap-2 rounded-lg shrink-0"
           >
             <Plus className="w-4 h-4" /> Tambah Soal
           </Button>
         </div>
 
-        <Card className="border border-border overflow-hidden py-0 gap-0">
+        <div className="overflow-x-auto rounded-xl">
+        <Card className="border border-border overflow-hidden py-0 gap-0 min-w-100">
           <div className="flex items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border text-xs font-bold text-slate-900 uppercase tracking-wide">
             <span className="w-6">No</span>
             <span className="flex-1">Pertanyaan</span>
@@ -588,6 +589,7 @@ const AdminQuestions = () => {
             )}
           </CardContent>
         </Card>
+        </div>
       </div>
 
       {dialogOpen && (
