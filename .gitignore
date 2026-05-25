@@ -37,3 +37,9 @@ CLAUDE.md
 
 # Skill screenshots (generated artifacts)
 .claude/skills/run-kiddo/shots/
+
+# User-provided attachments
+.agents/
+.claude/
+.mcp.json
+supabase/
