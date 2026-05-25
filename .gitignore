@@ -34,3 +34,6 @@ dist-ssr
 # Project docs not tracked
 PRD.md
 CLAUDE.md
+
+# Skill screenshots (generated artifacts)
+.claude/skills/run-kiddo/shots/

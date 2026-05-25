@@ -220,7 +220,7 @@ const Dashboard = () => {
             </>
           ) : (
             <>
-              <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
+              <Card className="border border-border bg-white -rotate-1">
                 <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
                     <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
@@ -244,7 +244,7 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border border-border/70 bg-white/70 backdrop-blur-sm rotate-1">
+              <Card className="border border-border bg-white rotate-1">
                 <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
                     <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
@@ -268,7 +268,7 @@ const Dashboard = () => {
                 </CardContent>
               </Card>
 
-              <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
+              <Card className="border border-border bg-white -rotate-1">
                 <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
                     <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
@@ -351,7 +351,7 @@ const Dashboard = () => {
                         ) : (
                           <span className="drop-shadow-sm">{mod.emoji}</span>
                         )}
-                        <div className="absolute bottom-2.5 right-2.5 bg-white/75 backdrop-blur-sm text-[10px] font-bold text-foreground px-2 py-0.5 rounded-full">
+                        <div className="absolute bottom-2.5 right-2.5 bg-white shadow-sm text-[10px] font-bold text-foreground px-2 py-0.5 rounded-full">
                           {mod.progress}%
                         </div>
                       </div>

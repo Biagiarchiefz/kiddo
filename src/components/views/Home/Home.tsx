@@ -592,34 +592,34 @@ const Home = () => {
                 label: "Pelajar Aktif",
                 sub: "di seluruh Indonesia",
                 Icon: Users,
-                iconClass: "text-[#9FFB00]",
+                iconClass: "text-lime-500",
               },
               {
                 value: "4.9",
                 label: "Rating Orang Tua",
                 sub: "dari 500+ ulasan",
                 Icon: Heart,
-                iconClass: "text-rose-300",
+                iconClass: "text-rose-500",
               },
               {
                 value: "95%",
                 label: "Tingkat Kepuasan",
                 sub: "anak lebih semangat belajar",
                 Icon: Rocket,
-                iconClass: "text-amber-300",
+                iconClass: "text-amber-500",
               },
             ].map((s, i) => (
               <motion.div
                 key={s.label}
                 {...fadeUp(i * 0.1)}
-                className="bg-white/15 backdrop-blur-sm border border-white/20 rounded-2xl p-8 text-center text-white space-y-2 hover:bg-white/20 transition-colors"
+                className="bg-white rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1"
               >
                 <div className="flex justify-center">
                   <s.Icon className={`w-8 h-8 ${s.iconClass}`} />
                 </div>
-                <p className="text-4xl font-black">{s.value}</p>
-                <p className="font-bold">{s.label}</p>
-                <p className="text-sm text-sky-100">{s.sub}</p>
+                <p className="text-4xl font-black text-sky-700">{s.value}</p>
+                <p className="font-bold text-sky-800">{s.label}</p>
+                <p className="text-sm text-muted-foreground">{s.sub}</p>
               </motion.div>
             ))}
           </div>
@@ -676,45 +676,41 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             {...fadeUp()}
-            className="rounded-3xl p-12 text-center text-white relative overflow-hidden"
-            style={{ background: "linear-gradient(135deg, #1e293b, #0f172a)" }}
+            className="rounded-3xl p-12 text-center relative overflow-hidden bg-accent"
           >
             <div
               className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px"
               style={{
                 background:
-                  "linear-gradient(90deg, transparent, #9FFB00, transparent)",
+                  "linear-gradient(90deg, transparent, oklch(0.62 0.19 211), transparent)",
               }}
             />
             <div
               className="absolute -top-16 -right-16 w-64 h-64 rounded-full pointer-events-none opacity-20"
               style={{
-                background: "radial-gradient(circle, #38BDF8, transparent)",
+                background: "radial-gradient(circle, oklch(0.62 0.19 211), transparent)",
               }}
             />
             <div
-              className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full pointer-events-none opacity-20"
+              className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full pointer-events-none opacity-15"
               style={{
-                background: "radial-gradient(circle, #9FFB00, transparent)",
+                background: "radial-gradient(circle, oklch(0.45 0.2 211), transparent)",
               }}
             />
 
             <div className="relative space-y-5 max-w-2xl mx-auto">
-              <span
-                className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full border text-[#9FFB00]"
-                style={{ borderColor: "#9FFB0050" }}
-              >
+              <span className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full bg-white/40 text-sky-900 border border-white/30">
                 <Zap className="w-3.5 h-3.5 fill-current" />
                 Mulai Perjalanan Belajar Hari Ini
               </span>
-              <h2 className="text-4xl font-bold leading-tight">
+              <h2 className="text-4xl font-bold leading-tight text-sky-950">
                 Membangun Generasi Cerdas
                 <br />
-                <span style={{ color: "#9FFB00" }}>
+                <span className="text-sky-600">
                   Satu Anak pada Satu Waktu
                 </span>
               </h2>
-              <p className="text-slate-400 leading-relaxed">
+              <p className="text-sky-900/70 leading-relaxed">
                 Bergabung bersama ribuan keluarga Indonesia yang telah
                 mempercayakan pendidikan anak mereka kepada Kiddo.
               </p>
@@ -722,26 +718,24 @@ const Home = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-2xl px-10 font-bold text-base text-slate-900 gap-2"
-                  style={{ backgroundColor: "#9FFB00" }}
+                  className="rounded-2xl px-10 font-bold text-base bg-sky-500 hover:bg-sky-600 text-white gap-2 shadow-lg shadow-sky-500/30"
                 >
                   <Link to="/daftar">
                     Daftar Gratis Sekarang
-                 <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5" />
                   </Link>
                 </Button>
                 <Button
                   asChild
                   variant="outline"
                   size="lg"
-                  className="rounded-2xl px-8 font-bold text-base border-white/20 text-black "
+                  className="rounded-2xl px-8 font-bold text-base bg-white/50 hover:bg-white/70 border-white/60 text-sky-900"
                 >
                   <Link to="/login">Sudah Punya Akun</Link>
                 </Button>
               </div>
-              <p className="text-xs text-slate-500 pt-1">
-                Gratis selamanya · Tidak perlu kartu kredit · Setup dalam 2
-                menit
+              <p className="text-xs text-sky-900/50 pt-1">
+                Gratis selamanya · Tidak perlu kartu kredit · Setup dalam 2 menit
               </p>
             </div>
           </motion.div>

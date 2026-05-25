@@ -172,6 +172,7 @@ const Login = () => {
         </p>
       </div>
 
+      
       {/* Right Panel – Hero Image */}
       <div className="flex-1 relative hidden lg:flex flex-col">
         <img
