@@ -68,7 +68,7 @@ const AppLayout = ({ children }: Props) => {
   return (
     <SidebarProvider className="bg-sidebar h-svh overflow-hidden">
       <AppSidebar />
-      <SidebarInset className="rounded-l-[30px] overflow-hidden flex flex-col">
+      <SidebarInset className="sm:rounded-l-[30px] overflow-hidden flex flex-col">
         <AppNavbar />
         <main className="flex-1 overflow-y-auto p-4 sm:p-6 w-full">
           <PageBreadcrumb />

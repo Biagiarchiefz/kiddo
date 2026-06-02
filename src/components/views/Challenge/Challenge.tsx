@@ -387,7 +387,7 @@ const Challenge = () => {
 
   return (
     <AppLayout>
-      <div className="relative">
+      <div className={cn("relative", uiPhase !== "playing" && "min-h-full overflow-hidden")}>
         {/* Blur overlay */}
         <AnimatePresence>
           {uiPhase !== "playing" && (

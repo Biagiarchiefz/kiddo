@@ -166,7 +166,7 @@ const Dashboard = () => {
           initial="hidden"
           animate="show"
         >
-          <Card className="bg-linear-to-r from-sky-500 to-sky-400 border-0">
+          <Card className="bg-linear-to-r from-sky-500 to-sky-400 border-0 rounded-2xl">
             <CardContent className="p-5 flex items-center justify-between gap-4 relative">
               <div className="absolute -top-6 -right-6 w-32 h-32 bg-white/10 rounded-full pointer-events-none" />
               <div className="absolute bottom-0 right-28 w-20 h-20 bg-white/10 rounded-full pointer-events-none" />

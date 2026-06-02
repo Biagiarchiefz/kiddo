@@ -16,17 +16,33 @@ const AnimatedOutlet = () => {
   const location = useLocation();
 
   return (
-    <AnimatePresence mode="wait">
-      <motion.div
-        key={location.pathname}
-        initial={{ opacity: 0, y: 12 }}
-        animate={{ opacity: 1, y: 0 }}
-        exit={{ opacity: 0, y: -8 }}
-        transition={{ duration: 0.25, ease: "easeOut" }}
-      >
-        <Outlet />
-      </motion.div>
-    </AnimatePresence>
+    <>
+      {/* Progress bar sweep */}
+      <AnimatePresence>
+        <motion.div
+          key={`bar-${location.pathname}`}
+          className="fixed top-0 left-0 h-0.75 z-100 origin-left"
+          style={{ background: "linear-gradient(90deg, #38bdf8, #0ea5e9, #7dd3fc)" }}
+          initial={{ scaleX: 0, opacity: 1 }}
+          animate={{ scaleX: 1, opacity: 1 }}
+          exit={{ opacity: 0 }}
+          transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1] }}
+        />
+      </AnimatePresence>
+
+      {/* Page content transition */}
+      <AnimatePresence mode="wait">
+        <motion.div
+          key={location.pathname}
+          initial={{ opacity: 0, y: 22 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: -14 }}
+          transition={{ duration: 0.38, ease: [0.22, 1, 0.36, 1] }}
+        >
+          <Outlet />
+        </motion.div>
+      </AnimatePresence>
+    </>
   );
 };
 
