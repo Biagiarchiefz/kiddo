@@ -28,6 +28,22 @@ import duniaHewanImg from "@/assets/images/duniaHewan.webp";
 import matematikaImg from "@/assets/images/matematika.webp";
 import bahasaImg from "@/assets/images/bahasa.webp";
 
+// ── Decorative SVG ───────────────────────────────────────────────────────────
+
+const SunDecoration = ({ className }: { className?: string }) => (
+  <svg viewBox="0 0 200 200" fill="none" strokeLinecap="round" className={className}>
+    <circle cx="100" cy="100" r="36" fill="currentColor" />
+    <line x1="100" y1="52"  x2="100" y2="24"  stroke="currentColor" strokeWidth="9" />
+    <line x1="134" y1="66"  x2="155" y2="45"  stroke="currentColor" strokeWidth="9" />
+    <line x1="148" y1="100" x2="176" y2="100" stroke="currentColor" strokeWidth="9" />
+    <line x1="134" y1="134" x2="155" y2="155" stroke="currentColor" strokeWidth="9" />
+    <line x1="100" y1="148" x2="100" y2="176" stroke="currentColor" strokeWidth="9" />
+    <line x1="66"  y1="134" x2="45"  y2="155" stroke="currentColor" strokeWidth="9" />
+    <line x1="52"  y1="100" x2="24"  y2="100" stroke="currentColor" strokeWidth="9" />
+    <line x1="66"  y1="66"  x2="45"  y2="45"  stroke="currentColor" strokeWidth="9" />
+  </svg>
+);
+
 // ── Animation helpers ─────────────────────────────────────────────────────────
 
 const fadeUp = (delay = 0) => ({
@@ -173,6 +189,15 @@ const Home = () => {
             background: "radial-gradient(circle, #9FFB00, transparent)",
           }}
         />
+
+        {/* Sun decoration */}
+        <motion.div
+          className="absolute -top-10 right-[10%] w-72 text-amber-300 opacity-[0.22] pointer-events-none"
+          animate={{ rotate: 360 }}
+          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
+        >
+          <SunDecoration />
+        </motion.div>
 
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-14">
           {/* Left */}
@@ -567,14 +592,32 @@ const Home = () => {
       {/* ══════════════ 5. BIG STATS ══════════════ */}
       <motion.section
         {...fadeUp(0)}
-        className="py-20"
-        style={{ background: "linear-gradient(135deg, #0ea5e9, #0284c7)" }}
+        className="py-20 relative overflow-hidden"
+        style={{ background: "linear-gradient(135deg, #0284c7, #0ea5e9, #38bdf8)" }}
       >
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div
-            {...fadeUp()}
-            className="text-center text-white mb-12 space-y-3"
-          >
+        {/* Half-ring top-right */}
+        <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full border-[14px] border-white/15 pointer-events-none" />
+        {/* Half-ring bottom-left */}
+        <div className="absolute -bottom-24 -left-24 w-80 h-80 rounded-full border-[14px] border-white/10 pointer-events-none" />
+        {/* Medium ring mid-right */}
+        <div className="absolute top-1/2 -translate-y-1/2 -right-8 w-44 h-44 rounded-full border-[8px] border-white/10 pointer-events-none" />
+        {/* Small rings scattered */}
+        <div className="absolute top-10 left-[18%] w-10 h-10 rounded-full border-2 border-white/20 pointer-events-none" />
+        <div className="absolute bottom-10 right-[22%] w-7 h-7 rounded-full border-2 border-white/15 pointer-events-none" />
+        <div className="absolute top-[55%] left-10 w-5 h-5 rounded-full border border-white/20 pointer-events-none" />
+        {/* Sparkles */}
+        <svg className="absolute top-8 left-[40%] w-4 h-4 text-white/25 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+        </svg>
+        <svg className="absolute bottom-12 left-14 w-3 h-3 text-white/20 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+        </svg>
+        <svg className="absolute top-14 right-[30%] w-3 h-3 text-white/20 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+          <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+        </svg>
+
+        <div className="max-w-7xl mx-auto px-6 relative">
+          <motion.div {...fadeUp()} className="text-center text-white mb-12 space-y-3">
             <span className="text-xs font-bold uppercase tracking-widest opacity-70">
               Dampak Nyata
             </span>
@@ -586,42 +629,50 @@ const Home = () => {
           </motion.div>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {[
-              {
-                value: "12.000+",
-                label: "Pelajar Aktif",
-                sub: "di seluruh Indonesia",
-                Icon: Users,
-                iconClass: "text-lime-500",
-              },
-              {
-                value: "4.9",
-                label: "Rating Orang Tua",
-                sub: "dari 500+ ulasan",
-                Icon: Heart,
-                iconClass: "text-rose-500",
-              },
-              {
-                value: "95%",
-                label: "Tingkat Kepuasan",
-                sub: "anak lebih semangat belajar",
-                Icon: Rocket,
-                iconClass: "text-amber-500",
-              },
-            ].map((s, i) => (
-              <motion.div
-                key={s.label}
-                {...fadeUp(i * 0.1)}
-                className="bg-white rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1"
-              >
-                <div className="flex justify-center">
-                  <s.Icon className={`w-8 h-8 ${s.iconClass}`} />
-                </div>
-                <p className="text-4xl font-black text-sky-700">{s.value}</p>
-                <p className="font-bold text-sky-800">{s.label}</p>
-                <p className="text-sm text-muted-foreground">{s.sub}</p>
-              </motion.div>
-            ))}
+            {/* ── Card 1: Pelajar Aktif — cincin besar kanan atas + titik bulat kiri bawah ── */}
+            <motion.div
+              {...fadeUp(0)}
+              className="bg-sky-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full border-[12px] border-sky-300/25 pointer-events-none" />
+              <div className="absolute bottom-4 left-5 w-5 h-5 rounded-full bg-sky-200/70 pointer-events-none" />
+              <div className="flex justify-center relative">
+                <Users className="w-8 h-8 text-sky-500" />
+              </div>
+              <p className="text-4xl font-black text-sky-700">12.000+</p>
+              <p className="font-bold text-sm text-sky-800">Pelajar Aktif</p>
+              <p className="text-sm text-muted-foreground">di seluruh Indonesia</p>
+            </motion.div>
+
+            {/* ── Card 2: Rating — kotak miring kiri atas + cincin kecil kanan bawah ── */}
+            <motion.div
+              {...fadeUp(0.1)}
+              className="bg-rose-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div className="absolute -top-6 -left-6 w-24 h-24 rotate-45 border-[10px] border-rose-300/25 rounded-xl pointer-events-none" />
+              <div className="absolute bottom-4 right-5 w-10 h-10 rounded-full border-2 border-rose-300/40 pointer-events-none" />
+              <div className="flex justify-center relative">
+                <Heart className="w-8 h-8 text-rose-500" />
+              </div>
+              <p className="text-4xl font-black text-rose-600">4.9</p>
+              <p className="font-bold text-sm text-rose-800">Rating Orang Tua</p>
+              <p className="text-sm text-muted-foreground">dari 500+ ulasan</p>
+            </motion.div>
+
+            {/* ── Card 3: Kepuasan — persegi panjang kanan bawah + kotak miring kecil kiri atas ── */}
+            <motion.div
+              {...fadeUp(0.2)}
+              className="bg-amber-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+            >
+              <div className="absolute -bottom-5 -right-4 w-28 h-20 border-[10px] border-amber-300/25 rounded-2xl pointer-events-none" />
+              <div className="absolute top-5 left-5 w-7 h-7 rotate-12 border-2 border-amber-300/45 rounded-md pointer-events-none" />
+              <div className="flex justify-center relative">
+                <Rocket className="w-8 h-8 text-amber-500" />
+              </div>
+              <p className="text-4xl font-black text-amber-600">95%</p>
+              <p className="font-bold text-sm text-amber-800">Tingkat Kepuasan</p>
+              <p className="text-sm text-muted-foreground">anak lebih semangat belajar</p>
+            </motion.div>
           </div>
         </div>
       </motion.section>
@@ -676,41 +727,56 @@ const Home = () => {
         <div className="max-w-7xl mx-auto px-6">
           <motion.div
             {...fadeUp()}
-            className="rounded-3xl p-12 text-center relative overflow-hidden bg-accent"
+            className="rounded-3xl p-12 text-center relative overflow-hidden bg-gradient-to-br from-sky-700 via-sky-600 to-sky-500"
           >
-            <div
-              className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px"
-              style={{
-                background:
-                  "linear-gradient(90deg, transparent, oklch(0.62 0.19 211), transparent)",
-              }}
-            />
-            <div
-              className="absolute -top-16 -right-16 w-64 h-64 rounded-full pointer-events-none opacity-20"
-              style={{
-                background: "radial-gradient(circle, oklch(0.62 0.19 211), transparent)",
-              }}
-            />
-            <div
-              className="absolute -bottom-16 -left-16 w-64 h-64 rounded-full pointer-events-none opacity-15"
-              style={{
-                background: "radial-gradient(circle, oklch(0.45 0.2 211), transparent)",
-              }}
-            />
+            {/* Glow blobs */}
+            <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full pointer-events-none opacity-20"
+              style={{ background: "radial-gradient(circle, white, transparent)" }} />
+            <div className="absolute -bottom-20 -left-20 w-72 h-72 rounded-full pointer-events-none opacity-15"
+              style={{ background: "radial-gradient(circle, white, transparent)" }} />
+
+            {/* Sparkle stars */}
+            <svg className="absolute top-6 left-10 w-5 h-5 text-white/30 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+            <svg className="absolute top-14 right-14 w-4 h-4 text-white/25 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+            <svg className="absolute bottom-10 left-[15%] w-6 h-6 text-white/20 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+            <svg className="absolute bottom-8 right-[12%] w-3 h-3 text-white/30 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+            <svg className="absolute top-[40%] left-6 w-3 h-3 text-white/20 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+            <svg className="absolute top-[35%] right-8 w-4 h-4 text-white/20 pointer-events-none" fill="currentColor" viewBox="0 0 24 24">
+              <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
+            </svg>
+
+            {/* Floating rings */}
+            <div className="absolute top-8 right-[28%] w-14 h-14 rounded-full border border-white/15 pointer-events-none" />
+            <div className="absolute bottom-10 left-[30%] w-20 h-20 rounded-full border border-white/10 pointer-events-none" />
+            <div className="absolute top-[30%] left-[8%] w-10 h-10 rounded-full border border-white/12 pointer-events-none" />
+
+            {/* Top shimmer line */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px pointer-events-none"
+              style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)" }} />
 
             <div className="relative space-y-5 max-w-2xl mx-auto">
-              <span className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full bg-white/40 text-sky-900 border border-white/30">
+              <span className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full bg-white/20 text-white border border-white/30">
                 <Zap className="w-3.5 h-3.5 fill-current" />
                 Mulai Perjalanan Belajar Hari Ini
               </span>
-              <h2 className="text-4xl font-bold leading-tight text-sky-950">
+              <h2 className="text-4xl font-bold leading-tight text-white">
                 Membangun Generasi Cerdas
                 <br />
-                <span className="text-sky-600">
+                <span className="text-white/80">
                   Satu Anak pada Satu Waktu
                 </span>
               </h2>
-              <p className="text-sky-900/70 leading-relaxed">
+              <p className="text-white/70 leading-relaxed">
                 Bergabung bersama ribuan keluarga Indonesia yang telah
                 mempercayakan pendidikan anak mereka kepada Kiddo.
               </p>
@@ -718,7 +784,7 @@ const Home = () => {
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-2xl px-10 font-bold text-base bg-sky-500 hover:bg-sky-600 text-white gap-2 shadow-lg shadow-sky-500/30"
+                  className="rounded-2xl px-10 font-bold text-base bg-white text-sky-700 gap-2 shadow-lg shadow-sky-900/20 hover:bg-white! hover:opacity-90!"
                 >
                   <Link to="/daftar">
                     Daftar Gratis Sekarang
@@ -727,14 +793,13 @@ const Home = () => {
                 </Button>
                 <Button
                   asChild
-                  variant="outline"
                   size="lg"
-                  className="rounded-2xl px-8 font-bold text-base bg-white/50 hover:bg-white/70 border-white/60 text-sky-900"
+                  className="rounded-2xl px-8 font-bold text-base bg-white/15 border border-white/50 text-white hover:bg-white/25! hover:border-white! hover:text-white!"
                 >
                   <Link to="/login">Sudah Punya Akun</Link>
                 </Button>
               </div>
-              <p className="text-xs text-sky-900/50 pt-1">
+              <p className="text-xs text-white/55 pt-1">
                 Gratis selamanya · Tidak perlu kartu kredit · Setup dalam 2 menit
               </p>
             </div>

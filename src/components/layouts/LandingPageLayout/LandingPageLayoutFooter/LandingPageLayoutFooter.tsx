@@ -17,7 +17,7 @@ const Cloud = ({ className }: { className?: string }) => (
 
 const LandingPageLayoutFooter = () => {
   return (
-    <footer className="relative overflow-hidden bg-sky-500 text-white">
+    <footer className="relative overflow-hidden bg-sky-500 text-white rounded-t-2xl">
       {/* Cloud layer */}
       <div className="absolute inset-0 pointer-events-none select-none">
         <Cloud className="absolute -top-6 -left-10 w-72 opacity-[0.12]" />
