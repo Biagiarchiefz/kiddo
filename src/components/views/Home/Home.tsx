@@ -183,21 +183,11 @@ const Home = () => {
             background: "radial-gradient(circle, #38BDF8, transparent)",
           }}
         />
-        <div
-          className="absolute -bottom-10 -left-16 w-72 h-72 rounded-full opacity-15 pointer-events-none"
-          style={{
-            background: "radial-gradient(circle, #9FFB00, transparent)",
-          }}
-        />
 
         {/* Sun decoration */}
-        <motion.div
-          className="absolute -top-10 right-[10%] w-72 text-amber-300 opacity-[0.22] pointer-events-none"
-          animate={{ rotate: 360 }}
-          transition={{ duration: 40, repeat: Infinity, ease: "linear" }}
-        >
+        <div className="absolute -top-10 right-[10%] w-72 text-amber-300 opacity-[0.22] pointer-events-none">
           <SunDecoration />
-        </motion.div>
+        </div>
 
         <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-14">
           {/* Left */}
