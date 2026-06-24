@@ -58,10 +58,10 @@ const BadgeCard = ({ badge, index }: { badge: BadgeItem; index: number }) => {
       )}>
         {/* Visual */}
         <div className={cn(
-          'h-32 flex items-center justify-center relative',
+          'h-32 3xl:h-48 flex items-center justify-center relative',
           badge.earned ? badge.headerBg : 'bg-muted'
         )}>
-          <span className={cn('text-5xl drop-shadow', badge.earned ? '' : 'grayscale')}>
+          <span className={cn('text-5xl 3xl:text-7xl drop-shadow', badge.earned ? '' : 'grayscale')}>
             {badge.emoji}
           </span>
 
@@ -78,21 +78,21 @@ const BadgeCard = ({ badge, index }: { badge: BadgeItem; index: number }) => {
           )}
         </div>
 
-        <CardContent className="p-4 text-center space-y-2">
+        <CardContent className="p-4 3xl:p-6 text-center space-y-2">
           {badge.earned && (
-            <span className="inline-block text-[10px] font-bold bg-amber-100 text-amber-700 px-2.5 py-0.5 rounded-full uppercase tracking-wide">
+            <span className="inline-block text-[10px] 3xl:text-xs font-bold bg-amber-100 text-amber-700 px-2.5 py-0.5 rounded-full uppercase tracking-wide">
               ✨ Lencana Diraih!
             </span>
           )}
 
           <p className={cn(
-            'font-bold text-sm leading-snug',
+            'font-bold text-sm 3xl:text-base leading-snug',
             badge.earned ? 'text-foreground' : 'text-muted-foreground'
           )}>
             {badge.name}
           </p>
 
-          <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+          <p className="text-xs 3xl:text-sm text-muted-foreground leading-relaxed line-clamp-2">
             {badge.description}
           </p>
 
@@ -126,8 +126,8 @@ const Badges = () => {
         custom={0} variants={fadeUp} initial="hidden" animate="show"
         className="text-center mb-8"
       >
-        <h2 className="text-3xl font-bold text-primary">Lencana Saya</h2>
-        <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
+        <h2 className="text-3xl 3xl:text-5xl font-bold text-primary">Lencana Saya</h2>
+        <p className="text-sm 3xl:text-base text-muted-foreground mt-2 max-w-sm 3xl:max-w-xl mx-auto leading-relaxed">
           Selesaikan tantangan, kumpulkan XP, dan naiki level untuk mendapatkan lencana!
         </p>
         {!isLoading && (
@@ -141,7 +141,7 @@ const Badges = () => {
       </motion.div>
 
       {/* Grid */}
-      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 3xl:grid-cols-4 gap-4 3xl:gap-6">
         {isLoading
           ? Array.from({ length: 6 }).map((_, i) => <BadgeSkeleton key={i} />)
           : badges.map((badge, i) => <BadgeCard key={badge.id} badge={badge} index={i} />)

@@ -43,3 +43,6 @@ CLAUDE.md
 .claude/
 .mcp.json
 supabase/
+
+# Tasks
+src/taks/

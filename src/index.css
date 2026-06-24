@@ -24,6 +24,9 @@
 
   --animate-collapsible-down: collapsible-down 0.2s ease-out;
   --animate-collapsible-up:   collapsible-up   0.2s ease-out;
+
+  /* Breakpoint khusus untuk layar 2732×2048 (iPad Pro 13" landscape & large desktop) */
+  --breakpoint-3xl: 2048px;
 }
 
 @theme inline {
@@ -151,5 +154,12 @@
   }
   h1, h2, h3, h4, h5, h6 {
     font-family: var(--font-balsamiq);
+  }
+
+  /* Sidebar lebih lebar di layar 3xl (≥2048px) */
+  @media (min-width: 2048px) {
+    :root {
+      --sidebar-width: 20rem;
+    }
   }
 }

@@ -46,25 +46,25 @@ interface NavItem {
 const navItems: NavItem[] = [
   {
     label: "Modul",
-    icon: <Rocket className="w-4 h-4" />,
+    icon: <Rocket className="w-4 h-4 3xl:w-5 3xl:h-5" />,
     href: "/dashboard",
     match: (p) => p === "/dashboard" || p.startsWith("/materi"),
   },
   {
     label: "Tantangan",
-    icon: <ClipboardList className="w-4 h-4" />,
+    icon: <ClipboardList className="w-4 h-4 3xl:w-5 3xl:h-5" />,
     href: "/challenges",
     match: (p) => p.startsWith("/challenges"),
   },
   {
     label: "Lencana",
-    icon: <Medal className="w-4 h-4" />,
+    icon: <Medal className="w-4 h-4 3xl:w-5 3xl:h-5" />,
     href: "/badges",
     match: (p) => p.startsWith("/badges"),
   },
   {
     label: "Peringkat",
-    icon: <Trophy className="w-4 h-4" />,
+    icon: <Trophy className="w-4 h-4 3xl:w-5 3xl:h-5" />,
     href: "/leaderboard",
     match: (p) => p.startsWith("/leaderboard"),
   },
@@ -96,7 +96,7 @@ const AppSidebar = () => {
 
   return (
     <Sidebar collapsible="offcanvas">
-      <SidebarHeader className="px-4 py-3 gap-3">
+      <SidebarHeader className="px-4 3xl:px-6 py-3 3xl:py-5 gap-3">
         {/* <Link to="/dashboard">
           <img src={kiddoLogo} alt="Kiddo" className="h-10 w-auto" />
         </Link> */}
@@ -104,7 +104,7 @@ const AppSidebar = () => {
         {/* User info + XP */}
         {isLoading ? (
           <div className="flex items-center gap-2 mt-1">
-            <Skeleton className="w-9 h-9 rounded-full shrink-0 bg-white/20" />
+            <Skeleton className="w-9 h-9 3xl:w-12 3xl:h-12 rounded-full shrink-0 bg-white/20" />
             <div className="flex flex-col gap-1.5 flex-1">
               <Skeleton className="h-2.5 w-24 bg-white/20" />
               <Skeleton className="h-2 w-16 bg-white/20" />
@@ -112,21 +112,21 @@ const AppSidebar = () => {
           </div>
         ) : (
           <div className="flex items-center gap-2 mt-1">
-            <Avatar className="w-9 h-9 shrink-0">
+            <Avatar className="w-9 h-9 3xl:w-12 3xl:h-12 shrink-0">
               {profile?.avatar_url && (
                 <AvatarImage src={profile.avatar_url} alt={profile.username} />
               )}
-              <AvatarFallback className="bg-yellow-500 text-slate-900 text-xs font-bold">
+              <AvatarFallback className="bg-yellow-500 text-slate-900 text-xs 3xl:text-sm font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
             <div className="flex-1 min-w-0">
-              <p className="text-sm font-semibold text-white leading-none truncate">
+              <p className="text-sm 3xl:text-base font-semibold text-white leading-none truncate">
                 {profile?.username ?? "Explorer"}
               </p>
               <div className="flex items-center gap-1 mt-1">
-                <Zap className="w-3 h-3 text-yellow-300 fill-yellow-300 shrink-0" />
-                <span className="text-xs font-bold text-yellow-300">
+                <Zap className="w-3 h-3 3xl:w-4 3xl:h-4 text-yellow-300 fill-yellow-300 shrink-0" />
+                <span className="text-xs 3xl:text-sm font-bold text-yellow-300">
                   {(profile?.total_xp ?? 0).toLocaleString("id-ID")} XP
                 </span>
               </div>
@@ -138,8 +138,8 @@ const AppSidebar = () => {
       <Divider />
 
       {/* Nav Items */}
-      <SidebarContent className="px-2 py-3">
-        <SidebarMenu className="gap-1.5">
+      <SidebarContent className="px-2 3xl:px-3 py-3 3xl:py-5">
+        <SidebarMenu className="gap-1.5 3xl:gap-2">
           {navItems.map((item) => {
             const active = item.match(pathname);
             return (
@@ -148,7 +148,7 @@ const AppSidebar = () => {
                 <SidebarMenuButton
                   asChild
                   isActive={active}
-                  className="relative z-10 h-10 rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
+                  className="relative z-10 h-10 3xl:h-14 3xl:text-base rounded-lg font-semibold data-[active=true]:bg-transparent data-[active=true]:text-sky-700 data-[active=true]:shadow-none"
                 >
                   <Link to={item.href}>
                     {item.icon}
@@ -164,16 +164,16 @@ const AppSidebar = () => {
       <Divider />
 
       {/* Footer */}
-      <SidebarFooter className="gap-2 py-3 px-3">
+      <SidebarFooter className="gap-2 py-3 3xl:py-5 px-3 3xl:px-5">
         {profile?.role === "admin" && (
           <Button
             asChild
             variant="outline"
             size="sm"
-            className="w-full rounded-lg gap-2 font-semibold bg-white border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800"
+            className="w-full rounded-lg gap-2 font-semibold bg-white border-amber-200 text-amber-700 hover:bg-amber-50 hover:text-amber-800 3xl:h-11 3xl:text-sm"
           >
             <Link to="/admin">
-              <ShieldCheck className="w-4 h-4" />
+              <ShieldCheck className="w-4 h-4 3xl:w-5 3xl:h-5" />
               Kembali ke Admin
             </Link>
           </Button>
@@ -185,9 +185,9 @@ const AppSidebar = () => {
               <Button
                 variant="outline"
                 size="sm"
-                className="w-full rounded-lg gap-2 font-semibold bg-white border-red-300 text-destructive shadow-none hover:bg-red-50 hover:border-red-400 hover:text-destructive"
+                className="w-full rounded-lg gap-2 font-semibold bg-white border-red-300 text-destructive shadow-none hover:bg-red-50 hover:border-red-400 hover:text-destructive 3xl:h-11 3xl:text-sm"
               >
-                <LogOut className="w-4 h-4" />
+                <LogOut className="w-4 h-4 3xl:w-5 3xl:h-5" />
                 Keluar
               </Button>
             </AlertDialogTrigger>

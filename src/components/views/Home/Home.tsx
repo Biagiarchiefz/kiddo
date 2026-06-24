@@ -174,7 +174,7 @@ const Home = () => {
       {/* ══════════════ 1. HERO ══════════════ */}
       <motion.section
         {...fadeUp(0)}
-        className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-sky-50 pt-16 pb-20"
+        className="relative overflow-hidden bg-gradient-to-br from-sky-50 via-white to-sky-50 pt-16 pb-20 3xl:pt-24 3xl:pb-32"
       >
         {/* Decorative blobs */}
         <div
@@ -185,24 +185,24 @@ const Home = () => {
         />
 
         {/* Sun decoration */}
-        <div className="absolute -top-10 right-[10%] w-72 text-amber-300 opacity-[0.22] pointer-events-none">
+        <div className="absolute -top-10 right-[10%] w-72 text-amber-300 opacity-[0.22] pointer-events-none hidden lg:block">
           <SunDecoration />
         </div>
 
-        <div className="max-w-7xl mx-auto px-6 flex flex-col lg:flex-row items-center gap-14">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 flex flex-col lg:flex-row items-center gap-14 3xl:gap-24">
           {/* Left */}
           <motion.div
             {...fadeUp(0)}
             className="flex-1 space-y-6 text-center lg:text-left"
           >
             {/* Badge */}
-            <span className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full border border-sky-200 bg-white text-sky-600 shadow-sm">
-              <Star className="w-3.5 h-3.5 fill-sky-400 text-sky-400" />
+            <span className="inline-flex items-center gap-2 text-xs 3xl:text-sm font-bold px-4 py-1.5 3xl:px-6 3xl:py-2 rounded-full border border-sky-200 bg-white text-sky-600 shadow-sm">
+              <Star className="w-3.5 h-3.5 3xl:w-5 3xl:h-5 fill-sky-400 text-sky-400" />
               Platform Belajar #1 untuk Anak Indonesia
             </span>
 
             {/* Heading */}
-            <h1 className="text-5xl lg:text-6xl font-bold text-slate-900 leading-tight">
+            <h1 className="text-5xl lg:text-6xl 3xl:text-8xl font-bold text-slate-900 leading-tight">
               Wujudkan Masa
               <br />
               Depan Cerah
@@ -213,7 +213,7 @@ const Home = () => {
               </span>
             </h1>
 
-            <p className="text-slate-500 text-base leading-relaxed max-w-md mx-auto lg:mx-0">
+            <p className="text-slate-500 text-base 3xl:text-xl leading-relaxed max-w-md 3xl:max-w-xl mx-auto lg:mx-0">
               Petualangan belajar interaktif yang dirancang khusus untuk anak
               usia 7–12 tahun. Kumpulkan XP, selesaikan misi, dan raih prestasi
               setiap hari!
@@ -225,9 +225,9 @@ const Home = () => {
                 (t) => (
                   <span
                     key={t}
-                    className="text-xs font-semibold text-slate-500 bg-white border border-slate-200 px-3 py-1 rounded-full inline-flex items-center gap-1.5"
+                    className="text-xs 3xl:text-sm font-semibold text-slate-500 bg-white border border-slate-200 px-3 py-1 3xl:px-4 3xl:py-1.5 rounded-full inline-flex items-center gap-1.5"
                   >
-                    <CheckCircle className="w-3.5 h-3.5 text-emerald-500" />
+                    <CheckCircle className="w-3.5 h-3.5 3xl:w-5 3xl:h-5 text-emerald-500" />
                     {t}
                   </span>
                 ),
@@ -239,18 +239,18 @@ const Home = () => {
               <Button
                 asChild
                 size="lg"
-                className="rounded-2xl px-8 font-bold gap-2 text-base bg-sky-500 hover:bg-sky-600 text-white shadow-lg shadow-sky-200"
+                className="rounded-2xl px-8 3xl:px-12 font-bold gap-2 text-base 3xl:text-lg bg-sky-500 hover:bg-sky-600 text-white shadow-lg shadow-sky-200"
               >
                 <Link to="/daftar">
                   Mulai Belajar
-                  <ChevronRight className="w-5 h-5" />
+                  <ChevronRight className="w-5 h-5 3xl:w-6 3xl:h-6" />
                 </Link>
               </Button>
               <Button
                 asChild
                 variant="outline"
                 size="lg"
-                className="rounded-2xl px-8 font-bold gap-2 text-base border-slate-200 hover:border-sky-300 hover:text-sky-600"
+                className="rounded-2xl px-8 3xl:px-12 font-bold gap-2 text-base 3xl:text-lg border-slate-200 hover:border-sky-300 hover:text-sky-600"
               >
                 <Link to="/#fitur">
                   Lihat Fitur
@@ -268,7 +268,7 @@ const Home = () => {
             <div className="relative">
               {/* Main card */}
               <div
-                className="w-80 h-80 lg:w-96 lg:h-96 rounded-3xl shadow-2xl shadow-sky-200/50 overflow-hidden"
+                className="w-80 h-80 lg:w-96 lg:h-96 3xl:w-[560px] 3xl:h-[560px] rounded-3xl shadow-2xl shadow-sky-200/50 overflow-hidden"
                 style={{
                   background:
                     "linear-gradient(135deg, #e0f2fe, #bae6fd, #e0f2fe)",
@@ -330,20 +330,20 @@ const Home = () => {
         </div>
 
         {/* ── Stats Bar ── */}
-        <motion.div {...fadeUp(0.3)} className="max-w-7xl mx-auto px-6 mt-14">
+        <motion.div {...fadeUp(0.3)} className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 mt-14 3xl:mt-20">
           <div className="bg-white rounded-2xl shadow-md border border-sky-100 grid grid-cols-3 divide-x divide-sky-100">
             {stats.map(({ icon: Icon, value, label }) => (
               <div
                 key={label}
-                className="flex flex-col items-center py-6 gap-1"
+                className="flex flex-col items-center py-6 3xl:py-10 gap-1"
               >
                 <div className="flex items-center gap-2">
-                  <Icon className="w-5 h-5 text-sky-500" />
-                  <span className="text-2xl font-black text-slate-900">
+                  <Icon className="w-5 h-5 3xl:w-7 3xl:h-7 text-sky-500" />
+                  <span className="text-2xl 3xl:text-4xl font-black text-slate-900">
                     {value}
                   </span>
                 </div>
-                <span className="text-xs text-slate-400 font-medium">
+                <span className="text-xs 3xl:text-base text-slate-400 font-medium">
                   {label}
                 </span>
               </div>
@@ -353,20 +353,20 @@ const Home = () => {
       </motion.section>
 
       {/* ══════════════ 2. TAGLINE + FEATURES ══════════════ */}
-      <motion.section {...fadeUp(0)} id="fitur" className="bg-white py-20">
-        <div className="max-w-7xl mx-auto px-6">
+      <motion.section {...fadeUp(0)} id="fitur" className="bg-white py-20 3xl:py-28">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10">
           {/* Header */}
           <div className="flex flex-col lg:flex-row lg:items-end justify-between gap-6 mb-12">
-            <motion.div {...fadeUp()} className="space-y-3 max-w-xl">
-              <span className="text-xs font-bold uppercase tracking-widest text-sky-500">
+            <motion.div {...fadeUp()} className="space-y-3 max-w-xl 3xl:max-w-3xl">
+              <span className="text-xs 3xl:text-sm font-bold uppercase tracking-widest text-sky-500">
                 Kenapa Kiddo?
               </span>
-              <h2 className="text-4xl font-bold text-slate-900 leading-tight">
+              <h2 className="text-4xl 3xl:text-6xl font-bold text-slate-900 leading-tight">
                 Anak Cerdas &amp; Berprestasi
                 <br />
                 <span className="text-sky-500">Dimulai dari Sini</span>
               </h2>
-              <p className="text-slate-500 leading-relaxed">
+              <p className="text-slate-500 3xl:text-lg leading-relaxed">
                 Kami memadukan kurikulum terbaik dengan pengalaman bermain yang
                 menyenangkan — satu pelajaran seru pada satu waktu.
               </p>
@@ -374,7 +374,7 @@ const Home = () => {
             <motion.div {...fadeUp(0.1)}>
               <Button
                 asChild
-                className="rounded-xl px-8 font-bold bg-sky-500 hover:bg-sky-600 text-white gap-2 shadow-md shadow-sky-200"
+                className="rounded-xl px-8 3xl:px-12 3xl:py-3 3xl:text-base font-bold bg-sky-500 hover:bg-sky-600 text-white gap-2 shadow-md shadow-sky-200"
               >
                 <Link to="/daftar">
                   Daftar Sekarang
@@ -385,27 +385,27 @@ const Home = () => {
           </div>
 
           {/* Feature Cards */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 3xl:gap-8">
             {features.map((f, i) => (
               <motion.div
                 key={f.title}
                 {...fadeUp(i * 0.08)}
-                className={`${f.bg} rounded-2xl p-6 space-y-3 hover:shadow-md transition-shadow border border-white`}
+                className={`${f.bg} rounded-2xl p-6 3xl:p-10 space-y-3 3xl:space-y-5 hover:shadow-md transition-shadow border border-white`}
               >
                 <div className="flex items-start justify-between">
-                  <span className="w-12 h-12 rounded-2xl bg-white/80 flex items-center justify-center">
-                    <f.Icon className={`w-6 h-6 ${f.iconClass}`} />
+                  <span className="w-12 h-12 3xl:w-18 3xl:h-18 rounded-2xl bg-white/80 flex items-center justify-center">
+                    <f.Icon className={`w-6 h-6 3xl:w-9 3xl:h-9 ${f.iconClass}`} />
                   </span>
                   <span
-                    className={`text-[10px] font-bold px-2.5 py-1 rounded-full ${f.badge}`}
+                    className={`text-[10px] 3xl:text-xs font-bold px-2.5 py-1 3xl:px-3 3xl:py-1.5 rounded-full ${f.badge}`}
                   >
                     {f.badgeText}
                   </span>
                 </div>
-                <h3 className="font-bold text-slate-800 text-base leading-snug">
+                <h3 className="font-bold text-slate-800 text-base 3xl:text-xl leading-snug">
                   {f.title}
                 </h3>
-                <p className="text-sm text-slate-500 leading-relaxed">
+                <p className="text-sm 3xl:text-base text-slate-500 leading-relaxed">
                   {f.desc}
                 </p>
               </motion.div>
@@ -415,13 +415,13 @@ const Home = () => {
       </motion.section>
 
       {/* ══════════════ 3. MODULES / COURSES ══════════════ */}
-      <motion.section {...fadeUp(0)} className="bg-sky-50 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div {...fadeUp()} className="text-center space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-sky-500">
+      <motion.section {...fadeUp(0)} className="bg-sky-50 py-20 3xl:py-28">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10">
+          <motion.div {...fadeUp()} className="text-center space-y-3 mb-12 3xl:mb-16">
+            <span className="text-xs 3xl:text-sm font-bold uppercase tracking-widest text-sky-500">
               Modul Belajar
             </span>
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-4xl 3xl:text-6xl font-bold text-slate-900">
               Membentuk Masa Depan
               <br />
               <span className="text-sky-500">Anak Satu Pelajaran</span> pada
@@ -429,7 +429,7 @@ const Home = () => {
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-5 3xl:gap-8">
             {modules.map((mod, i) => (
               <motion.div
                 key={mod.title}
@@ -437,7 +437,7 @@ const Home = () => {
                 className="bg-white rounded-2xl overflow-hidden shadow-sm hover:shadow-md transition-all hover:-translate-y-1 border border-sky-100 group"
               >
                 <div
-                  className={`${mod.color} h-32 flex items-center justify-center text-6xl select-none`}
+                  className={`${mod.color} h-32 3xl:h-52 flex items-center justify-center text-6xl select-none`}
                 >
                   {mod.image ? (
                     <img
@@ -449,16 +449,16 @@ const Home = () => {
                     " "
                   )}
                 </div>
-                <div className="p-5 space-y-1.5">
-                  <span className="text-[10px] font-bold text-slate-400 uppercase tracking-wide">
+                <div className="p-5 3xl:p-7 space-y-1.5">
+                  <span className="text-[10px] 3xl:text-xs font-bold text-slate-400 uppercase tracking-wide">
                     {mod.level}
                   </span>
-                  <h3 className="font-bold text-slate-800 text-base">
+                  <h3 className="font-bold text-slate-800 text-base 3xl:text-lg">
                     {mod.title}
                   </h3>
                   <div className="flex items-center justify-between pt-2">
-                    <span className="text-xs text-slate-400 flex items-center gap-1">
-                      <BookOpen className="w-3.5 h-3.5" />
+                    <span className="text-xs 3xl:text-sm text-slate-400 flex items-center gap-1">
+                      <BookOpen className="w-3.5 h-3.5 3xl:w-5 3xl:h-5" />
                       {mod.count}
                     </span>
                     <Button
@@ -480,12 +480,12 @@ const Home = () => {
       </motion.section>
 
       {/* ══════════════ 4. SPLIT CTA ══════════════ */}
-      <motion.section {...fadeUp(0)} id="tentang" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6 grid grid-cols-1 lg:grid-cols-2 gap-6">
+      <motion.section {...fadeUp(0)} id="tentang" className="py-20 3xl:py-28 bg-white">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 grid grid-cols-1 lg:grid-cols-2 gap-6 3xl:gap-10">
           {/* Left */}
           <motion.div
             {...fadeUp()}
-            className="bg-sky-500 rounded-3xl p-10 text-white relative overflow-hidden"
+            className="bg-sky-500 rounded-3xl p-10 3xl:p-16 text-white relative overflow-hidden"
           >
             <div className="absolute -top-8 -right-8 w-40 h-40 rounded-full bg-white/10 pointer-events-none" />
             <div className="absolute -bottom-6 right-10 w-24 h-24 rounded-full bg-white/10 pointer-events-none" />
@@ -493,12 +493,12 @@ const Home = () => {
               <span className="w-12 h-12 rounded-2xl bg-white/20 flex items-center justify-center">
                 <Dumbbell className="w-6 h-6 text-lime-200" />
               </span>
-              <h3 className="text-2xl font-bold leading-snug">
+              <h3 className="text-2xl 3xl:text-4xl font-bold leading-snug">
                 Tingkatkan Kepercayaan
                 <br />
                 Diri Anak Anda
               </h3>
-              <p className="text-sky-100 text-sm leading-relaxed">
+              <p className="text-sky-100 text-sm 3xl:text-lg leading-relaxed">
                 Dengan sistem pencapaian XP dan lencana, setiap pelajaran
                 memberikan rasa bangga dan motivasi untuk terus maju.
               </p>
@@ -510,9 +510,9 @@ const Home = () => {
                 ].map((item) => (
                   <li
                     key={item}
-                    className="flex items-center gap-2 text-sm font-medium"
+                    className="flex items-center gap-2 text-sm 3xl:text-base font-medium"
                   >
-                    <CheckCircle className="w-4 h-4 text-[#9FFB00] shrink-0" />
+                    <CheckCircle className="w-4 h-4 3xl:w-5 3xl:h-5 text-[#9FFB00] shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -530,7 +530,7 @@ const Home = () => {
           {/* Right */}
           <motion.div
             {...fadeUp(0.1)}
-            className="rounded-3xl p-10 relative overflow-hidden text-slate-800 border-2 border-slate-100"
+            className="rounded-3xl p-10 3xl:p-16 relative overflow-hidden text-slate-800 border-2 border-slate-100"
             style={{ background: "linear-gradient(135deg, #f0fdf4, #ecfdf5)" }}
           >
             <div
@@ -543,12 +543,12 @@ const Home = () => {
               <span className="w-12 h-12 rounded-2xl bg-sky-100 flex items-center justify-center">
                 <Sparkles className="w-6 h-6 text-sky-600" />
               </span>
-              <h3 className="text-2xl font-bold leading-snug text-slate-900">
+              <h3 className="text-2xl 3xl:text-4xl font-bold leading-snug text-slate-900">
                 Bantu Anak Raih
                 <br />
                 Impian Tertinggi
               </h3>
-              <p className="text-slate-500 text-sm leading-relaxed">
+              <p className="text-slate-500 text-sm 3xl:text-lg leading-relaxed">
                 Konten belajar kami disusun bersama para ahli pendidikan anak
                 untuk memastikan setiap materi sesuai tahapan perkembangan.
               </p>
@@ -560,9 +560,9 @@ const Home = () => {
                 ].map((item) => (
                   <li
                     key={item}
-                    className="flex items-center gap-2 text-sm font-medium text-slate-700"
+                    className="flex items-center gap-2 text-sm 3xl:text-base font-medium text-slate-700"
                   >
-                    <CheckCircle className="w-4 h-4 text-sky-500 shrink-0" />
+                    <CheckCircle className="w-4 h-4 3xl:w-5 3xl:h-5 text-sky-500 shrink-0" />
                     {item}
                   </li>
                 ))}
@@ -606,104 +606,104 @@ const Home = () => {
           <path d="M12 0l2 9.3L24 12l-10 2.7L12 24l-2-9.3L0 12l10-2.7z"/>
         </svg>
 
-        <div className="max-w-7xl mx-auto px-6 relative">
-          <motion.div {...fadeUp()} className="text-center text-white mb-12 space-y-3">
-            <span className="text-xs font-bold uppercase tracking-widest opacity-70">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 relative">
+          <motion.div {...fadeUp()} className="text-center text-white mb-12 3xl:mb-20 space-y-3">
+            <span className="text-xs 3xl:text-sm font-bold uppercase tracking-widest opacity-70">
               Dampak Nyata
             </span>
-            <h2 className="text-4xl font-bold">
+            <h2 className="text-4xl 3xl:text-6xl font-bold">
               Berdayakan Anak-anak
               <br />
               Satu Pelajaran pada Satu Waktu
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            {/* ── Card 1: Pelajar Aktif — cincin besar kanan atas + titik bulat kiri bawah ── */}
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 3xl:gap-10">
+            {/* ── Card 1: Pelajar Aktif ── */}
             <motion.div
               {...fadeUp(0)}
-              className="bg-sky-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+              className="bg-sky-50 rounded-2xl p-8 3xl:p-12 text-center space-y-2 3xl:space-y-4 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
             >
               <div className="absolute -top-8 -right-8 w-36 h-36 rounded-full border-[12px] border-sky-300/25 pointer-events-none" />
               <div className="absolute bottom-4 left-5 w-5 h-5 rounded-full bg-sky-200/70 pointer-events-none" />
               <div className="flex justify-center relative">
-                <Users className="w-8 h-8 text-sky-500" />
+                <Users className="w-8 h-8 3xl:w-14 3xl:h-14 text-sky-500" />
               </div>
-              <p className="text-4xl font-black text-sky-700">12.000+</p>
-              <p className="font-bold text-sm text-sky-800">Pelajar Aktif</p>
-              <p className="text-sm text-muted-foreground">di seluruh Indonesia</p>
+              <p className="text-4xl 3xl:text-6xl font-black text-sky-700">12.000+</p>
+              <p className="font-bold text-sm 3xl:text-lg text-sky-800">Pelajar Aktif</p>
+              <p className="text-sm 3xl:text-base text-muted-foreground">di seluruh Indonesia</p>
             </motion.div>
 
-            {/* ── Card 2: Rating — kotak miring kiri atas + cincin kecil kanan bawah ── */}
+            {/* ── Card 2: Rating ── */}
             <motion.div
               {...fadeUp(0.1)}
-              className="bg-rose-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+              className="bg-rose-50 rounded-2xl p-8 3xl:p-12 text-center space-y-2 3xl:space-y-4 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
             >
               <div className="absolute -top-6 -left-6 w-24 h-24 rotate-45 border-[10px] border-rose-300/25 rounded-xl pointer-events-none" />
               <div className="absolute bottom-4 right-5 w-10 h-10 rounded-full border-2 border-rose-300/40 pointer-events-none" />
               <div className="flex justify-center relative">
-                <Heart className="w-8 h-8 text-rose-500" />
+                <Heart className="w-8 h-8 3xl:w-14 3xl:h-14 text-rose-500" />
               </div>
-              <p className="text-4xl font-black text-rose-600">4.9</p>
-              <p className="font-bold text-sm text-rose-800">Rating Orang Tua</p>
-              <p className="text-sm text-muted-foreground">dari 500+ ulasan</p>
+              <p className="text-4xl 3xl:text-6xl font-black text-rose-600">4.9</p>
+              <p className="font-bold text-sm 3xl:text-lg text-rose-800">Rating Orang Tua</p>
+              <p className="text-sm 3xl:text-base text-muted-foreground">dari 500+ ulasan</p>
             </motion.div>
 
-            {/* ── Card 3: Kepuasan — persegi panjang kanan bawah + kotak miring kecil kiri atas ── */}
+            {/* ── Card 3: Kepuasan ── */}
             <motion.div
               {...fadeUp(0.2)}
-              className="bg-amber-50 rounded-2xl p-8 text-center space-y-2 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
+              className="bg-amber-50 rounded-2xl p-8 3xl:p-12 text-center space-y-2 3xl:space-y-4 hover:shadow-xl transition-all hover:-translate-y-1 relative overflow-hidden"
             >
               <div className="absolute -bottom-5 -right-4 w-28 h-20 border-[10px] border-amber-300/25 rounded-2xl pointer-events-none" />
               <div className="absolute top-5 left-5 w-7 h-7 rotate-12 border-2 border-amber-300/45 rounded-md pointer-events-none" />
               <div className="flex justify-center relative">
-                <Rocket className="w-8 h-8 text-amber-500" />
+                <Rocket className="w-8 h-8 3xl:w-14 3xl:h-14 text-amber-500" />
               </div>
-              <p className="text-4xl font-black text-amber-600">95%</p>
-              <p className="font-bold text-sm text-amber-800">Tingkat Kepuasan</p>
-              <p className="text-sm text-muted-foreground">anak lebih semangat belajar</p>
+              <p className="text-4xl 3xl:text-6xl font-black text-amber-600">95%</p>
+              <p className="font-bold text-sm 3xl:text-lg text-amber-800">Tingkat Kepuasan</p>
+              <p className="text-sm 3xl:text-base text-muted-foreground">anak lebih semangat belajar</p>
             </motion.div>
           </div>
         </div>
       </motion.section>
 
       {/* ══════════════ 6. TESTIMONIALS ══════════════ */}
-      <motion.section {...fadeUp(0)} className="bg-slate-50 py-20">
-        <div className="max-w-7xl mx-auto px-6">
-          <motion.div {...fadeUp()} className="text-center space-y-3 mb-12">
-            <span className="text-xs font-bold uppercase tracking-widest text-sky-500">
+      <motion.section {...fadeUp(0)} className="bg-slate-50 py-20 3xl:py-28">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10">
+          <motion.div {...fadeUp()} className="text-center space-y-3 mb-12 3xl:mb-16">
+            <span className="text-xs 3xl:text-sm font-bold uppercase tracking-widest text-sky-500">
               Testimoni
             </span>
-            <h2 className="text-4xl font-bold text-slate-900">
+            <h2 className="text-4xl 3xl:text-6xl font-bold text-slate-900">
               Kata Mereka Tentang Kiddo
             </h2>
           </motion.div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6 3xl:gap-10">
             {testimonials.map((t, i) => (
               <motion.div
                 key={t.name}
                 {...fadeUp(i * 0.08)}
-                className="bg-white rounded-2xl p-6 shadow-sm border border-slate-100 space-y-4 hover:shadow-md transition-shadow"
+                className="bg-white rounded-2xl p-6 3xl:p-10 shadow-sm border border-slate-100 space-y-4 3xl:space-y-6 hover:shadow-md transition-shadow"
               >
                 <div className="flex gap-1">
                   {[1, 2, 3, 4, 5].map((s) => (
                     <Star
                       key={s}
-                      className="w-4 h-4 fill-amber-400 text-amber-400"
+                      className="w-4 h-4 3xl:w-6 3xl:h-6 fill-amber-400 text-amber-400"
                     />
                   ))}
                 </div>
-                <p className="text-sm text-slate-600 leading-relaxed italic">
+                <p className="text-sm 3xl:text-base text-slate-600 leading-relaxed italic">
                   "{t.text}"
                 </p>
                 <div className="flex items-center gap-3 pt-2 border-t border-slate-100">
-                  <div className="w-10 h-10 rounded-full bg-sky-100 flex items-center justify-center">
-                    <t.Icon className={`w-5 h-5 ${t.iconClass}`} />
+                  <div className="w-10 h-10 3xl:w-14 3xl:h-14 rounded-full bg-sky-100 flex items-center justify-center">
+                    <t.Icon className={`w-5 h-5 3xl:w-7 3xl:h-7 ${t.iconClass}`} />
                   </div>
                   <div>
-                    <p className="text-sm font-bold text-slate-800">{t.name}</p>
-                    <p className="text-xs text-slate-400">{t.role}</p>
+                    <p className="text-sm 3xl:text-base font-bold text-slate-800">{t.name}</p>
+                    <p className="text-xs 3xl:text-sm text-slate-400">{t.role}</p>
                   </div>
                 </div>
               </motion.div>
@@ -713,11 +713,11 @@ const Home = () => {
       </motion.section>
 
       {/* ══════════════ 7. BOTTOM CTA BANNER ══════════════ */}
-      <motion.section {...fadeUp(0)} id="kontak" className="py-20 bg-white">
-        <div className="max-w-7xl mx-auto px-6">
+      <motion.section {...fadeUp(0)} id="kontak" className="py-20 3xl:py-28 bg-white">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10">
           <motion.div
             {...fadeUp()}
-            className="rounded-3xl p-12 text-center relative overflow-hidden bg-gradient-to-br from-sky-700 via-sky-600 to-sky-500"
+            className="rounded-3xl p-12 3xl:p-24 text-center relative overflow-hidden bg-gradient-to-br from-sky-700 via-sky-600 to-sky-500"
           >
             {/* Glow blobs */}
             <div className="absolute -top-20 -right-20 w-72 h-72 rounded-full pointer-events-none opacity-20"
@@ -754,42 +754,42 @@ const Home = () => {
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-96 h-px pointer-events-none"
               style={{ background: "linear-gradient(90deg, transparent, rgba(255,255,255,0.5), transparent)" }} />
 
-            <div className="relative space-y-5 max-w-2xl mx-auto">
-              <span className="inline-flex items-center gap-2 text-xs font-bold px-4 py-1.5 rounded-full bg-white/20 text-white border border-white/30">
-                <Zap className="w-3.5 h-3.5 fill-current" />
+            <div className="relative space-y-5 3xl:space-y-8 max-w-2xl 3xl:max-w-5xl mx-auto">
+              <span className="inline-flex items-center gap-2 text-xs 3xl:text-sm font-bold px-4 py-1.5 3xl:px-6 3xl:py-2.5 rounded-full bg-white/20 text-white border border-white/30">
+                <Zap className="w-3.5 h-3.5 3xl:w-5 3xl:h-5 fill-current" />
                 Mulai Perjalanan Belajar Hari Ini
               </span>
-              <h2 className="text-4xl font-bold leading-tight text-white">
+              <h2 className="text-4xl 3xl:text-7xl font-bold leading-tight text-white">
                 Membangun Generasi Cerdas
                 <br />
                 <span className="text-white/80">
                   Satu Anak pada Satu Waktu
                 </span>
               </h2>
-              <p className="text-white/70 leading-relaxed">
+              <p className="text-white/70 3xl:text-xl leading-relaxed">
                 Bergabung bersama ribuan keluarga Indonesia yang telah
                 mempercayakan pendidikan anak mereka kepada Kiddo.
               </p>
-              <div className="flex flex-wrap gap-3 justify-center pt-2">
+              <div className="flex flex-wrap gap-3 3xl:gap-5 justify-center pt-2">
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-2xl px-10 font-bold text-base bg-white text-sky-700 gap-2 shadow-lg shadow-sky-900/20 hover:bg-white! hover:opacity-90!"
+                  className="rounded-2xl px-10 3xl:px-16 font-bold text-base 3xl:text-xl bg-white text-sky-700 gap-2 shadow-lg shadow-sky-900/20 hover:bg-white! hover:opacity-90!"
                 >
                   <Link to="/daftar">
                     Daftar Gratis Sekarang
-                    <ChevronRight className="w-5 h-5" />
+                    <ChevronRight className="w-5 h-5 3xl:w-7 3xl:h-7" />
                   </Link>
                 </Button>
                 <Button
                   asChild
                   size="lg"
-                  className="rounded-2xl px-8 font-bold text-base bg-white/15 border border-white/50 text-white hover:bg-white/25! hover:border-white! hover:text-white!"
+                  className="rounded-2xl px-8 3xl:px-14 font-bold text-base 3xl:text-xl bg-white/15 border border-white/50 text-white hover:bg-white/25! hover:border-white! hover:text-white!"
                 >
                   <Link to="/login">Sudah Punya Akun</Link>
                 </Button>
               </div>
-              <p className="text-xs text-white/55 pt-1">
+              <p className="text-xs 3xl:text-base text-white/55 pt-1">
                 Gratis selamanya · Tidak perlu kartu kredit · Setup dalam 2 menit
               </p>
             </div>

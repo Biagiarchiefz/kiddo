@@ -67,7 +67,7 @@ const UnitCard = ({ unit, index }: UnitCardProps) => {
         isInProgress && 'border-sky-200 shadow-[0_2px_16px_rgba(14,165,233,0.13)]',
         isLocked     && 'border-slate-100 shadow-[0_1px_4px_rgba(0,0,0,0.04)] opacity-55',
       )}>
-        <div className="p-5 space-y-4">
+        <div className="p-5 3xl:p-8 space-y-4">
 
           {/* Top row: unit number + status chip */}
           <div className="flex items-center justify-between">
@@ -94,12 +94,12 @@ const UnitCard = ({ unit, index }: UnitCardProps) => {
           {/* Title + description */}
           <div className="space-y-1.5">
             <h3 className={cn(
-              'font-semibold text-[15px] leading-snug',
+              'font-semibold text-[15px] 3xl:text-lg leading-snug',
               isLocked ? 'text-slate-400' : 'text-slate-800'
             )}>
               {unit.title}
             </h3>
-            <p className="text-[13px] text-slate-400 leading-relaxed">{unit.description}</p>
+            <p className="text-[13px] 3xl:text-base text-slate-400 leading-relaxed">{unit.description}</p>
           </div>
 
           {/* Unlock notice */}
@@ -261,8 +261,8 @@ const Materi = () => {
                   <p className="text-sky-200 text-[11px] font-semibold uppercase tracking-widest mb-1">
                     Modul Belajar
                   </p>
-                  <h1 className="text-xl font-bold leading-snug">{module.title}</h1>
-                  <p className="text-sky-200/80 text-xs leading-relaxed mt-1.5 max-w-sm">
+                  <h1 className="text-xl 3xl:text-3xl font-bold leading-snug">{module.title}</h1>
+                  <p className="text-sky-200/80 text-xs 3xl:text-sm leading-relaxed mt-1.5 max-w-sm 3xl:max-w-xl">
                     {module.description}
                   </p>
                 </div>
@@ -305,7 +305,7 @@ const Materi = () => {
               const isLeft = index % 2 === 0
               return (
                 <div key={unit.id}>
-                  <div className="grid grid-cols-[32px_1fr] items-start gap-0 md:grid-cols-[1fr_48px_1fr] md:items-center">
+                  <div className="grid grid-cols-[32px_1fr] items-start gap-0 md:grid-cols-[1fr_48px_1fr] 3xl:grid-cols-[1fr_64px_1fr] md:items-center">
 
                     {/* Left slot — desktop only */}
                     <div className="hidden md:block pr-5">

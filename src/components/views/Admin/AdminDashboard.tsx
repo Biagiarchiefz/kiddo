@@ -112,10 +112,10 @@ const AdminDashboard = () => {
                 <p className="text-amber-100 text-[10px] font-bold uppercase tracking-widest">
                   Panel Admin
                 </p>
-                <h2 className="text-2xl sm:text-4xl font-bold text-white leading-snug">
+                <h2 className="text-2xl sm:text-4xl 3xl:text-5xl font-bold text-white leading-snug">
                   Halo, {profile?.username ?? "Admin"}!!
                 </h2>
-                <p className="text-white/80 text-xs max-w-xs leading-relaxed">
+                <p className="text-white/80 text-xs 3xl:text-sm max-w-xs 3xl:max-w-md leading-relaxed">
                   Kelola konten, soal, dan pengguna platform Kiddo dari sini.
                 </p>
                 <Button
@@ -131,7 +131,7 @@ const AdminDashboard = () => {
 
               {/* Image card — same style as Dashboard */}
               <div className="hidden md:block shrink-0 relative z-10">
-                <div className="w-40 h-40 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 shadow-[0_16px_40px_rgba(180,83,9,0.35)] overflow-hidden -rotate-2">
+                <div className="w-40 h-40 3xl:w-64 3xl:h-64 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 shadow-[0_16px_40px_rgba(180,83,9,0.35)] overflow-hidden -rotate-2">
                   <img
                     src={dashboardHeroImg}
                     alt="Admin panel"
@@ -149,7 +149,7 @@ const AdminDashboard = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-3 gap-2 sm:gap-3"
+          className="grid grid-cols-3 gap-2 sm:gap-3 3xl:gap-5"
         >
           {profileLoading || statsLoading ? (
             <>
@@ -160,72 +160,72 @@ const AdminDashboard = () => {
           ) : (
             <>
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
-                      <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-sky-600" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
+                      <Users className="w-3.5 h-3.5 sm:w-4 sm:h-4 3xl:w-6 3xl:h-6 text-sky-600" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Pengguna
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {stats?.users}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Terdaftar
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
                     USR
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
-                      <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-green-600" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                      <BookOpen className="w-3.5 h-3.5 sm:w-4 sm:h-4 3xl:w-6 3xl:h-6 text-green-600" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Modul
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {stats?.modules}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Tersedia
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                     MOD
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border/70 bg-white/70 backdrop-blur-sm -rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                      <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-amber-600" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                      <HelpCircle className="w-3.5 h-3.5 sm:w-4 sm:h-4 3xl:w-6 3xl:h-6 text-amber-600" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Soal
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {stats?.questions}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Total bank soal
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
                     SOL
                   </div>
                 </CardContent>
@@ -246,7 +246,7 @@ const AdminDashboard = () => {
         </motion.div>
 
         {/* ── Quick nav cards — same style as module cards ── */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-3 3xl:gap-6">
           {quickNav.map((item, i) => (
             <motion.div
               key={item.label}
@@ -266,7 +266,7 @@ const AdminDashboard = () => {
               <Link to={item.href} className="block h-full">
                 <Card className="border border-border pt-0 h-full">
                   <div
-                    className={`h-40 flex items-center justify-center text-5xl relative overflow-hidden ${item.bg}`}
+                    className={`h-40 3xl:h-56 flex items-center justify-center text-5xl relative overflow-hidden ${item.bg}`}
                   >
                     <img
                       src={item.image}
@@ -275,11 +275,11 @@ const AdminDashboard = () => {
                       loading="lazy"
                     />
                   </div>
-                  <CardContent className="p-3.5 space-y-1.5">
-                    <p className="font-bold text-sm text-foreground">
+                  <CardContent className="p-3.5 3xl:p-6 space-y-1.5">
+                    <p className="font-bold text-sm 3xl:text-base text-foreground">
                       {item.label}
                     </p>
-                    <p className="text-xs text-muted-foreground leading-relaxed">
+                    <p className="text-xs 3xl:text-sm text-muted-foreground leading-relaxed">
                       {item.description}
                     </p>
                   </CardContent>

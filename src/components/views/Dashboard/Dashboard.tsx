@@ -175,10 +175,10 @@ const Dashboard = () => {
                 <p className="text-sky-100 text-[15px] font-bold uppercase tracking-widest ">
                   Selamat Datang Kembali!
                 </p>
-                <h2 className="text-2xl sm:text-4xl font-bold text-white leading-snug">
+                <h2 className="text-2xl sm:text-4xl 3xl:text-5xl font-bold text-white leading-snug">
                   Halo, {profile?.username ?? "Pelajar"}!!
                 </h2>
-                <p className="text-white text-xs max-w-xs leading-relaxed">
+                <p className="text-white text-xs 3xl:text-sm max-w-xs 3xl:max-w-md leading-relaxed">
                   Pilih modul di bawah dan lanjutkan petualangan belajarmu.
                   Kumpulkan XP dan naiki peringkat!
                 </p>
@@ -192,7 +192,7 @@ const Dashboard = () => {
               </div>
 
               <div className="hidden md:block shrink-0 relative z-10">
-                <div className="w-40 h-40 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 shadow-[0_16px_40px_rgba(14,116,144,0.35)] overflow-hidden -rotate-2">
+                <div className="w-40 h-40 3xl:w-64 3xl:h-64 rounded-3xl bg-white/15 backdrop-blur-md border border-white/30 shadow-[0_16px_40px_rgba(14,116,144,0.35)] overflow-hidden -rotate-2">
                   <img
                     src={dashboardHeroImg}
                     alt="Maskot belajar"
@@ -210,7 +210,7 @@ const Dashboard = () => {
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="grid grid-cols-3 gap-2 sm:gap-3"
+          className="grid grid-cols-3 gap-2 sm:gap-3 3xl:gap-5"
         >
           {profileLoading ? (
             <>
@@ -221,72 +221,72 @@ const Dashboard = () => {
           ) : (
             <>
               <Card className="border border-border bg-white -rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
-                      <Zap className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-amber-500 fill-amber-400" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-amber-100 flex items-center justify-center shrink-0">
+                      <Zap className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 3xl:w-6 3xl:h-6 text-amber-500 fill-amber-400" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Total XP
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {(profile?.total_xp ?? 0).toLocaleString()}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Modul aktif {totalModules}
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-amber-50 text-amber-600 border border-amber-200">
                     XP
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border bg-white rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
-                      <Star className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-sky-500 fill-sky-400" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-sky-100 flex items-center justify-center shrink-0">
+                      <Star className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 3xl:w-6 3xl:h-6 text-sky-500 fill-sky-400" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Level
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {profile?.level ?? 1}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Rata-rata progres {averageProgress}%
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-sky-50 text-sky-600 border border-sky-200">
                     LV
                   </div>
                 </CardContent>
               </Card>
 
               <Card className="border border-border bg-white -rotate-1">
-                <CardContent className="p-2 sm:p-3.5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
+                <CardContent className="p-2 sm:p-3.5 3xl:p-5 flex flex-col items-center sm:flex-row sm:items-start sm:justify-between gap-1 sm:gap-3">
                   <div className="flex flex-col items-center sm:flex-row sm:items-start gap-1 sm:gap-3">
-                    <div className="w-7 h-7 sm:w-9 sm:h-9 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
-                      <BookCheck className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 text-green-600" />
+                    <div className="w-7 h-7 sm:w-9 sm:h-9 3xl:w-12 3xl:h-12 rounded-xl bg-green-100 flex items-center justify-center shrink-0">
+                      <BookCheck className="w-3.5 h-3.5 sm:w-4.5 sm:h-4.5 3xl:w-6 3xl:h-6 text-green-600" />
                     </div>
                     <div className="space-y-0.5 text-center sm:text-left">
-                      <p className="text-[9px] sm:text-[10px] text-muted-foreground font-semibold uppercase tracking-wide">
+                      <p className="text-[9px] sm:text-[10px] 3xl:text-xs text-muted-foreground font-semibold uppercase tracking-wide">
                         Selesai
                       </p>
-                      <p className="text-sm sm:text-lg font-black text-foreground leading-none">
+                      <p className="text-sm sm:text-lg 3xl:text-2xl font-black text-foreground leading-none">
                         {completedModules}
                       </p>
-                      <p className="text-[10px] text-muted-foreground hidden sm:block">
+                      <p className="text-[10px] 3xl:text-xs text-muted-foreground hidden sm:block">
                         Dari {totalModules} modul
                       </p>
                     </div>
                   </div>
-                  <div className="hidden sm:flex text-[10px] font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
+                  <div className="hidden sm:flex text-[10px] 3xl:text-xs font-bold px-2 py-1 rounded-full bg-green-50 text-green-700 border border-green-200">
                     {completionRate}%
                   </div>
                 </CardContent>
@@ -303,7 +303,7 @@ const Dashboard = () => {
           animate="show"
           className="flex items-center justify-between"
         >
-          <h3 className="text-sm font-bold text-foreground">Modul Belajar</h3>
+          <h3 className="text-sm 3xl:text-lg font-bold text-foreground">Modul Belajar</h3>
           {/* <Button asChild variant="ghost" size="sm" className="h-7 text-xs text-primary gap-0.5 px-2">
             <Link to="/materi/1">
               Lihat Semua <ChevronRight className="w-3.5 h-3.5" />
@@ -312,7 +312,7 @@ const Dashboard = () => {
         </motion.div>
 
         {/* Module cards grid */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 md:grid-cols-3 3xl:grid-cols-4 gap-3 3xl:gap-5">
           {isLoading
             ? Array.from({ length: 3 }).map((_, i) => (
                 <ModuleCardSkeleton key={i} />
@@ -338,7 +338,7 @@ const Dashboard = () => {
                       {/* Colored header */}
                       <div
                         className={cn(
-                          "h-40 flex items-center justify-center text-4xl relative overflow-hidden",
+                          "h-40 3xl:h-56 flex items-center justify-center text-4xl relative overflow-hidden",
                           mod.header_bg,
                         )}
                       >
@@ -356,9 +356,9 @@ const Dashboard = () => {
                         </div>
                       </div>
 
-                      <CardContent className="p-3.5 space-y-2.5">
+                      <CardContent className="p-3.5 3xl:p-6 space-y-2.5">
                         <div className="flex items-center gap-2 flex-wrap">
-                          <span className="font-bold text-sm text-foreground">
+                          <span className="font-bold text-sm 3xl:text-base text-foreground">
                             {mod.title}
                           </span>
                           {mod.isNew ? (
@@ -380,7 +380,7 @@ const Dashboard = () => {
                           )}
                         </div>
 
-                        <p className="text-xs text-muted-foreground leading-relaxed line-clamp-2">
+                        <p className="text-xs 3xl:text-sm text-muted-foreground leading-relaxed line-clamp-2">
                           {mod.description}
                         </p>
 

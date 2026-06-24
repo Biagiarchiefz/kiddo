@@ -70,7 +70,7 @@ const AppLayout = ({ children }: Props) => {
       <AppSidebar />
       <SidebarInset className="sm:rounded-l-[30px] overflow-hidden flex flex-col">
         <AppNavbar />
-        <main className="flex-1 overflow-y-auto p-4 sm:p-6 w-full">
+        <main className="flex-1 overflow-y-auto p-4 sm:p-6 3xl:p-10 w-full">
           <PageBreadcrumb />
           {children}
         </main>

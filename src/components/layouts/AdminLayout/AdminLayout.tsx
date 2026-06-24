@@ -56,12 +56,12 @@ const AdminLayout = ({ children }: { children: ReactNode }) => (
   <SidebarProvider className="bg-sidebar h-svh overflow-hidden">
     <AdminSidebar />
     <SidebarInset className="rounded-l-[30px] overflow-hidden flex flex-col">
-      <header className="sticky top-0 z-50 flex items-center gap-2 px-4 py-2.5 bg-background border-b border-border shadow-sm shrink-0">
+      <header className="sticky top-0 z-50 flex items-center gap-2 px-4 py-2.5 3xl:px-8 3xl:py-4 bg-background border-b border-border shadow-sm shrink-0">
         <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
         <Separator orientation="vertical" className="h-4 mx-1" />
-        <span className="text-sm font-bold text-foreground">Panel Admin</span>
+        <span className="text-sm 3xl:text-base font-bold text-foreground">Panel Admin</span>
       </header>
-      <main className="flex-1 overflow-y-auto p-4 sm:p-6 w-full">
+      <main className="flex-1 overflow-y-auto p-4 sm:p-6 3xl:p-10 w-full">
         <AdminBreadcrumb />
         {children}
       </main>

@@ -29,13 +29,13 @@ const LandingPageLayoutFooter = () => {
       </div>
 
       {/* Main footer */}
-      <div className="relative max-w-7xl mx-auto px-6 py-14 grid grid-cols-2 md:grid-cols-4 gap-10">
+      <div className="relative max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 py-14 3xl:py-20 grid grid-cols-2 md:grid-cols-4 gap-10 3xl:gap-16">
         {/* Brand */}
         <div className="col-span-2 md:col-span-1 space-y-4">
           <Link to="/" className="flex items-center gap-2">
-            <h1 className="font-bold text-4xl text-white">kiddo</h1>
+            <h1 className="font-bold text-4xl 3xl:text-5xl text-white">kiddo</h1>
           </Link>
-          <p className="text-sm text-white/75 leading-relaxed max-w-xs">
+          <p className="text-sm 3xl:text-base text-white/75 leading-relaxed max-w-xs 3xl:max-w-sm">
             Platform belajar interaktif yang menyenangkan untuk anak usia 7–12
             tahun. Belajar seru, prestasi nyata!
           </p>
@@ -122,7 +122,7 @@ const LandingPageLayoutFooter = () => {
 
       {/* Bottom bar */}
       <div className="relative border-t border-white/20">
-        <div className="max-w-7xl mx-auto px-6 py-4 flex flex-col md:flex-row items-center justify-between gap-2 text-xs text-white/60">
+        <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 py-4 3xl:py-6 flex flex-col md:flex-row items-center justify-between gap-2 text-xs 3xl:text-sm text-white/60">
           <p>© 2025 Kiddo Learning Adventure. All rights reserved.</p>
           <p>Dibuat dengan untuk generasi masa depan Indonesia</p>
         </div>

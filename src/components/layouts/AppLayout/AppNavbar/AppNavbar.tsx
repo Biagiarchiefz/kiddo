@@ -11,7 +11,7 @@ const AppNavbar = () => {
   const initial = profile?.username?.charAt(0).toUpperCase() ?? '?'
 
   return (
-    <header className="bg-background border-b border-border shadow-sm sticky top-0 z-50 flex items-center gap-2 px-4 py-2.5">
+    <header className="bg-background border-b border-border shadow-sm sticky top-0 z-50 flex items-center gap-2 px-4 py-2.5 3xl:px-8 3xl:py-4">
       <SidebarTrigger className="-ml-1 text-muted-foreground hover:text-foreground" />
       <Separator orientation="vertical" className="h-4 mx-1" />
 
@@ -20,9 +20,9 @@ const AppNavbar = () => {
         {isLoading ? (
           <Skeleton className="h-7 w-24 rounded-full" />
         ) : (
-          <div className="flex items-center gap-1 bg-yellow-400/20 border border-yellow-400/50 px-2.5 py-1 rounded-full">
-            <Zap className="w-3.5 h-3.5 text-yellow-400 fill-yellow-400" />
-            <span className="text-xs font-bold text-yellow-400">
+          <div className="flex items-center gap-1 bg-yellow-400/20 border border-yellow-400/50 px-2.5 py-1 3xl:px-4 3xl:py-1.5 rounded-full">
+            <Zap className="w-3.5 h-3.5 3xl:w-5 3xl:h-5 text-yellow-400 fill-yellow-400" />
+            <span className="text-xs 3xl:text-sm font-bold text-yellow-400">
               {(profile?.total_xp ?? 0).toLocaleString('id-ID')} XP
             </span>
           </div>
@@ -45,19 +45,19 @@ const AppNavbar = () => {
           </div>
         ) : (
           <div className="flex items-center gap-2">
-            <Avatar className="w-8 h-8">
+            <Avatar className="w-8 h-8 3xl:w-11 3xl:h-11">
               {profile?.avatar_url && (
                 <AvatarImage src={profile.avatar_url} alt={profile.username} />
               )}
-              <AvatarFallback className="bg-primary/10 text-primary text-xs font-bold">
+              <AvatarFallback className="bg-primary/10 text-primary text-xs 3xl:text-sm font-bold">
                 {initial}
               </AvatarFallback>
             </Avatar>
             <div className="hidden sm:block">
-              <p className="text-xs font-semibold text-foreground leading-none">
+              <p className="text-xs 3xl:text-sm font-semibold text-foreground leading-none">
                 {profile?.username ?? 'Explorer'}
               </p>
-              <p className="text-[10px] text-muted-foreground mt-0.5">
+              <p className="text-[10px] 3xl:text-xs text-muted-foreground mt-0.5">
                 {profile?.school || `Level ${profile?.level ?? 1} Adventurer`}
               </p>
             </div>

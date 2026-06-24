@@ -51,22 +51,22 @@ const Register = () => {
   return (
     <div className="min-h-screen flex">
       {/* Left Panel – Form */}
-      <div className="flex flex-col w-full lg:max-w-[460px] bg-white px-10 py-10">
+      <div className="flex flex-col w-full lg:max-w-[460px] 3xl:max-w-[700px] bg-white px-10 py-10 3xl:px-20 3xl:py-14">
         {/* Logo */}
         <div className="flex items-center gap-2.5">
           <div className="leading-none">
-            <h1 className="text-4xl font-bold text-sky-500">kiddo</h1>
-            <p className="text-xs font-semibold text-slate-500">
+            <h1 className="text-4xl 3xl:text-6xl font-bold text-sky-500">kiddo</h1>
+            <p className="text-xs 3xl:text-sm font-semibold text-slate-500">
               Belajar dengan seru setiap hari
             </p>
           </div>
         </div>
 
         {/* Form area */}
-        <div className="flex-1 flex flex-col justify-center py-10 space-y-6 max-w-[340px] mx-auto w-full">
+        <div className="flex-1 flex flex-col justify-center py-10 3xl:py-14 space-y-6 3xl:space-y-8 max-w-[340px] 3xl:max-w-[520px] mx-auto w-full">
           <div>
-            <h1 className="text-3xl font-bold text-foreground">Buat Akun</h1>
-            <p className="text-muted-foreground text-sm mt-1.5">
+            <h1 className="text-3xl 3xl:text-5xl font-bold text-foreground">Buat Akun</h1>
+            <p className="text-muted-foreground text-sm 3xl:text-lg mt-1.5">
               Daftar dan mulai petualangan belajarmu bersama Kiddo
             </p>
           </div>
@@ -78,78 +78,78 @@ const Register = () => {
             </div>
           )}
 
-          <form onSubmit={handleSubmit} className="space-y-4">
+          <form onSubmit={handleSubmit} className="space-y-4 3xl:space-y-5">
             <div className="space-y-1.5">
-              <Label htmlFor="username">Nama Pengguna</Label>
+              <Label htmlFor="username" className="3xl:text-base">Nama Pengguna</Label>
               <div className="relative">
-                <User className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <User className="absolute left-3.5 3xl:left-5 top-1/2 -translate-y-1/2 w-4 h-4 3xl:w-6 3xl:h-6 text-muted-foreground pointer-events-none" />
                 <Input
                   id="username"
                   type="text"
                   placeholder="Masukkan Nama Pengguna"
                   value={form.username}
                   onChange={(e) => handleChange("username", e.target.value)}
-                  className="pl-10 h-12 rounded-lg"
+                  className="pl-10 3xl:pl-14 h-12 3xl:h-16 3xl:text-base rounded-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="school">Nama Sekolah</Label>
+              <Label htmlFor="school" className="3xl:text-base">Nama Sekolah</Label>
               <div className="relative">
-                <School className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <School className="absolute left-3.5 3xl:left-5 top-1/2 -translate-y-1/2 w-4 h-4 3xl:w-6 3xl:h-6 text-muted-foreground pointer-events-none" />
                 <Input
                   id="school"
                   type="text"
                   placeholder="Masukkan Nama Sekolah"
                   value={form.school}
                   onChange={(e) => handleChange("school", e.target.value)}
-                  className="pl-10 h-12 rounded-lg"
+                  className="pl-10 3xl:pl-14 h-12 3xl:h-16 3xl:text-base rounded-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email" className="3xl:text-base">Email</Label>
               <div className="relative">
-                <Mail className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <Mail className="absolute left-3.5 3xl:left-5 top-1/2 -translate-y-1/2 w-4 h-4 3xl:w-6 3xl:h-6 text-muted-foreground pointer-events-none" />
                 <Input
                   id="email"
                   type="email"
                   placeholder="Masukkan Email"
                   value={form.email}
                   onChange={(e) => handleChange("email", e.target.value)}
-                  className="pl-10 h-12 rounded-lg"
+                  className="pl-10 3xl:pl-14 h-12 3xl:h-16 3xl:text-base rounded-lg"
                   required
                 />
               </div>
             </div>
 
             <div className="space-y-1.5">
-              <Label htmlFor="password">Password</Label>
+              <Label htmlFor="password" className="3xl:text-base">Password</Label>
               <div className="relative">
-                <KeyRound className="absolute left-3.5 top-1/2 -translate-y-1/2 w-4 h-4 text-muted-foreground pointer-events-none" />
+                <KeyRound className="absolute left-3.5 3xl:left-5 top-1/2 -translate-y-1/2 w-4 h-4 3xl:w-6 3xl:h-6 text-muted-foreground pointer-events-none" />
                 <Input
                   id="password"
                   type={showPassword ? "text" : "password"}
                   placeholder="Masukkan Password"
                   value={form.password}
                   onChange={(e) => handleChange("password", e.target.value)}
-                  className="pl-10 pr-10 h-12 rounded-lg"
+                  className="pl-10 3xl:pl-14 pr-10 3xl:pr-14 h-12 3xl:h-16 3xl:text-base rounded-lg"
                   required
                   minLength={6}
                 />
                 <button
                   type="button"
                   onClick={() => setShowPassword((v) => !v)}
-                  className="absolute right-3.5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
+                  className="absolute right-3.5 3xl:right-5 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition-colors"
                 >
                   {showPassword ? (
-                    <EyeOff className="w-4 h-4" />
+                    <EyeOff className="w-4 h-4 3xl:w-6 3xl:h-6" />
                   ) : (
-                    <Eye className="w-4 h-4" />
+                    <Eye className="w-4 h-4 3xl:w-6 3xl:h-6" />
                   )}
                 </button>
               </div>
@@ -158,11 +158,11 @@ const Register = () => {
             <Button
               type="submit"
               disabled={loading}
-              className="w-full h-12 rounded-lg text-base font-semibold bg-sky-500 hover:bg-sky-600 mt-2"
+              className="w-full h-12 3xl:h-16 rounded-lg text-base 3xl:text-lg font-semibold bg-sky-500 hover:bg-sky-600 mt-2"
             >
               {loading ? (
                 <>
-                  <Loader2 className="w-4 h-4 animate-spin" /> Memproses...
+                  <Loader2 className="w-4 h-4 3xl:w-6 3xl:h-6 animate-spin" /> Memproses...
                 </>
               ) : (
                 "Daftar"
@@ -171,7 +171,7 @@ const Register = () => {
           </form>
 
           {/* Divider */}
-          <div className="flex items-center gap-3 text-xs text-muted-foreground">
+          <div className="flex items-center gap-3 text-xs 3xl:text-sm text-muted-foreground">
             <div className="flex-1 h-px bg-border" />
             <span>atau</span>
             <div className="flex-1 h-px bg-border" />
@@ -182,13 +182,13 @@ const Register = () => {
             type="button"
             onClick={handleGoogleLogin}
             disabled={loading}
-            className="w-full flex items-center justify-center gap-3 border border-border rounded-lg h-12 text-sm font-semibold text-foreground hover:bg-muted/40 transition-colors disabled:opacity-50"
+            className="w-full flex items-center justify-center gap-3 border border-border rounded-lg h-12 3xl:h-16 text-sm 3xl:text-base font-semibold text-foreground hover:bg-muted/40 transition-colors disabled:opacity-50"
           >
             <GoogleIcon />
             Daftar dengan Google
           </button>
 
-          <p className="text-center text-sm text-muted-foreground">
+          <p className="text-center text-sm 3xl:text-base text-muted-foreground">
             Sudah punya akun?{" "}
             <Link
               to="/login"
@@ -200,7 +200,7 @@ const Register = () => {
         </div>
 
         {/* Footer */}
-        <p className="text-center text-xs text-muted-foreground">
+        <p className="text-center text-xs 3xl:text-sm text-muted-foreground">
           © 2026 Kiddo Learning Adventure. Hak cipta dilindungi.
         </p>
       </div>
@@ -215,12 +215,12 @@ const Register = () => {
         <div className="absolute inset-0 bg-black/55 rounded-l-3xl" />
 
         {/* Text content */}
-        <div className="relative flex flex-col h-full p-12 text-white">
+        <div className="relative flex flex-col h-full p-12 3xl:p-24 text-white">
           <div className="mt-4">
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/60">
+            <p className="text-xs 3xl:text-base font-semibold tracking-[0.2em] uppercase text-white/60">
               Platform Pembelajaran Digital
             </p>
-            <h2 className="text-4xl font-bold mt-4 leading-snug max-w-xs">
+            <h2 className="text-4xl 3xl:text-7xl font-bold mt-4 3xl:mt-8 leading-snug max-w-xs 3xl:max-w-2xl">
               Belajar yang menyenangkan untuk generasi masa depan
             </h2>
           </div>

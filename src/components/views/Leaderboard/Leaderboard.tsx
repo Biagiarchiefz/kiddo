@@ -50,7 +50,7 @@ const RankRow = ({ entry, idx, showBorder }: RankRowProps) => (
     initial="hidden"
     animate="show"
     className={cn(
-      "grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 transition-colors",
+      "grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 3xl:px-8 3xl:py-4 transition-colors",
       showBorder ? "border-b border-border/70" : "",
       entry.isCurrentUser
         ? "bg-primary/8 border-l-[3px] border-l-primary"
@@ -93,7 +93,7 @@ const RankRow = ({ entry, idx, showBorder }: RankRowProps) => (
         <div className="flex items-center gap-2">
           <p
             className={cn(
-              "text-sm font-semibold truncate",
+              "text-sm 3xl:text-base font-semibold truncate",
               entry.isCurrentUser ? "text-primary" : "text-foreground",
             )}
           >
@@ -213,26 +213,26 @@ const Leaderboard = () => {
         animate="show"
         className="text-center mb-4 sm:mb-8"
       >
-        <p className="text-[11px] font-bold uppercase tracking-[0.22em] text-muted-foreground">
+        <p className="text-[11px] 3xl:text-sm font-bold uppercase tracking-[0.22em] text-muted-foreground">
           Leaderboard
         </p>
-        <h2 className="text-3xl font-bold text-foreground mt-2">
+        <h2 className="text-3xl 3xl:text-5xl font-bold text-foreground mt-2">
           Papan Peringkat
         </h2>
-        <p className="text-sm text-muted-foreground mt-2 max-w-sm mx-auto leading-relaxed">
+        <p className="text-sm 3xl:text-base text-muted-foreground mt-2 max-w-sm 3xl:max-w-xl mx-auto leading-relaxed">
           Lihat pencapaian para pelajar terbaik! Selesaikan kuis untuk naik
           peringkat.
         </p>
       </motion.div>
 
-      <div className="flex flex-col gap-6 lg:flex-row lg:items-end">
+      <div className="flex flex-col gap-6 3xl:gap-10 lg:flex-row lg:items-end">
         {/* ── Podium ── */}
         <motion.div
           custom={1}
           variants={fadeUp}
           initial="hidden"
           animate="show"
-          className="w-full lg:w-72 lg:shrink-0"
+          className="w-full lg:w-72 3xl:w-96 lg:shrink-0"
         >
           {/* Podium avatars */}
           <div className="flex items-end justify-center gap-3 pb-1">
@@ -333,7 +333,7 @@ const Leaderboard = () => {
         {/* ── Rankings list ── */}
         <Card className="flex-1 overflow-hidden shadow-md border border-border/70 bg-card/90 py-0 gap-0">
           {/* Table header */}
-          <div className="grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 bg-yellow-400 border-b border-border/70 text-[11px] font-bold text-slate-900 uppercase tracking-wider">
+          <div className="grid grid-cols-[28px_1fr_80px] sm:grid-cols-[34px_1fr_72px_100px] items-center gap-3 px-5 py-3 3xl:px-8 3xl:py-4 bg-yellow-400 border-b border-border/70 text-[11px] 3xl:text-sm font-bold text-slate-900 uppercase tracking-wider">
             <span className="text-center">No</span>
             <span>Pelajar</span>
             <span className="hidden sm:block text-center">Level</span>

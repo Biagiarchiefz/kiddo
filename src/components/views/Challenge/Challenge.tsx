@@ -451,25 +451,25 @@ const Challenge = () => {
               className="flex flex-wrap items-center justify-between gap-2"
             >
               <div>
-                <h2 className="text-xl font-black text-foreground">
+                <h2 className="text-xl 3xl:text-2xl font-black text-foreground">
                   Tantangan Campuran
                 </h2>
-                <p className="text-sm text-muted-foreground mt-0.5">
+                <p className="text-sm 3xl:text-base text-muted-foreground mt-0.5">
                   Uji pengetahuanmu dari semua materi!
                 </p>
               </div>
               <div className="flex items-center gap-2">
-                <span className="text-[10px] font-bold uppercase tracking-wide text-sky-600 bg-sky-100/70 px-2 py-1 rounded-full">
+                <span className="text-[10px] 3xl:text-xs font-bold uppercase tracking-wide text-sky-600 bg-sky-100/70 px-2 py-1 rounded-full">
                   Mode Ceria
                 </span>
-                <span className="text-xs text-muted-foreground font-semibold">
+                <span className="text-xs 3xl:text-sm text-muted-foreground font-semibold">
                   Soal {currentIndex + 1} / {totalQuestions}
                 </span>
               </div>
             </motion.div>
 
             {/* Progress bar */}
-            <div className="h-2 bg-muted/70 rounded-full overflow-hidden">
+            <div className="h-2 3xl:h-3 bg-muted/70 rounded-full overflow-hidden">
               <motion.div
                 className="h-full bg-linear-to-r from-sky-500 via-blue-500 to-emerald-400 rounded-full"
                 animate={{ width: `${progress}%` }}
@@ -488,11 +488,11 @@ const Challenge = () => {
                   transition={{ duration: 0.25, ease: "easeOut" as const }}
                 >
                   <Card className="shadow-sm border-sky-100">
-                    <CardContent className="p-5 space-y-4">
+                    <CardContent className="p-5 3xl:p-7 space-y-4">
                       {/* Badges */}
                       <div className="flex items-center gap-2 flex-wrap">
-                        <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-600 text-[10px] font-bold px-2.5 py-0.5 rounded-full">
-                          <Trophy className="h-3.5 w-3.5" />
+                        <span className="inline-flex items-center gap-1.5 bg-blue-50 border border-blue-100 text-blue-600 text-[10px] 3xl:text-xs font-bold px-2.5 py-0.5 rounded-full">
+                          <Trophy className="h-3.5 w-3.5 3xl:h-4 3xl:w-4" />
                           {currentQuestion.category || 'Umum'}
                         </span>
                         <span className={cn(
@@ -508,7 +508,7 @@ const Challenge = () => {
                       </div>
 
                       {/* Question text */}
-                      <p className="text-base font-semibold text-foreground leading-relaxed">
+                      <p className="text-base 3xl:text-lg font-semibold text-foreground leading-relaxed">
                         {currentQuestion.question}
                       </p>
 
@@ -639,7 +639,7 @@ const Challenge = () => {
 
             {/* Next button */}
             <Button
-              className="w-full rounded-[10px] gap-2 text-base font-bold py-5"
+              className="w-full rounded-[10px] gap-2 text-base 3xl:text-lg font-bold py-5 3xl:py-7"
               onClick={submitAndNext}
               disabled={!selectedAnswer || isSubmitting}
             >
@@ -648,7 +648,7 @@ const Challenge = () => {
                 : currentIndex === totalQuestions - 1
                   ? "Selesai"
                   : "Lanjut"}
-              {!isSubmitting && <ChevronRight className="w-4 h-4" />}
+              {!isSubmitting && <ChevronRight className="w-4 h-4 3xl:w-5 3xl:h-5" />}
             </Button>
           </div>
 
@@ -661,27 +661,27 @@ const Challenge = () => {
               duration: 0.35,
               ease: "easeOut" as const,
             }}
-            className="w-full lg:w-52 lg:shrink-0 space-y-3 lg:sticky lg:top-20"
+            className="w-full lg:w-52 3xl:w-72 lg:shrink-0 space-y-3 lg:sticky lg:top-20"
           >
             <Card className="bg-linear-to-br from-sky-50 to-white border-sky-100 shadow-sm">
-              <CardContent className="p-4 space-y-2">
-                <p className="text-[10px] font-bold uppercase tracking-wide text-sky-700">
+              <CardContent className="p-4 3xl:p-6 space-y-2">
+                <p className="text-[10px] 3xl:text-xs font-bold uppercase tracking-wide text-sky-700">
                   Teman Belajar
                 </p>
                 <div className="flex items-center gap-2">
-                  <span className="inline-flex h-9 w-9 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
-                    <Cat className="h-4 w-4" />
+                  <span className="inline-flex h-9 w-9 3xl:h-12 3xl:w-12 items-center justify-center rounded-xl bg-sky-100 text-sky-700">
+                    <Cat className="h-4 w-4 3xl:h-5 3xl:w-5" />
                   </span>
                   <div>
-                    <p className="text-xs font-semibold text-foreground">
+                    <p className="text-xs 3xl:text-sm font-semibold text-foreground">
                       Kucing Pintar
                     </p>
-                    <p className="text-[10px] text-muted-foreground">
+                    <p className="text-[10px] 3xl:text-xs text-muted-foreground">
                       Ayo jawab yang terbaik!
                     </p>
                   </div>
                 </div>
-                <div className="flex items-center gap-2 text-[10px]">
+                <div className="flex items-center gap-2 text-[10px] 3xl:text-xs">
                   <span className="inline-flex items-center gap-1 rounded-full bg-emerald-50 text-emerald-700 border border-emerald-100 px-2 py-1">
                     <CheckCircle2 className="w-3 h-3" />
                     Seru & aman
@@ -695,17 +695,17 @@ const Challenge = () => {
             </Card>
             {/* XP reward */}
             <Card className="bg-linear-to-br from-amber-50 to-yellow-50 border-amber-100 shadow-sm">
-              <CardContent className="p-4 text-center space-y-1.5">
-                <p className="text-[10px] text-amber-700 font-bold uppercase tracking-wider">
+              <CardContent className="p-4 3xl:p-6 text-center space-y-1.5">
+                <p className="text-[10px] 3xl:text-xs text-amber-700 font-bold uppercase tracking-wider">
                   Extra XP
                 </p>
                 <div className="flex items-center justify-center gap-1">
-                  <Zap className="w-4 h-4 text-amber-400 fill-amber-400" />
-                  <span className="text-2xl font-black text-amber-600">
+                  <Zap className="w-4 h-4 3xl:w-5 3xl:h-5 text-amber-400 fill-amber-400" />
+                  <span className="text-2xl 3xl:text-3xl font-black text-amber-600">
                     +{currentQuestion?.xp_reward ?? 10}/soal
                   </span>
                 </div>
-                <p className="text-[10px] text-amber-700/70 leading-relaxed">
+                <p className="text-[10px] 3xl:text-xs text-amber-700/70 leading-relaxed">
                   Jawab benar untuk kumpulkan XP!
                 </p>
               </CardContent>
@@ -713,7 +713,7 @@ const Challenge = () => {
 
             {/* Progress tracker */}
             <Card className="shadow-sm">
-              <CardContent className="p-4 space-y-2.5">
+              <CardContent className="p-4 3xl:p-6 space-y-2.5">
                 <p className="text-[10px] font-bold text-foreground uppercase tracking-wide">
                   Progres Soal
                 </p>

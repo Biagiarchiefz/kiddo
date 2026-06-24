@@ -72,20 +72,20 @@ const LandingPageLayoutNavbar = () => {
 
   return (
     <nav className="bg-white border-b border-sky-100 sticky top-0 z-50 shadow-sm">
-      <div className="max-w-7xl mx-auto px-6 py-3.5 flex items-center justify-between">
+      <div className="max-w-7xl 3xl:max-w-[2000px] mx-auto px-6 3xl:px-10 py-3.5 3xl:py-5 flex items-center justify-between">
         {/* Logo */}
         <Link to="/" onClick={() => setMenuOpen(false)}>
-          <h1 className="text-4xl font-bold text-sky-500">kiddo</h1>
+          <h1 className="text-4xl 3xl:text-5xl font-bold text-sky-500">kiddo</h1>
         </Link>
 
         {/* Desktop nav links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden md:flex items-center gap-8 3xl:gap-12">
           {navLinks.map(link => (
             <Link
               key={link.href}
               to={link.href}
               onClick={(e) => handleNavClick(e, link.href)}
-              className={`text-sm font-medium transition-colors pb-0.5 border-b-2 ${
+              className={`text-sm 3xl:text-base font-medium transition-colors pb-0.5 border-b-2 ${
                 isActive(link.href)
                   ? 'text-sky-600 font-semibold border-sky-500'
                   : 'text-slate-500 hover:text-sky-600 border-transparent'
@@ -98,10 +98,10 @@ const LandingPageLayoutNavbar = () => {
 
         {/* Auth buttons + hamburger */}
         <div className="flex items-center gap-2">
-          <Button variant="ghost" size="sm" asChild className="font-medium text-slate-600 hover:text-sky-600">
+          <Button variant="ghost" size="sm" asChild className="font-medium text-slate-600 hover:text-sky-600 3xl:text-base">
             <Link to="/login">Masuk</Link>
           </Button>
-          <Button size="sm" asChild className="hidden sm:inline-flex rounded-xl font-semibold px-5 bg-sky-500 hover:bg-sky-600 text-white shadow-sm">
+          <Button size="sm" asChild className="hidden sm:inline-flex rounded-xl font-semibold px-5 3xl:px-7 3xl:py-2.5 3xl:text-base bg-sky-500 hover:bg-sky-600 text-white shadow-sm">
             <Link to="/daftar">Mulai Gratis</Link>
           </Button>
           <Button
